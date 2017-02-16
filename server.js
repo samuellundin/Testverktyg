@@ -11,7 +11,7 @@ const uuid = require('uuid/v1');
 app.use(express.static(path.join(__dirname, '/public')));
 
 //Säg till appen vilken view engine vi använder, handlebars, och berätta i vilken mapp våra .hbs-filer
-//kommer ligga
+//kommer ligga (dvs handlebars-filer)
 app.engine('.hbs', exphbs({
     defaultLayout: 'main',
     extname: '.hbs',
@@ -26,12 +26,10 @@ app.use(bodyparser.urlencoded({
 }));
 app.use(bodyparser.json());
 
-//Säg till vilken port den ska lyssna på.
-/*
-För att köra denna server, kör "node server.js" när du står i den här katalogen.
-Öppna sedan localhost:3000 i en webbläsare.
- */
+//Säg till vilken port appen ska lyssna på.
 app.listen(3000);
+
+
 
 
 //APP REQUESTS
