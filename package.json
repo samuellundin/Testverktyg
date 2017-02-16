@@ -1,0 +1,26 @@
+{
+  "name": "testverktyg",
+  "version": "1.0.0",
+  "description": "Testverktyg som vi utvecklar åt Newton",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samuellundin/Testverktyg.git"
+  },
+  "author": "Samuel Lundin, Markus Gustafsson, Mattias Crusell, Sofia Hayoti",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samuellundin/Testverktyg/issues"
+  },
+  "homepage": "https://github.com/samuellundin/Testverktyg#readme",
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "express": "^4.14.1",
+    "express-handlebars": "^3.0.0",
+    "mysql": "^2.13.0",
+    "uuid": "^3.0.1"
+  }
+}
