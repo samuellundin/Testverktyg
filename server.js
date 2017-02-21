@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.engine('.hbs', exphbs({
     defaultLayout: 'main',
     extname: '.hbs',
-    layoutsDir: path.join(__dirname, 'views/layouts')
+    layoutsDir: path.join(__dirname, 'views/layout')
 }));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
@@ -35,5 +35,5 @@ app.listen(3000);
 //APP REQUESTS
 
 app.get('/', function(req, res, next){
-    res.send('Välkommen till vårt testverktyg!');
+    res.render('index');
 });
