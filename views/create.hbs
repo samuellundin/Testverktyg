@@ -29,7 +29,7 @@
                 <div id="answersBox">
                     <div class="input-group answer">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" id="testButton">
+                        <button class="btn btn-default removeButton" type="button" id="testButton">
                             <span class="glyphicon glyphicon-remove"></span>
                         </button>
                     </span>
@@ -37,7 +37,7 @@
                     </div>
                     <div class="input-group answer">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">
+                        <button class="btn btn-default removeButton" type="button">
                             <span class="glyphicon glyphicon-remove"></span>
                         </button>
                     </span>
@@ -78,6 +78,11 @@
     });
 
     $('#addButton').on('click', function () {
-        $('#answersBox').append('<div class="input-group answer"> <span class="input-group-btn"> <button class="btn btn-default" type="button"> <span class="glyphicon glyphicon-remove"></span> </button> </span> <input type="text" class="form-control" placeholder="Svar 2"> </div>')
+        var answerCount = $('.answer').length + 1;
+        $('#answersBox').append('<div class="input-group answer"> <span class="input-group-btn"> <button class="btn btn-default removeButton" type="button"> <span class="glyphicon glyphicon-remove"></span> </button> </span> <input type="text" class="form-control" placeholder="Svar '+ answerCount +'"> </div>')
+    });
+
+    $('.removeButton').on('click', function() {
+        
     });
 </script>
