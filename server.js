@@ -7,6 +7,7 @@ const app = express();
 const mysql = require('mysql');
 const uuid = require('uuid/v1');
 const session = require('client-sessions');
+const sql = require('./public/js/sql.js');
 
 //Säg till appen (express) var den hittar statiska filer, så som javascript-filer och css-filer
 app.use(express.static(path.join(__dirname, '/public')));
@@ -66,7 +67,13 @@ app.get('/create', function(req, res){
 app.get('/logout', function(req, res){
     req.session.reset();
     res.send('index');
-})
+});
+
+app.get('/api/users', function(req, res){
+    var result = sql.getAllUsers();
+    console.log(result);
+    res.send('you found me');
+});
 
 app.post('/create', function(req, res){
     req.session.username = req.body.username;
