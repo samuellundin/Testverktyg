@@ -82,7 +82,8 @@
         $('#answersBox').append('<div class="input-group answer"> <span class="input-group-btn"> <button class="btn btn-default removeButton" type="button"> <span class="glyphicon glyphicon-remove"></span> </button> </span> <input type="text" class="form-control" placeholder="Svar '+ answerCount +'"> </div>')
     });
 
-    $('.removeButton').on('click', function() {
-        $(this).parent().parent().first().remove();
+    $(document).on('click', 'button.removeButton', function(events) {
+        $(this).parents('div').eq(0).remove();
     });
+
 </script>
