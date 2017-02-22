@@ -4,7 +4,11 @@
 <!-- Jumbotron -->
 <div class="jumbotron">
     <div class="container">
-        <h1>Testverktyg!</h1>
+        {{#if this.username}}
+            <h1>Hej, {{this.username}}</h1>
+        {{else}}
+            <h1>Testverktyg!</h1>
+        {{/if}}
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pretium nisl tincidunt congue pulvinar. Maecenas leo orci, sodales vel convallis in, suscipit eu risus. Quisque non egestas magna. Phasellus euismod augue sed neque auctor rhoncus.</p>
         <p><a class="btn btn-primary btn-lg" href="#" role="button">Skapa Test »</a></p>
     </div>

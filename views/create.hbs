@@ -30,11 +30,11 @@
                 <!-- Answers -->
                 <div class="input-group answer">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">
+                        <button class="btn btn-default" type="button" id="testButton">
                             <span class="glyphicon glyphicon-remove"></span>
                         </button>
                     </span>
-                    <input type="text" class="form-control" placeholder="Svar 1">
+                    <input type="text" class="form-control" placeholder="Svar 1" id="testInput">
                 </div>
                 <div class="input-group answer">
                     <span class="input-group-btn">
@@ -63,3 +63,17 @@
         </p>
     </div>
 </footer>
+
+<script>
+    $('#testButton').on('click', function(){
+        var value = $('#testInput').val();
+                console.log(value);
+        $.ajax({
+            url: '/create',
+            data: {username: value},
+            type: 'POST',
+            success: function(){
+            }
+        });
+    });
+</script>

@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link href="style/styles.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
 </head>
 <body>
 <!-- Navbar -->
@@ -30,16 +34,29 @@
                 <li><a href="#">Statistik</a></li>
                 <li><a href="#">Dela</a></li>
             </ul>
-            <button type="button" class="btn btn-default navbar-btn navbar-right">Logga In</button>
+            {{#if this.username}}
+                <button type="button" class="btn btn-default navbar-btn navbar-right" id="logout">Logga Ut</button>
+            {{else}}
+                <button type="button" class="btn btn-default navbar-btn navbar-right" id="login">Logga In</button>
+            {{/if}}
         </div>
     </div>
 </nav>
 <!-- Det är i taggen här under som Express och Handlebars skickar info -->
     {{{body}}}
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
+<script>
+    $('#logout').on('click', function(){
+        console.log('Clicked?');
+        $.ajax({
+            url: '/logout',
+            type: 'get',
+            success: function(){
+                console.log('Logged out successfully');
+                location.reload();
+            }
+        })
+    })
+</script>
 </body>
 </html>

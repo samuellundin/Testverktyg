@@ -41,12 +41,28 @@ app.listen(3000);
 
 
 //APP REQUESTS
-
 app.get('/', function(req, res, next){
-    res.render('index');
+    if(req.session.username){
+        res.render('index', {username: req.session.username});
+    } else {
+        res.render('index');
+    }
 });
 
 app.get('/create', function(req, res){
-    res.render('create');
-    console.log('Yaaay!');
+    if(req.session.username){
+        res.render('create', {username: req.session.username});
+    } else {
+        res.render('create');
+    }
+});
+
+app.get('/logout', function(req, res){
+    req.session.reset();
+    res.send('index');
+})
+
+app.post('/create', function(req, res){
+    req.session.username = req.body.username;
+    res.redirect('/');
 });
