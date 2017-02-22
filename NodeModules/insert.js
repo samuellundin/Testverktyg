@@ -6,12 +6,13 @@
 var mysql = require('mysql');
 var connection = mysql.createConnection({
     host: 'localhost',
-    user: '',
-    password: '',
+    user: 'dev',
+    password: '1234',
     database: 'TestTool'
 })
 connection.connect();
 
+addUser('Sofia', 'Hayoti', 'sofhay@live.se','puss','student' );
 
 function addUser(ufirstName,ulastName, umail, upassword,urole) {
     var newUser ={
@@ -23,8 +24,8 @@ function addUser(ufirstName,ulastName, umail, upassword,urole) {
     };
    var query = connection.query('INSERT INTO User set ?', newUser, function(err,resilt){
        if(err){
-        document.write("error");
+       return false;
        }
-       document.write("Bra jobbat hayoti");
+       return true;
    });
 };
