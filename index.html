@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link href="styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="jquery-ui-1.12.1/jquery-ui.min.css">
 </head>
 <body>
 
@@ -44,6 +45,21 @@
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pretium nisl tincidunt congue pulvinar. Maecenas leo orci, sodales vel convallis in, suscipit eu risus. Quisque non egestas magna. Phasellus euismod augue sed neque auctor rhoncus.</p>
         <p><a class="btn btn-primary btn-lg" href="#" role="button">Skapa Test »</a></p>
     </div>
+</div>
+
+<!-- Login dialog overlay -->
+<div id="dialog" title=" ">
+    <div class="page-header">
+        <h3>Logga in</h3>
+    </div>
+
+        <form method="post" action="index.html">
+            <p><input type="text" name="login" value="" placeholder="Användarnamn"></p>
+            <p><input type="password" name="password" value="" placeholder="Lösenord"></p>
+            <p class="submit"><input type="submit" name="commit" value="Logga in"></p>
+        </form>
+</div>
+
 </div>
 
 <!-- Features -->
@@ -111,6 +127,10 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
+
+<script src="jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+<script src="jquery-ui-1.12.1/jquery-ui.min.js"></script>
+<script src="javascript/login.js"></script>
 
 </body>
 </html>
