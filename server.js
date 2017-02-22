@@ -43,7 +43,6 @@ app.listen(3000);
 
 //APP REQUESTS
 app.get('/', function(req, res, next){
-    console.log(req.nav);
     if(req.session.username){
         res.render('index', {username: req.session.username});
     } else {
