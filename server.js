@@ -6,6 +6,7 @@ const bodyparser = require('body-parser');
 const app = express();
 const mysql = require('mysql');
 const uuid = require('uuid/v1');
+const session = require('client-sessions');
 
 //Säg till appen (express) var den hittar statiska filer, så som javascript-filer och css-filer
 app.use(express.static(path.join(__dirname, '/public')));
@@ -26,6 +27,13 @@ app.use(bodyparser.urlencoded({
 }));
 app.use(bodyparser.json());
 
+app.use(session({
+    cookieName: 'session',
+    secret: 'secret',
+    duration: 30 * 60 * 1000,
+    activeDuration: 5 * 60 * 1000,
+}));
+
 //Säg till vilken port appen ska lyssna på.
 app.listen(3000);
 
@@ -36,4 +44,9 @@ app.listen(3000);
 
 app.get('/', function(req, res, next){
     res.render('index');
+});
+
+app.get('/create', function(req, res){
+    res.render('create');
+    console.log('Yaaay!');
 });
