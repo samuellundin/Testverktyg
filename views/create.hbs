@@ -1,5 +1,3 @@
-
-
 <!-- Content -->
 <div class="container" id="test">
     <div class="col-lg-8">
@@ -28,23 +26,25 @@
                 </div>
 
                 <!-- Answers -->
-                <div class="input-group answer">
+                <div id="answersBox">
+                    <div class="input-group answer">
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="button" id="testButton">
                             <span class="glyphicon glyphicon-remove"></span>
                         </button>
                     </span>
-                    <input type="text" class="form-control" placeholder="Svar 1" id="testInput">
-                </div>
-                <div class="input-group answer">
+                        <input type="text" class="form-control" placeholder="Svar 1" id="testInput">
+                    </div>
+                    <div class="input-group answer">
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="button">
                             <span class="glyphicon glyphicon-remove"></span>
                         </button>
                     </span>
-                    <input type="text" class="form-control" placeholder="Svar 2">
+                        <input type="text" class="form-control" placeholder="Svar 2">
+                    </div>
                 </div>
-                <button type="button" class="btn btn-default">Lägg till Svar</button>
+                <button type="button" class="btn btn-default" id="addButton">Lägg till Svar</button>
             </form>
         </div>
 
@@ -65,15 +65,19 @@
 </footer>
 
 <script>
-    $('#testButton').on('click', function(){
+    $('#testButton').on('click', function () {
         var value = $('#testInput').val();
-                console.log(value);
+        console.log(value);
         $.ajax({
             url: '/create',
             data: {username: value},
             type: 'POST',
-            success: function(){
+            success: function () {
             }
         });
+    });
+
+    $('#addButton').on('click', function () {
+        $('#answersBox').append('<div class="input-group answer"> <span class="input-group-btn"> <button class="btn btn-default" type="button"> <span class="glyphicon glyphicon-remove"></span> </button> </span> <input type="text" class="form-control" placeholder="Svar 2"> </div>')
     });
 </script>
