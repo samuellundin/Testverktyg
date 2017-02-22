@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-inverse navbar-static-top">
     <div class="container">
 
         <!-- Brand and Navbutton -->
@@ -28,25 +28,37 @@
         <div class="loginmodal-container">
             <h1>Login to Your Account</h1><br>
             <form>
-                <input type="text" name="user" placeholder="Username" id="usernameInput">
-                <input type="password" name="pass" placeholder="Password">
-                <input type="submit" name="login" class="login loginmodal-submit" value="Login" id="loginButton">
+                <input type="text" name="user" placeholder="Email" id="usernameInput">
+                <input type="password" name="pass" placeholder="Password" id="passwordInput">
+                <input type="submit" name="login" class="login loginmodal-submit" value="Login" id="loginButton" data-toggle="modal" data-target="#login-modal">
             </form>
         </div>
     </div>
 </div>
+<!-- Error -->
+{{#if err}}
+    <div class="alert alert-danger" role="alert">
+        {{err}}
+    </div>
+{{/if}}
 
 <script>
-    $('#loginButton').on('click', function () {
+    $('#loginButton').on('click', function (e) {
+        e.preventDefault();
         var value = $('#usernameInput').val();
-        console.log(value);
+        var password = $('#passwordInput').val();
         $.ajax({
             url: '/create',
-            data: {username: value},
+            data: {email: value, password: password},
             type: 'POST',
             success: function () {
             console.log('success');
-                setTimeout(location.reload(), 500);
+                $('#usernameInput').val('');
+                $('#passwordInput').val('');
+                setTimeout(function(){location.reload()}, 300);
+            },
+            error: function () {
+                console.log('error');
             }
         });
     });

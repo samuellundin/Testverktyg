@@ -47,13 +47,11 @@ app.get('/', function(req, res, next){
     if(req.session.username){
         res.render('index', {username: req.session.username});
     } else {
-        res.render('index');
+        res.render('index', {err : req.session.err});
+        console.log(req.session.err);
+        delete req.session.err;
     }
 
-});
-
-app.post('/', function(req, res, next){
-    console.log(req.body);
 });
 
 app.get('/create', function(req, res){
@@ -70,12 +68,34 @@ app.get('/logout', function(req, res){
 });
 
 app.get('/api/users', function(req, res){
-    var result = sql.getAllUsers();
-    console.log(result);
-    res.send('you found me');
+    sql.connection.query('SELECT * FROM User', function(err, result){
+        res.send(result);
+    });
 });
 
 app.post('/create', function(req, res){
-    req.session.username = req.body.username;
-    res.redirect('/');
+    sql.connection.query("SELECT * FROM User WHERE Mail = '" + req.body.email +"'", function(err, result){
+        if(err || result[0] == null){
+            req.session.err = 'No such mail registered';
+            delayRedirect(res, 200);
+            return;
+        }
+        var password = result[0].Password;
+        if(password == req.body.password){
+            req.session.username = result[0].FirstName;
+            req.session.email = result[0].Mail;
+            req.session.role = result[0].Role;
+            delayRedirect(res, 200);
+        } else {
+            req.session.err = 'Wrong password';
+            delayRedirect(res, 200);
+        }
+    });
+
 });
+
+function delayRedirect(res, delay){
+    setTimeout(function(){
+        res.sendStatus(200);
+    }, delay);
+}

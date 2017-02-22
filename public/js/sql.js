@@ -13,6 +13,8 @@ var connection = mysql.createConnection({
 })
 connection.connect();
 
+exports.connection = connection;
+
 exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
     var newUser ={
         firstname: ufirstName,
@@ -32,7 +34,11 @@ exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
 };
 
 exports.getAllUsers = function(){
+    var resultat = "";
     connection.query('SELECT * FROM User', function(err, result){
-        return result;
+        resultat = result;
+        console.log(result);
     });
+    console.log(resultat + " yeah.");
+    return 'Whaat?';
 }
