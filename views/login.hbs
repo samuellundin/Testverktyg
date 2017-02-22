@@ -1,15 +1,12 @@
-<div class="container" id="test">
-    <div class="col-lg-8">
-        <div class="panel panel-default">
-            <form action="/" method="post" class="panel-content">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" class="form-control">
-                    <label for="password">Lösenord</label>
-                    <input type="password" name="password" id="password" class="form-control">
-                    <button type="submit">Logga in</button>
-                </div>
-            </form>
-        </div>
+<!-- Login dialog overlay -->
+<div id="dialog" title=" ">
+    <div class="page-header">
+        <h3>Logga in</h3>
     </div>
+
+    <form method="post" action="index.html">
+        <p><input type="text" name="login" value="" placeholder="Användarnamn"></p>
+        <p><input type="password" name="password" value="" placeholder="Lösenord"></p>
+        <p class="submit"><input type="submit" name="commit" value="Logga in"></p>
+    </form>
 </div>
