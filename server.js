@@ -48,7 +48,6 @@ app.get('/', function(req, res, next){
         res.render('index', {username: req.session.username});
     } else {
         res.render('index', {err : req.session.err});
-        console.log(req.session.err);
         delete req.session.err;
     }
 
