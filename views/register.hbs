@@ -1,0 +1,80 @@
+<div class="container">
+        <div class="row">
+            <div class="panel-heading">
+                <div class="panel-title text-center">
+                    <h1 class="title">Registrera Användare</h1>
+                    <hr />
+                </div>
+            </div>
+            <div class="col-md-5">
+                <form class="form-horizontal" method="post" action="#">
+
+                    <!-- First Name -->
+                    <div class="form-group">
+                        <label for="name" class="cols-sm-2 control-label">Förnamn</label>
+                        <div class="cols-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                                <input type="text" class="form-control" name="name" id="name"  placeholder="Förnamn"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="form-group">
+                        <label for="email" class="cols-sm-2 control-label">Efternamn</label>
+                        <div class="cols-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                                <input type="text" class="form-control" name="email" id="email"  placeholder="Efternamn"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="username" class="cols-sm-2 control-label">Email</label>
+                        <div class="cols-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-users fa" aria-hidden="true"></i></span>
+                                <input type="text" class="form-control" name="username" id="username"  placeholder="Email"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password" class="cols-sm-2 control-label">Lösenord</label>
+                        <div class="cols-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                                <input type="password" class="form-control" name="password" id="password"  placeholder="Lösenord"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="form-group">
+                        <label for="confirm" class="cols-sm-2 control-label">Bekräfta Lösenord</label>
+                        <div class="cols-sm-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                                <input type="password" class="form-control" name="confirm" id="confirm"  placeholder="Bekräfta Lösenord"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <button type="button" class="btn btn-primary btn-lg btn-block login-button">Registrera</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+</div>
+
+<style>
+    .row {
+        margin-top: 50px;
+        padding: 10px
+    }
+</style>

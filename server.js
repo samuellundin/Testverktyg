@@ -51,6 +51,10 @@ app.get('/', function(req, res, next){
 
 });
 
+app.get('/register', function(req, res, next) {
+    res.render('register', {username: req.session.username});
+});
+
 app.get('/login', function(req, res, next){
 
     res.render('login');
