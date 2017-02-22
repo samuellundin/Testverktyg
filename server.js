@@ -16,7 +16,8 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.engine('.hbs', exphbs({
     defaultLayout: 'main',
     extname: '.hbs',
-    layoutsDir: path.join(__dirname, 'views/layout')
+    layoutsDir: path.join(__dirname, 'views/layout'),
+    partialsDir: path.join(__dirname, 'views/partials')
 }));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
@@ -42,15 +43,20 @@ app.listen(3000);
 
 //APP REQUESTS
 app.get('/', function(req, res, next){
+    req.nav = {body: 'yeah'};
+    console.log(req.nav);
     if(req.session.username){
         res.render('index', {username: req.session.username});
     } else {
         res.render('index');
     }
+
 });
 
 app.get('/login', function(req, res, next){
+
     res.render('login');
+
 });
 
 app.post('/', function(req, res, next){
