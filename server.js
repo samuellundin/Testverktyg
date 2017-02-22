@@ -55,6 +55,10 @@ app.get('/register', function(req, res, next) {
     res.render('register', {username: req.session.username});
 });
 
+app.post('/register', function(req, res, next) {
+    console.log('registration successful');
+});
+
 app.get('/login', function(req, res, next){
 
     res.render('login');
