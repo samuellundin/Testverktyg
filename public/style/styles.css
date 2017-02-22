@@ -5,7 +5,15 @@
 #features {
     margin-bottom: 75px;
 }
-
+#test {
+    margin-top: 75px;
+}
+.panel-content {
+    padding: 10px;
+}
+.answer {
+    margin-bottom: 10px;
+}
 .no-close .ui-dialog-titlebar-close{
     display: none;
 }
