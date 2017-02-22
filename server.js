@@ -51,12 +51,6 @@ app.get('/', function(req, res, next){
 
 });
 
-app.get('/login', function(req, res, next){
-
-    res.render('login');
-
-});
-
 app.post('/', function(req, res, next){
     console.log(req.body);
 });

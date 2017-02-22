@@ -45,7 +45,8 @@
             data: {username: value},
             type: 'POST',
             success: function () {
-                location.reload();
+            console.log('success');
+                setTimeout(location.reload(), 500);
             }
         });
     });
