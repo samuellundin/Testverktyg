@@ -49,6 +49,14 @@ app.get('/', function(req, res, next){
     }
 });
 
+app.get('/login', function(req, res, next){
+    res.render('login');
+});
+
+app.post('/', function(req, res, next){
+    console.log(req.body);
+});
+
 app.get('/create', function(req, res){
     if(req.session.username){
         res.render('create', {username: req.session.username});
