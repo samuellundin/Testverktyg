@@ -57,16 +57,6 @@ app.get('/', function(req, res, next){
         delete req.session.err;
 });
 
-app.get('/register', function(req, res, next) {
-    res.render('register', {username: req.session.username});
-});
-
-app.post('/register', function(req, res, next) {
-    console.log('registration successful');
-
-
-});
-
 app.get('/login', function(req, res, next){
     res.render('login');
 });
@@ -123,6 +113,7 @@ app.get("/register", function(req, res) {
 })
 
 app.post("/register", function(req, res) {
+    console.log('gothere');
     sql.addUser(req.body.fName, req.body.lName, req.body.mail, req.body.password, req.body.role);
     res.redirect("/");
 })
