@@ -151,8 +151,9 @@
         </div>`);
     });
 
-    $('.panel-heading').on('click', function() {
+    $('#test').on('click', '.panel-heading', function(e) {
         $(this).next('.panel-body').slideToggle();
+        console.log(this);
     });
 
 </script>
