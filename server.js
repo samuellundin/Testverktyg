@@ -12,6 +12,17 @@ const sql = require('./public/js/sql.js');
 //Säg till appen (express) var den hittar statiska filer, så som javascript-filer och css-filer
 app.use(express.static(path.join(__dirname, '/public')));
 
+/*//Låter använda registerHelper för att utöka funktionaliteten i handlebars
+exphbs.registerHelper('equal', function(lvalue, rvalue, options) {
+    if (arguments.length < 3)
+        throw new Error("Handlebars Helper equal needs 2 parameters");
+    if( lvalue!=rvalue ) {
+        return options.inverse(this);
+    } else {
+        return options.fn(this);
+    }
+});*/
+
 //Säg till appen vilken view engine vi använder, handlebars, och berätta i vilken mapp våra .hbs-filer
 //kommer ligga (dvs handlebars-filer)
 app.engine('.hbs', exphbs({
@@ -39,30 +50,30 @@ app.use(session({
 //Säg till vilken port appen ska lyssna på.
 app.listen(3000);
 
-
+var user = {};
 
 
 //APP REQUESTS
 app.get('/', function(req, res, next){
     if(req.session.username){
-        res.render('index', {username: req.session.username});
+        res.render('index', user);
     } else {
         res.render('index', {err : req.session.err});
         delete req.session.err;
     }
-
 });
 
 app.get('/create', function(req, res){
-    if(req.session.username){
-        res.render('create', {username: req.session.username});
+    if(checkAccess(req, 'teacher') || checkAccess(req, 'admin')){
+        res.render('create', user);
     } else {
-        res.render('create');
+        res.redirect('/');
     }
 });
 
 app.get('/logout', function(req, res){
     req.session.reset();
+    user = {};
     res.send('index');
 });
 
@@ -84,6 +95,8 @@ app.post('/create', function(req, res){
             req.session.username = result[0].FirstName;
             req.session.email = result[0].Mail;
             req.session.role = result[0].Role;
+            req.session.id = result[0].UserId;
+            setupUserObject(req);
             delayRedirect(res, 200);
         } else {
             req.session.err = 'Wrong password';
@@ -104,6 +117,30 @@ app.post("/register", function(req, res) {
     sql.addUser(req.body.fName, req.body.lName, req.body.mail, req.body.password, req.body.role);
     res.redirect("/");
 })
+
+function setupUserObject(req){
+    switch (req.session.role){
+        case 'student':
+            user.student = true;
+            break;
+        case 'teacher':
+            user.teacher = true;
+            break;
+        case 'admin':
+            user.admin = true;
+            break;
+    }
+
+    user.fName = req.session.username;
+    user.email = req.session.email;
+    user.id = req.session.id;
+    console.log(user);
+}
+
+function checkAccess(req, currRole) {
+    return req.session.role === currRole;
+
+}
 
 function delayRedirect(res, delay){
     setTimeout(function(){
