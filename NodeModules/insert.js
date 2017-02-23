@@ -16,7 +16,6 @@ addUser('Markus', 'Gustafsson', 'markus3832@gmail.com', 'jupp', 'teacher');
 addUser('Sofia', 'Hayoti', 'sofhay@live.se','puss','student' );
 
 function addUser(ufirstName,ulastName, umail, upassword,urole) {
-<<<<<<< Updated upstream
     var newUser ={
         firstname: ufirstName,
         lastname: ulastName,
@@ -32,7 +31,6 @@ function addUser(ufirstName,ulastName, umail, upassword,urole) {
        console.log("Bra jobbat hayoti");
        return true;
        })
-=======
     if(!validateEmail(umail)){
         return false;
     }
@@ -52,7 +50,6 @@ function addUser(ufirstName,ulastName, umail, upassword,urole) {
             return true;
         });
     }
->>>>>>> Stashed changes
 };
 
 function validateEmail(email) {

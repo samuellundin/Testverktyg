@@ -88,9 +88,10 @@ app.get('/logout', function(req, res){
 });
 
 app.get('/api/users', function(req, res){
-    sql.connection.query('SELECT * FROM User', function(err, result){
+    res.send(sql.getAllUsers());
+/*    sql.connection.query('SELECT * FROM User', function(err, result){
         res.send(result);
-    });
+    });*/
 });
 
 app.post('/create', function(req, res){
