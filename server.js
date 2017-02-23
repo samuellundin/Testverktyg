@@ -93,6 +93,18 @@ app.post('/create', function(req, res){
 
 });
 
+app.get("/register", function(req, res) {
+    res.render("register");
+
+
+})
+
+app.post("/register", function(req, res) {
+    console.log(req.body);
+    sql.addUser(req.body.fName, req.body.lName, req.body.mail, req.body.password, req.body.role);
+    res.redirect("/");
+})
+
 function delayRedirect(res, delay){
     setTimeout(function(){
         res.sendStatus(200);
