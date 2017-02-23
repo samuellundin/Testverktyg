@@ -6,42 +6,79 @@
                 <hr/>
             </div>
         </div>
-        <div class="col-md-4 col-md-offset-4">
-            <form action="/register" method="post">
+        <div class="col-md-5">
+            <form id="registerForm">
 
                 <!-- First Name -->
                 <label for="name" class="cols-sm-2 control-label">Förnamn</label>
-                <input type="text" name="fName" class="form-control" id="firstname" placeholder="Förnamn"/>
+                <input type="text" class="form-control" id="firstname" placeholder="Förnamn"/>
 
                 <!-- Last Name -->
                 <label for="email" class="cols-sm-2 control-label">Efternamn</label>
-                <input type="text" name="lName" class="form-control" id="lastname" placeholder="Efternamn"/>
+                <input type="text" class="form-control" id="lastname" placeholder="Efternamn"/>
 
                 <!-- Email -->
                 <label for="username" class="cols-sm-2 control-label">Email</label>
-                <input type="text" name="mail" class="form-control" id="email" placeholder="Email"/>
+                <input type="text" class="form-control" id="email" placeholder="Email"/>
 
                 <!-- Password -->
                 <label for="password" class="cols-sm-2 control-label">Lösenord</label>
-                <input type="password" name="password" class="form-control" id="password" placeholder="Lösenord"/>
+                <input type="password" class="form-control" id="password" placeholder="Lösenord"/>
 
-                <!-- Role -->
-                <select name="role" class="form-control" style="margin: 15px 0">
-                    <option value="admin">Admin</option>
-                    <option value="teacher">Lärare</option>
-                    <option value="student">Elev</option>
-                </select>
+                <!-- Confirm Password -->
+                <label for="confirm" class="cols-sm-2 control-label">Bekräfta Lösenord</label>
+                <input type="password" class="form-control" id="confirm" placeholder="Bekräfta Lösenord"/>
 
                 <!-- Register Button -->
-                <button type="submit" class="btn btn-primary btn-lg btn-block login-button" id="registerButton">Registrera</button>
+                <button type="button" class="btn btn-primary btn-lg btn-block login-button" id="registerButton">Registrera</button>
             </form>
         </div>
     </div>
 </div>
 
+<script>
+    $('#registerButton').on('click', function () {
+        var password = $('#password').val();
+        var confirm = $('#confirm').val();
+
+        if (password != '' && password === confirm) {
+            $.ajax({
+                url: '/register',
+                method: 'post',
+                data: {
+                    firstname: $('#firstname').val(),
+                    lastname: $('#lastname').val(),
+                    email: $('#email').val(),
+                    password: password
+                },
+                success: function() {
+                    $('#registerForm')[0].reset();
+                }
+            });
+        } else {
+            console.log('Password not match');
+        }
+    });
+</script>
 
 <style>
     .row {
         margin-top: 50px;
     }
 </style>
+
+    <div class="col-md-12">
+        <h2>Registrera ny användare</h2>
+        <form action="/register" method="post">
+            <input type="text" name="fName" value="" placeholder="Förnamn"><br>
+            <input type="text" name="lName" value="" placeholder="Efternamn"><br>
+            <input type="text" name="mail" value="" placeholder="Epost"><br>
+            <input type="text" name="password" value="" placeholder="Lösenord"><br>
+            <select name="role">
+                <option value="admin">Admin</option>
+                <option value="teacher">Lärare</option>
+                <option value="student">Elev</option>
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+    </div>

@@ -57,6 +57,16 @@ app.get('/', function(req, res, next){
         delete req.session.err;
 });
 
+app.get('/register', function(req, res, next) {
+    res.render('register', {username: req.session.username});
+});
+
+app.post('/register', function(req, res, next) {
+    console.log('registration successful');
+
+
+});
+
 app.get('/login', function(req, res, next){
     res.render('login');
 });
@@ -81,6 +91,8 @@ app.get('/api/users', function(req, res){
     });
 });
 
+
+
 app.post('/create', function(req, res){
     sql.connection.query("SELECT * FROM User WHERE Mail = '" + req.body.email +"'", function(err, result){
         if(err || result[0] == null){
@@ -101,6 +113,10 @@ app.post('/create', function(req, res){
         }
     });
 });
+
+app.get("/results", function(req, res) {
+    res.render("results", req.session);
+})
 
 app.get("/register", function(req, res) {
     res.render("register");

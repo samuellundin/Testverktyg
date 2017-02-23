@@ -1,8 +1,22 @@
 <div class="container">
     <div class="col-md-12">
-        <p>Testresultat</p>
-        <select name="test">
-            <div id="testResults"></div>
-        </select>
+        <h3 class="page-header">Välj test</h3>
+        <form action="results" method="post">
+            <select name="test" id="testResults" class="form-control"></select>
+            <br>
+            <button type="button" class="btn btn-info" id="registerButton">Se resultat</button>
+        </form>
     </div>
 </div>
+
+<script>
+    //Array ska fyllas med rättade prov
+    var allTests = ["Djungelprov 0103-2017","Sportprov 0203-2017","Failprov 0105-2020"];
+
+    //Fyller upp sträng som laddas in på sidan
+    var testInsert = "";
+    for(var i=0; i < allTests.length; i++) {
+        testInsert += "<option value=allTests[i]>"+allTests[i]+"</option>";
+    }
+    $("#testResults").append(testInsert);
+</script>
