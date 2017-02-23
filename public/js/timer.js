@@ -14,7 +14,7 @@ function timer(test, time) {
 function countDown() {
     var element = document.getElementById('test');
     if(sec <10){
-    element.innerHTML =   min + ':' + "0" + sec;}
+    element.innerHTML =   min + ':' + '0' + sec;}
     else{
         element.innerHTML = min + ':' + sec;
     }
