@@ -1,4 +1,73 @@
 <div class="container">
+<<<<<<< HEAD
+    <div class="row">
+        <div class="panel-heading">
+            <div class="panel-title text-center">
+                <h1 class="title">Registrera Användare</h1>
+                <hr/>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <form id="registerForm">
+
+                <!-- First Name -->
+                <label for="name" class="cols-sm-2 control-label">Förnamn</label>
+                <input type="text" class="form-control" id="firstname" placeholder="Förnamn"/>
+
+                <!-- Last Name -->
+                <label for="email" class="cols-sm-2 control-label">Efternamn</label>
+                <input type="text" class="form-control" id="lastname" placeholder="Efternamn"/>
+
+                <!-- Email -->
+                <label for="username" class="cols-sm-2 control-label">Email</label>
+                <input type="text" class="form-control" id="email" placeholder="Email"/>
+
+                <!-- Password -->
+                <label for="password" class="cols-sm-2 control-label">Lösenord</label>
+                <input type="password" class="form-control" id="password" placeholder="Lösenord"/>
+
+                <!-- Confirm Password -->
+                <label for="confirm" class="cols-sm-2 control-label">Bekräfta Lösenord</label>
+                <input type="password" class="form-control" id="confirm" placeholder="Bekräfta Lösenord"/>
+
+                <!-- Register Button -->
+                <button type="button" class="btn btn-primary btn-lg btn-block login-button" id="registerButton">Registrera</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#registerButton').on('click', function () {
+        var password = $('#password').val();
+        var confirm = $('#confirm').val();
+
+        if (password != '' && password === confirm) {
+            $.ajax({
+                url: '/register',
+                method: 'post',
+                data: {
+                    firstname: $('#firstname').val(),
+                    lastname: $('#lastname').val(),
+                    email: $('#email').val(),
+                    password: password
+                },
+                success: function() {
+                    $('#registerForm')[0].reset();
+                }
+            });
+        } else {
+            console.log('Password not match');
+        }
+    });
+</script>
+
+<style>
+    .row {
+        margin-top: 50px;
+    }
+</style>
+=======
     <div class="col-md-12">
         <h2>Registrera ny användare</h2>
         <form action="/register" method="post">
@@ -15,3 +84,4 @@
         </form>
     </div>
 </div>
+>>>>>>> origin/master

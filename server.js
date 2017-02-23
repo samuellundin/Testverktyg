@@ -63,6 +63,27 @@ app.get('/', function(req, res, next){
     }
 });
 
+<<<<<<< HEAD
+app.get('/register', function(req, res, next) {
+    res.render('register', {username: req.session.username});
+});
+
+app.post('/register', function(req, res, next) {
+    console.log('registration successful');
+});
+
+app.get('/login', function(req, res, next){
+
+    res.render('login');
+
+});
+
+app.post('/', function(req, res, next){
+    console.log(req.body);
+});
+
+=======
+>>>>>>> origin/master
 app.get('/create', function(req, res){
     if(checkAccess(req, 'teacher') || checkAccess(req, 'admin')){
         res.render('create', user);
@@ -78,9 +99,10 @@ app.get('/logout', function(req, res){
 });
 
 app.get('/api/users', function(req, res){
-    sql.connection.query('SELECT * FROM User', function(err, result){
+    res.send(sql.getAllUsers());
+/*    sql.connection.query('SELECT * FROM User', function(err, result){
         res.send(result);
-    });
+    });*/
 });
 
 app.post('/create', function(req, res){

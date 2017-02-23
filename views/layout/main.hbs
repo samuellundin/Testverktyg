@@ -26,7 +26,6 @@
 
 <script>
     $('#logout').on('click', function(){
-        console.log('Clicked?');
         $.ajax({
             url: '/logout',
             type: 'get',
@@ -35,7 +34,7 @@
                 location.reload();
             }
         })
-    })
+    });
 </script>
 </body>
 </html>
