@@ -1,55 +1,110 @@
 <!-- Content -->
 <div class="container" id="test">
     <div class="col-lg-8">
-        <div class="panel panel-default answerPanel">
 
-            <!-- Title -->
+        <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Fråga 1</h3>
+                <h3 class="panel-title">Skapa nytt Test!</h3>
             </div>
-            <br>
-            <form class="panel-content">
-                <!-- Question -->
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Fråga?">
+            <div class="panel-body">
+                <form>
+                    <!-- Test Name -->
+                    <label class="control-label">Namn på test:</label>
+                    <input type="text" class="form-control" placeholder="Testnamn">
+
+                    <!-- Time Limit -->
+                    <label class="control-label">Tidsbegränsning:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <input type="checkbox">
+                        </span>
+                        <input type="text" class="form-control" placeholder="Minuter">
+                    </div>
+
+                    <!-- Datepicker -->
+                    <div class="form-group">
+                        <label class="control-label" for="date">Slutdatum:</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                            <input class="form-control" id="date" placeholder="DD/MM/YYYY" type="text"/>
+                        </div>
+                    </div>
+
+                    <!-- Checkbox -->
+                    <div class="checkbox">
+                        <label><input type="checkbox" value="">Självrättande</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div id="questionModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Fråga 1</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <!-- Question -->
+                            <div class="form-group" id="question">
+                                <input type="text" class="form-control questionTitle" placeholder="Fråga?">
+                            </div>
+
+                            <!-- Alternatives -->
+                            <div class="form-group">
+                                <select class="form-control">
+                                    <option hidden>Välj Typ</option>
+                                    <option>Flervalsfrågor</option>
+                                    <option>Alternativfrågor</option>
+                                    <option>Rangordningsfrågor</option>
+                                    <option>Öppna frågor</option>
+                                </select>
+                            </div>
+
+                            <!-- Answers -->
+                            <div id="answersBox">
+                                <div class="input-group answer">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default removeButton" type="button">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    </span>
+                                    <input type="text" class="form-control" placeholder="Svar 1">
+                                </div>
+                                <div class="input-group answer">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default removeButton" type="button">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    </span>
+                                    <input type="text" class="form-control" placeholder="Svar 2">
+                                </div>
+                            </div>
+                            <p id="infoText"></p>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" id="addButton">Lägg till Svar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="saveQuestion">Spara</button>
+                    </div>
                 </div>
 
-                <!-- Alternatives -->
-                <div class="form-group">
-                    <select class="form-control">
-                        <option hidden>Välj Typ</option>
-                        <option>Flervalsfrågor</option>
-                        <option>Alternativfrågor</option>
-                        <option>Rangordningsfrågor</option>
-                        <option>Öppna frågor</option>
-                    </select>
-                </div>
+            </div>
+        </div>
 
-                <!-- Answers -->
-                <div id="answersBox">
-                    <div class="input-group answer">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default removeButton" type="button">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </button>
-                    </span>
-                        <input type="text" class="form-control" placeholder="Svar 1">
-                    </div>
-                    <div class="input-group answer">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default removeButton" type="button">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </button>
-                    </span>
-                        <input type="text" class="form-control" placeholder="Svar 2">
-                    </div>
-                </div>
-                <button type="button" class="btn btn-default" id="addButton">Lägg till Svar</button>
-            </form>
+        <div id="questionBox">
+            
         </div>
 
         <!-- Buttons -->
-        <button type="button" class="btn btn-default">Skapa Fråga</button>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#questionModal">Skapa Fråga</button>
         <button type="button" class="btn btn-default pull-right">Spara Test</button>
     </div>
 </div>
@@ -67,10 +122,33 @@
 <script>
     $('#addButton').on('click', function () {
         var answerCount = $('.answer').length + 1;
-        $('#answersBox').append('<div class="input-group answer"> <span class="input-group-btn"> <button class="btn btn-default removeButton" type="button"> <span class="glyphicon glyphicon-remove"></span> </button> </span> <input type="text" class="form-control" placeholder="Svar '+ answerCount +'"> </div>')
+        $('#answersBox').append('<div class="input-group answer"> <span class="input-group-btn"> <button class="btn btn-default removeButton" type="button"> <span class="glyphicon glyphicon-remove"></span> </button> </span> <input type="text" class="form-control" placeholder="Svar ' + answerCount + '"> </div>')
     });
 
-    $(document).on('click', 'button.removeButton', function(events) {
+    $(document).on('click', 'button.removeButton', function (events) {
         $(this).parents('div').eq(0).remove();
     });
+
+    $('#date').datepicker({
+        format: 'dd/mm/yyyy',
+        todayHighlight: true,
+        autoclose: true
+    });
+
+    $('#saveQuestion').on('click', function() {
+        var i = "";
+        $('.answer input').each(function() {
+            i += '<li class="list-group-item">'+ $(this).val() +'</li>';
+        });
+        $('#questionBox').append(`
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">`+ $("#question").find('input').val() +`</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">`+ i +`</ul>
+            </div>
+        </div>`);
+    });
+
 </script>

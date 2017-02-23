@@ -50,17 +50,11 @@ app.use(session({
 //Säg till vilken port appen ska lyssna på.
 app.listen(3000);
 
-var user = {};
-
 
 //APP REQUESTS
 app.get('/', function(req, res, next){
-    if(req.session.username){
-        res.render('index', user);
-    } else {
-        res.render('index', {err : req.session.err});
+        res.render('index', req.session);
         delete req.session.err;
-    }
 });
 
 app.get('/register', function(req, res, next) {
@@ -69,37 +63,32 @@ app.get('/register', function(req, res, next) {
 
 app.post('/register', function(req, res, next) {
     console.log('registration successful');
+
+
 });
 
 app.get('/login', function(req, res, next){
-
     res.render('login');
-
-});
-
-app.post('/', function(req, res, next){
-    console.log(req.body);
 });
 
 app.get('/create', function(req, res){
     if(checkAccess(req, 'teacher') || checkAccess(req, 'admin')){
-        res.render('create', user);
+        res.render('create', req.session);
     } else {
+        req.session.err = 'Permission denied';
         res.redirect('/');
     }
 });
 
 app.get('/logout', function(req, res){
     req.session.reset();
-    user = {};
     res.send('index');
 });
 
 app.get('/api/users', function(req, res){
-    res.send(sql.getAllUsers());
-/*    sql.connection.query('SELECT * FROM User', function(err, result){
+    sql.connection.query('SELECT * FROM User', function(err, result){
         res.send(result);
-    });*/
+    });
 });
 
 
@@ -111,20 +100,18 @@ app.post('/create', function(req, res){
             delayRedirect(res, 200);
             return;
         }
-        var password = result[0].Password;
-        if(password == req.body.password){
-            req.session.username = result[0].FirstName;
+        if(result[0].Password == req.body.password){
+            req.session.fName = result[0].FirstName;
             req.session.email = result[0].Mail;
             req.session.role = result[0].Role;
             req.session.id = result[0].UserId;
-            setupUserObject(req);
+            setupRole(req);
             delayRedirect(res, 200);
         } else {
             req.session.err = 'Wrong password';
             delayRedirect(res, 200);
         }
     });
-
 });
 
 app.get("/results", function(req, res) {
@@ -136,32 +123,26 @@ app.get("/register", function(req, res) {
 })
 
 app.post("/register", function(req, res) {
-    console.log(req.body);
     sql.addUser(req.body.fName, req.body.lName, req.body.mail, req.body.password, req.body.role);
     res.redirect("/");
 })
 
-function setupUserObject(req){
+function setupRole(req){
     switch (req.session.role){
         case 'student':
-            user.student = true;
+            req.session.student = true;
             break;
         case 'teacher':
-            user.teacher = true;
+            req.session.teacher = true;
             break;
         case 'admin':
-            user.admin = true;
+            req.session.admin = true;
             break;
     }
-
-    user.fName = req.session.username;
-    user.email = req.session.email;
-    user.id = req.session.id;
-    console.log(user);
 }
 
-function checkAccess(req, currRole) {
-    return req.session.role === currRole;
+function checkAccess(req, targRole) {
+    return req.session.role === targRole;
 
 }
 

@@ -1,3 +1,7 @@
+body {
+    margin-top: 60px;
+    margin-bottom: 75px;
+}
 .jumbotron {
     padding-top: 75px;
 }
@@ -20,4 +24,11 @@
 
 .ui-widget-overlay.ui-front { /* you want this */
     opacity:.75;
+}
+.control-label {
+    margin-top: 10px;
+}
+
+.leftMargin {
+    margin-left: 25px;
 }
