@@ -54,7 +54,7 @@
                         <form>
                             <!-- Question -->
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Fråga?">
+                                <input type="text" class="form-control questionTitle" placeholder="Fråga?">
                             </div>
 
                             <!-- Alternatives -->
@@ -79,19 +79,20 @@
                                     <input type="text" class="form-control" placeholder="Svar 1">
                                 </div>
                                 <div class="input-group answer">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default removeButton" type="button">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </button>
-                            </span>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default removeButton" type="button">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    </span>
                                     <input type="text" class="form-control" placeholder="Svar 2">
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-default" id="addButton">Lägg till Svar</button>
+                            <p id="infoText"></p>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Spara</button>
+                        <button type="button" class="btn btn-default pull-left" id="addButton">Lägg till Svar</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="saveQuestion">Spara</button>
                     </div>
                 </div>
 
@@ -132,6 +133,10 @@
         format: 'dd/mm/yyyy',
         todayHighlight: true,
         autoclose: true
+    });
+
+    $('#saveQuestion').on('click', function() {
+        $('#questionBox').append('<div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title">Fråga '+ $(".panel").length +'</h3></div><div class="panel-body"></div></div>');
     });
 
 </script>

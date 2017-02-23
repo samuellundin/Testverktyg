@@ -1,4 +1,6 @@
-
+body {
+    margin-bottom: 75px;
+}
 .jumbotron {
     padding-top: 75px;
 }
