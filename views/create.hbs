@@ -28,7 +28,7 @@
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
-                            <input class="form-control" id="date" placeholder="DD/MM/YYYY" type="text"/>
+                            <input class="form-control" id="date" placeholder="YYYY-MM-DD" type="text"/>
                         </div>
                     </div>
 
@@ -130,7 +130,7 @@
     });
 
     $('#date').datepicker({
-        format: 'dd/mm/yyyy',
+        format: 'yyyy-mm-dd',
         todayHighlight: true,
         autoclose: true
     });
@@ -149,6 +149,10 @@
                 <ul class="list-group">`+ i +`</ul>
             </div>
         </div>`);
+    });
+
+    $('.panel-heading').on('click', function() {
+        $(this).next('.panel-body').slideToggle();
     });
 
 </script>
