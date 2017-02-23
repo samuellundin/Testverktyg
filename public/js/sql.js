@@ -16,6 +16,10 @@ connection.connect();
 exports.connection = connection;
 
 exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
+    if(!validateEmail(umail)){
+        return {err: 'Not a valid email adress'};
+    }
+
     var newUser ={
         firstname: ufirstName,
         lastname: ulastName,
@@ -41,4 +45,10 @@ exports.getAllUsers = function(){
     });
     console.log(resultat + " yeah.");
     return 'Whaat?';
+} 
+
+
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
 }
