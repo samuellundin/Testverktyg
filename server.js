@@ -115,7 +115,7 @@ app.post('/create', function(req, res){
 });
 
 app.get("/results", function(req, res) {
-    res.render("results", user);
+    res.render("results", req.session);
 })
 
 app.get("/register", function(req, res) {
