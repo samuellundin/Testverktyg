@@ -1,4 +1,6 @@
-
+body {
+    margin-top: 60px;
+}
 .jumbotron {
     padding-top: 75px;
 }
@@ -24,4 +26,8 @@
 }
 .control-label {
     margin-top: 10px;
+}
+
+.leftMargin {
+    margin-left: 25px;
 }

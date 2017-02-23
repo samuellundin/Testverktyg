@@ -23,6 +23,17 @@
     {{>_loggedOutNavbar}}
 {{/if}}
 
+<!-- Error -->
+{{#if err}}
+    <div class="container">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="alert alert-danger" role="alert">
+                <p class="leftMargin">{{err}}</p>
+            </div>
+        </div>
+    </div>
+{{/if}}
+
 <!-- Det är i taggen här under som Express och Handlebars skickar info -->
     {{{body}}}
 
