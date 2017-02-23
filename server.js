@@ -63,7 +63,6 @@ app.get('/', function(req, res, next){
     }
 });
 
-<<<<<<< HEAD
 app.get('/register', function(req, res, next) {
     res.render('register', {username: req.session.username});
 });
@@ -82,8 +81,6 @@ app.post('/', function(req, res, next){
     console.log(req.body);
 });
 
-=======
->>>>>>> origin/master
 app.get('/create', function(req, res){
     if(checkAccess(req, 'teacher') || checkAccess(req, 'admin')){
         res.render('create', user);
@@ -104,6 +101,8 @@ app.get('/api/users', function(req, res){
         res.send(result);
     });*/
 });
+
+
 
 app.post('/create', function(req, res){
     sql.connection.query("SELECT * FROM User WHERE Mail = '" + req.body.email +"'", function(err, result){
@@ -128,10 +127,12 @@ app.post('/create', function(req, res){
 
 });
 
+app.get("/results", function(req, res) {
+    res.render("results", user);
+})
+
 app.get("/register", function(req, res) {
     res.render("register");
-
-
 })
 
 app.post("/register", function(req, res) {
