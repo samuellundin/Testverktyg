@@ -108,6 +108,10 @@ app.get("/results", function(req, res) {
     res.render("results", req.session);
 })
 
+app.get("/share", function(req, res) {
+    res.render("share", req.session);
+})
+
 app.get("/register", function(req, res) {
     res.render("register");
 })
