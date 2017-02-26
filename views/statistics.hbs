@@ -1,0 +1,52 @@
+<div class="container" id="statistics">
+    <div class="col-lg-8">
+        <div class="panel panel-default">
+              <div class="panel-heading">
+                    <h1 class="panel-title">Statistik</h1>
+              </div>
+              <div class="panel-body">
+                  <p>Välj ett test nedan för att se hittils samlad statistik.</p>
+                  <select name="test" id="testSelect" class="form-control">
+                      <option value="">Välj test</option>
+                      <option value="" id="genTest1">Generic test 1</option>
+                      <option value="" id="genTest2">Generic test 2</option>
+                  </select>
+
+                  <table class="table" id="statsTable">
+                      <br><br>
+                      <tr>
+                          <th>Antal godkända resultat:</th>
+                          <td>X</td>
+                      </tr>
+                      <tr>
+                          <th>Medelvärde, antal poäng:</th>
+                          <td>X</td>
+                      </tr>
+                      <tr>
+                          <th>Medelvärde, tid:</th>
+                          <td>X</td>
+                      </tr>
+                  </table>
+              </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $("#statsTable").hide();
+
+    $(function() {
+        $("#testSelect").change(function() {
+            if ($("#genTest1").is(":selected")) {
+                $("#statsTable").hide();
+                $("#statsTable").slideDown();
+            } else if($("#genTest2").is(":selected")){
+                $("#statsTable").hide();
+                $("#statsTable").slideDown();
+            } else {
+                $("#statsTable").hide();
+            }
+        });
+    });
+</script>

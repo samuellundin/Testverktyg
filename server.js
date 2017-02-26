@@ -112,6 +112,10 @@ app.get("/share", function(req, res) {
     res.render("share", req.session);
 })
 
+app.get("/statistics", function(req, res) {
+    res.render("statistics", req.session);
+})
+
 app.get("/register", function(req, res) {
     res.render("register");
 })
