@@ -46,7 +46,7 @@
         var value = $('#usernameInput').val();
         var password = $('#passwordInput').val();
         $.ajax({
-            url: '/create',
+            url: '/login',
             data: {email: value, password: password},
             type: 'POST',
             success: function () {

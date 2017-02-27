@@ -12,17 +12,6 @@ const sql = require('./public/js/sql.js');
 //Säg till appen (express) var den hittar statiska filer, så som javascript-filer och css-filer
 app.use(express.static(path.join(__dirname, '/public')));
 
-/*//Låter använda registerHelper för att utöka funktionaliteten i handlebars
-exphbs.registerHelper('equal', function(lvalue, rvalue, options) {
-    if (arguments.length < 3)
-        throw new Error("Handlebars Helper equal needs 2 parameters");
-    if( lvalue!=rvalue ) {
-        return options.inverse(this);
-    } else {
-        return options.fn(this);
-    }
-});*/
-
 //Säg till appen vilken view engine vi använder, handlebars, och berätta i vilken mapp våra .hbs-filer
 //kommer ligga (dvs handlebars-filer)
 app.engine('.hbs', exphbs({
@@ -44,7 +33,7 @@ app.use(session({
     cookieName: 'session',
     secret: 'secret',
     duration: 30 * 60 * 1000,
-    activeDuration: 5 * 60 * 1000,
+    activeDuration: 5 * 60 * 1000
 }));
 
 //Säg till vilken port appen ska lyssna på.
@@ -83,7 +72,7 @@ app.get('/api/users', function(req, res){
 
 
 
-app.post('/create', function(req, res){
+app.post('/login', function(req, res){
     sql.connection.query("SELECT * FROM User WHERE Mail = '" + req.body.email +"'", function(err, result){
         if(err || result[0] == null){
             req.session.err = 'No such mail registered';
@@ -104,27 +93,52 @@ app.post('/create', function(req, res){
     });
 });
 
+app.post('/create', function(req, res){
+    console.log(req.body);
+    sql.addTest(req.body.data);
+    for(var i = 0; i < req.body.questions.length; i++){
+        console.log('Add question');
+        sql.addQuestion(req.body.questions[i]);
+    }
+    setTimeout(function(){
+        for(var i = 0; i < req.body.answers.length; i++){
+            console.log('Add answer');
+            sql.addAnswer(req.body.answers[i]);
+        }
+    }, 500);
+/*    addQuestions(req);*/
+    res.send('Yay');
+});
+
+function addQuestions(req){
+
+    setTimeout(function(){addAnswers(req)}, 2000);
+}
+
+function addAnswers(req){
+
+}
+
 app.get("/results", function(req, res) {
     res.render("results", req.session);
-})
+});
 
 app.get("/share", function(req, res) {
     res.render("share", req.session);
-})
+});
 
 app.get("/statistics", function(req, res) {
     res.render("statistics", req.session);
-})
+});
 
 app.get("/register", function(req, res) {
     res.render("register");
-})
+});
 
 app.post("/register", function(req, res) {
-    console.log('gothere');
     sql.addUser(req.body.fName, req.body.lName, req.body.mail, req.body.password, req.body.role);
     res.redirect("/");
-})
+});
 
 function setupRole(req){
     switch (req.session.role){
@@ -142,7 +156,6 @@ function setupRole(req){
 
 function checkAccess(req, targRole) {
     return req.session.role === targRole;
-
 }
 
 function delayRedirect(res, delay){

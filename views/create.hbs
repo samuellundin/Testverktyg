@@ -2,7 +2,7 @@
 <div class="container" id="test">
     <div class="col-lg-8">
 
-        <div class="panel panel-default">
+        <div class="panel panel-default notthis">
             <div class="panel-heading">
                 <h3 class="panel-title">Skapa nytt Test!</h3>
             </div>
@@ -10,7 +10,7 @@
                 <form>
                     <!-- Test Name -->
                     <label class="control-label">Namn på test:</label>
-                    <input type="text" class="form-control" placeholder="Testnamn">
+                    <input type="text" class="form-control" placeholder="Testnamn" id="testName">
 
                     <!-- Time Limit -->
                     <label class="control-label">Tidsbegränsning:</label>
@@ -42,61 +42,7 @@
 
         <!-- Modal -->
         <div id="questionModal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
 
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Fråga 1</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <!-- Question -->
-                            <div class="form-group" id="question">
-                                <input type="text" class="form-control questionTitle" placeholder="Fråga?">
-                            </div>
-
-                            <!-- Alternatives -->
-                            <div class="form-group">
-                                <select class="form-control">
-                                    <option hidden>Välj Typ</option>
-                                    <option>Flervalsfrågor</option>
-                                    <option>Alternativfrågor</option>
-                                    <option>Rangordningsfrågor</option>
-                                    <option>Öppna frågor</option>
-                                </select>
-                            </div>
-
-                            <!-- Answers -->
-                            <div id="answersBox">
-                                <div class="input-group answer">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default removeButton" type="button">
-                                            <span class="glyphicon glyphicon-remove"></span>
-                                        </button>
-                                    </span>
-                                    <input type="text" class="form-control" placeholder="Svar 1">
-                                </div>
-                                <div class="input-group answer">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default removeButton" type="button">
-                                            <span class="glyphicon glyphicon-remove"></span>
-                                        </button>
-                                    </span>
-                                    <input type="text" class="form-control" placeholder="Svar 2">
-                                </div>
-                            </div>
-                            <p id="infoText"></p>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" id="addButton">Lägg till Svar</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal" id="saveQuestion">Spara</button>
-                    </div>
-                </div>
-
-            </div>
         </div>
 
         <div id="questionBox">
@@ -104,8 +50,8 @@
         </div>
 
         <!-- Buttons -->
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#questionModal">Skapa Fråga</button>
-        <button type="button" class="btn btn-default pull-right">Spara Test</button>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#questionModal" id="createQuestion">Skapa Fråga</button>
+        <button type="button" class="btn btn-default pull-right" id="saveTest">Spara Test</button>
     </div>
 </div>
 
@@ -120,7 +66,12 @@
 </footer>
 
 <script>
-    $('#addButton').on('click', function () {
+
+    $('#createQuestion').on('click', function(){
+        resetQuestionBox();
+    });
+
+    $('#questionModal').on('click', '#addButton', function () {
         var answerCount = $('.answer').length + 1;
         $('#answersBox').append('<div class="input-group answer"> <span class="input-group-btn"> <button class="btn btn-default removeButton" type="button"> <span class="glyphicon glyphicon-remove"></span> </button> </span> <input type="text" class="form-control" placeholder="Svar ' + answerCount + '"> </div>')
     });
@@ -135,7 +86,7 @@
         autoclose: true
     });
 
-    $('#saveQuestion').on('click', function() {
+    $(document).on('click', '#saveQuestion', function() {
         var i = "";
         $('.answer input').each(function() {
             i += '<li class="list-group-item">'+ $(this).val() +'</li>';
@@ -143,6 +94,7 @@
         $('#questionBox').append(`
         <div class="panel panel-default">
             <div class="panel-heading">
+            <meta class="` + $('#typeSelect').val() + `">
                 <h3 class="panel-title">`+ $("#question").find('input').val() +`</h3>
             </div>
             <div class="panel-body">
@@ -155,5 +107,127 @@
         $(this).next('.panel-body').slideToggle();
         console.log(this);
     });
+
+    function resetQuestionBox(){
+        $('#questionModal').html(`
+
+                <div class="modal-dialog">
+
+
+                <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Fråga 1</h4>
+                </div>
+                <div class="modal-body">
+                <form>
+
+                <div class="form-group" id="question">
+                <input type="text" class="form-control questionTitle" placeholder="Fråga?">
+                </div>
+
+
+                <div class="form-group">
+                <select class="form-control" id="typeSelect">
+                <option hidden>Välj Typ</option>
+                <option>Flervalsfrågor</option>
+                <option>Alternativfrågor</option>
+                <option>Rangordningsfrågor</option>
+                <option>Öppna frågor</option>
+                </select>
+                </div>
+
+
+                <div id="answersBox">
+                <div class="input-group answer">
+                <span class="input-group-btn">
+                <button class="btn btn-default removeButton" type="button">
+                <span class="glyphicon glyphicon-remove"></span>
+                </button>
+                </span>
+                <input type="text" class="form-control" placeholder="Svar 1">
+                </div>
+                <div class="input-group answer">
+                <span class="input-group-btn">
+                <button class="btn btn-default removeButton" type="button">
+                <span class="glyphicon glyphicon-remove"></span>
+                </button>
+                </span>
+                <input type="text" class="form-control" placeholder="Svar 2">
+                </div>
+                </div>
+                <p id="infoText"></p>
+                </form>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" id="addButton">Lägg till Svar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="saveQuestion">Spara</button>
+                </div>
+                </div>
+                </div>`);
+    }
+
+    $('#saveTest').on('click', function(){
+        var testData = {};
+        getTestData(testData);
+        getQuestionData(testData);
+        getAnswerData(testData);
+        $.ajax({
+            url: '/create',
+            method: 'post',
+            data: testData,
+            success: function(){
+
+            }
+        });
+    });
+
+    function getTestData(storeVariable){
+        var data = {};
+        data.userId = {{id}};
+        data.testTitle = $('#testName').val();
+        data.minutes = 0;
+        data.maxPoints = 0;
+        storeVariable.data = data;
+    }
+
+    function getQuestionData(storeVariable){
+        var questionData = new Object();
+        var questionsArray = [];
+        $('.panel-default').each(function(index){
+            if($(this).hasClass('notthis')){
+                return true;
+            }
+           questionData.title = $(this).find('h3').text();
+           questionData.testTitle = $('#testName').val();
+           questionData.qType = $(this).find('meta').attr('class');
+           questionData.qOrder = index;
+           questionData.score = 0;
+           questionsArray.push(questionData);
+           questionData = new Object();
+        });
+        storeVariable.questions = questionsArray;
+    }
+
+    function getAnswerData(storeVariable){
+        var answerData = new Object();
+        var answersArray = [];
+        $('.panel-default').each(function(){
+            if($(this).hasClass('notthis')){
+                return true;
+            }
+            var questionTitle = $(this).find('h3').text();
+            $(this).find('li').each(function(index){
+                answerData.qTitle = questionTitle;
+                answerData.title = $(this).text();
+                answerData.order = index;
+                answerData.score = 0;
+                answerData.corrected = 0;
+                answersArray.push(answerData);
+                answerData = new Object();
+            });
+        });
+        storeVariable.answers = answersArray;
+    };
 
 </script>

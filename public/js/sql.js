@@ -5,6 +5,7 @@
 var exports = module.exports = {};
 
 var mysql = require('mysql');
+var dcopy = require('deepcopy');
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'dev',
@@ -36,6 +37,82 @@ exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
        return true;
        })
 };
+
+exports.addTest = function(testData){
+    connection.query("INSERT INTO Test (TUserId, TTitle, TDate, TTimeMin, TMaxPoints) VALUES ("
+    + mysql.escape(testData.userId) + ", "
+    + mysql.escape(testData.testTitle) + ", "
+    + "now(), "
+    + testData.minutes + ", "
+    + testData.maxPoints + ")", function(err, result){
+        if(err){
+            console.log(err);
+            return false;
+        }
+        return true;
+    });
+};
+
+exports.addQuestion = function(questionData){
+    var testId = 0;
+    connection.query("SELECT TestID FROM Test WHERE TTitle = " + mysql.escape(questionData.testTitle), function(err, result){
+        testId = dcopy(result[0].TestID);
+        addQ(questionData, testId);
+    });
+};
+
+function addQ(questionData, testId){
+    connection.query("INSERT INTO Questions (QTestId, Question, QType, QPoints, QOrder) VALUES ("
+        + mysql.escape(testId) + ", "
+        + mysql.escape(questionData.title) + ", "
+        + mysql.escape(questionData.type) + ", "
+        + mysql.escape(questionData.score) + ", "
+        + mysql.escape(questionData.qOrder) + ")", function(err, result){
+        if(err){
+            console.log(err);
+            return false;
+        }
+        return true;
+    });
+}
+
+exports.addAnswer = function(answerData){
+    var questionId = 0;
+    connection.query("SELECT QuestionId FROM Questions WHERE Question = " + mysql.escape(answerData.qTitle), function(err, result){
+        questionId = dcopy(result[0].QuestionId);
+        addA(answerData, questionId);
+    });
+};
+
+function addA(answerData, questionId){
+    connection.query("INSERT INTO Answers (AQuestionId, AText, ACorrected, APoints, AOrder) VALUES ("
+        + mysql.escape(questionId) + ", "
+        + mysql.escape(answerData.title) + ", "
+        + mysql.escape(answerData.corrected) + ", "
+        + mysql.escape(answerData.score) + ", "
+        + mysql.escape(answerData.order) + ")", function(err, result){
+        if(err){
+            console.log(err);
+            return false;
+        }
+        return true;
+    });
+}
+
+function addQ(questionData, testId){
+    connection.query("INSERT INTO Questions (QTestId, Question, QType, QPoints, QOrder) VALUES ("
+        + mysql.escape(testId) + ", "
+        + mysql.escape(questionData.title) + ", "
+        + mysql.escape(questionData.qType) + ", "
+        + mysql.escape(questionData.score) + ", "
+        + mysql.escape(questionData.qOrder) + ")", function(err, result){
+        if(err){
+            console.log(err);
+            return false;
+        }
+        return true;
+    });
+}
 
 exports.getAllUsers = function(){
     var resultat = "";
