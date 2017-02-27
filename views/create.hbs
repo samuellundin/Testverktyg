@@ -16,9 +16,9 @@
                     <label class="control-label">Tidsbegränsning:</label>
                     <div class="input-group">
                         <span class="input-group-addon">
-                            <input type="checkbox">
+                            <input type="checkbox" id="timed">
                         </span>
-                        <input type="text" class="form-control" placeholder="HH:MM">
+                        <input type="text" class="form-control" placeholder="HH:MM" id="time">
                     </div>
 
                     <!-- Datepicker -->
@@ -279,7 +279,7 @@
         var data = {};
         data.userId = {{id}};
         data.testTitle = $('#testName').val();
-        data.minutes = 0;
+        data.minutes = $('#timed').is(':checked')? Number($('#time').val()) : 0;
         data.maxPoints = 0;
         storeVariable.data = data;
     }
