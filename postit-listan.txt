@@ -7,6 +7,9 @@ DATABAS
 -- Klagar ofta på att titeln är för lång när man försöker lägga till en fråga i databasen. Tillåt större strängar.
 -- Namnet på ett test ska vara unikt i databasen (för tillfället iaf)
 
-REGISTRERA SVAR I DATABASEN
--- Just nu så fungerar inte ordningen, för den använder en variabel som hela tiden räknar uppåt och jag fattar inte hur
-man får den att kopiera värdet istället för att bara peka "svarets" variabel till samma minnsadress.
+NODE
+-- Hitta en modul som krypterar lösenord och använda den
+
+DESIGN
+-- Designa en sida för grupphantering, förslagsvis får bara Admin göra det
+-- Skapa en sida för att ta ett test, hämta information från databasen för att göra det
