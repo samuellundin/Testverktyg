@@ -146,8 +146,16 @@ app.get("/testMenu", function(req, res) {
 app.get("/test=:testIdLink", function(req, res) {
    sql.connection.query("SELECT * FROM Test WHERE TestId = " + mysql.escape(req.params.testIdLink), function(error, result) {
        if(error) throw error;
-       req.session.test = dcopy(result);
-       res.render('test', req.session);
+       req.session.test = dcopy(result[0]);
+       sql.connection.query("SELECT * FROM Questions WHERE QTestId = " + mysql.escape(req.session.test.TestId), function(error, result) {
+           req.session.questions = dcopy(result);
+           /*sql.connection.query("SELECT * FROM Answers WHERE AQuestionId = " + mysql.escape(req.session.questions.QuestionId), function(error, result) {
+              req.session.answers = dcopy(result);
+
+           });*/
+           res.render('test', req.session);
+       });
+
    });
 });
 
