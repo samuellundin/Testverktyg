@@ -180,6 +180,20 @@
                 </div>`);
     }
 
+
+
+    $(function() {
+        $(document).on("change", "#typeSelect", function() {
+            console.log("haha");
+            if($("#qTypeOpen").is(":selected")){
+                $("#answersBox").html('<form>Egen notering:<br>' +
+                '<input type="text" name="firstname" class="form-control"></form>');
+            } else {
+                resetQuestionBox()
+            }
+        });
+    });
+
     $('#saveTest').on('click', function(){
         var testData = {};
         getTestData(testData);
