@@ -73,7 +73,13 @@
 
     $('#questionModal').on('click', '#addButton', function () {
         var answerCount = $('.answer').length + 1;
-        $('#answersBox').append('<div class="input-group answer"> <span class="input-group-btn"> <button class="btn btn-default removeButton" type="button"> <span class="glyphicon glyphicon-remove"></span> </button> </span> <input type="text" class="form-control" placeholder="Svar ' + answerCount + '"> </div>')
+        $('#answersBox').append(`<div class="input-group answer">
+            <span class="input-group-btn">
+                <button class="btn btn-default removeButton" type="button">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </span>
+            <input type="text" class="form-control" placeholder="Svar ' + answerCount + '"> </div>`)
     });
 
     $(document).on('click', 'button.removeButton', function (events) {
@@ -93,8 +99,15 @@
         });
         $('#questionBox').append(`
         <div class="panel panel-default">
-            <div class="panel-heading">
-            <meta class="` + $('#typeSelect').val() + `">
+            <div class="panel-heading clearfix">
+                <meta class="` + $('#typeSelect').val() + `">
+
+                <div class="pull-right">
+                    <button type="button" class="btn btn-default btn-sm">Redigera</button>
+                    <button type="button" class="btn btn-default btn-sm">
+                        &nbsp;<span class="glyphicon glyphicon-remove"></span>&nbsp;
+                    </button>
+                </div>
                 <h3 class="panel-title">`+ $("#question").find('input').val() +`</h3>
             </div>
             <div class="panel-body">
