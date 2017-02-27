@@ -8,6 +8,8 @@ const mysql = require('mysql');
 const uuid = require('uuid/v1');
 const session = require('client-sessions');
 const sql = require('./public/js/sql.js');
+var key = 'dsfdsfdsfds3432432sdfdsf';
+var encryptor = require('simple-encryptor')(key);
 
 //Säg till appen (express) var den hittar statiska filer, så som javascript-filer och css-filer
 app.use(express.static(path.join(__dirname, '/public')));
@@ -78,8 +80,9 @@ app.post('/login', function(req, res){
             req.session.err = 'No such mail registered';
             delayRedirect(res, 200);
             return;
+
         }
-        if(result[0].Password == req.body.password){
+        if(encryptor.decrypt(result[0].Password) == req.body.password){
             req.session.fName = result[0].FirstName;
             req.session.email = result[0].Mail;
             req.session.role = result[0].Role;
@@ -134,9 +137,14 @@ app.get("/statistics", function(req, res) {
 app.get("/register", function(req, res) {
     res.render("register");
 });
-
+//Krypterar användarens lösenord innan reg
 app.post("/register", function(req, res) {
-    sql.addUser(req.body.fName, req.body.lName, req.body.mail, req.body.password, req.body.role);
+
+    var encrypted = encryptor.encrypt(req.body.password);
+    console.log(encrypted);
+    console.log(encrypted.length);
+
+    sql.addUser(req.body.fName, req.body.lName, req.body.mail, encrypted, req.body.role);
     res.redirect("/");
 });
 

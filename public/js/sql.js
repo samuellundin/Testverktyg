@@ -30,7 +30,7 @@ exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
     };
    var query = connection.query('INSERT INTO User set ?', newUser, function(err,resilt){
        if(err){
-        console.log("error");
+        console.log(err);
         return false;
        }
        console.log("Bra jobbat hayoti");
