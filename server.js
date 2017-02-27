@@ -143,13 +143,11 @@ app.get("/testMenu", function(req, res) {
     });
 });
 
-app.get("/test/:testIdLink", function(req, res) {
-    res.render('index');
-/*   sql.connection.query("SELECT * FROM Test WHERE TestId = " + req.params.testIdLink, function(error, result) {
+app.get("/test?:testIdLink", function(req, res) {
+   sql.connection.query("SELECT * FROM Test WHERE TestId = " + mysql.escape(req.params.testIdLink), function(error, result) {
        if(error) throw error;
-       console.log(result);
-       res.render("index", req.session);
-   });*/
+       res.render('test', req.session);
+   });
 });
 
 app.get("/register", function(req, res) {
