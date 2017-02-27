@@ -143,9 +143,10 @@ app.get("/testMenu", function(req, res) {
     });
 });
 
-app.get("/test?:testIdLink", function(req, res) {
+app.get("/test=:testIdLink", function(req, res) {
    sql.connection.query("SELECT * FROM Test WHERE TestId = " + mysql.escape(req.params.testIdLink), function(error, result) {
        if(error) throw error;
+       req.session.test = dcopy(result);
        res.render('test', req.session);
    });
 });

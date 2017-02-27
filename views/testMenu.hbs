@@ -17,15 +17,8 @@
 <script>
 
     $(function() {
-        $("#startTestButton").on("click", function(e) {;
-            $.ajax({
-                url: '/test/' + $('#testName').find(":selected").attr('class'),
-                method: 'get',
-                success: function(){
-                   console.log('yeah');
-                }
-            });
-
+        $("#startTestButton").on("click", function(e) {
+            location.replace('/test=' + $('#testName').find(":selected").attr('class'));
         });
     });
 
