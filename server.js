@@ -140,6 +140,10 @@ app.post("/register", function(req, res) {
     res.redirect("/");
 });
 
+app.get('/questions', function(req, res, next){
+    res.render('questions');
+});
+
 function setupRole(req){
     switch (req.session.role){
         case 'student':
