@@ -13,12 +13,12 @@
 
                     <div class="col-lg-6">
                         <h2>Elever:</h2>
-                        <ul class="list-group" id="list"></ul>
+                        <ul class="list-group" id="list" style="min-height:100px "></ul>
                     </div>
                     <div class="col-lg-6">
                         <h2>Tillagda elever:</h2>
-                    <ul class="list-group" id="groupList">
-                        <li class="list-group-item">test</li>
+                    <ul class="list-group" id="groupList" style="min-height:100px ">
+
                     </ul>
                     </div>
                     <button type="submit" class="btn btn-default" data-toggle="modal" data-target="#questionModal" >Skapa grupp</button>
@@ -32,10 +32,11 @@
 
 <script>
     var studentList = $('#list');
+    //loopar igenom studenter som finns i databasen och skriver ut en lista på studenterna i webbläsaren.
    {{#each elever}}
        studentList.append('<li class="list-group-item"> {{this.FirstName}} {{this.LastName}} - {{this.Mail}}</li>');
 
     {{/each}}
-    $('#list,#groupList').sortable({connectWith:'#list,#groupList'});
+    $('#list,#groupList').sortable({connectWith:'#list,#groupList'});//Gör det möjligt att dra elever mellan listor
 
 </script>
