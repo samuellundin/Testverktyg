@@ -2,10 +2,12 @@ SKAPA TEST
 -- Kunna ange om ett svar är falskt eller sant
 -- Kunna sätta antal poäng på en fråga
 -- Kunna redigera/ta bort frågor
+-- Kunna sätta ett öppningsdatum på ett test (så det inte blir tillgängligt med en gång)
 
 DATABAS
 -- Klagar ofta på att titeln är för lång när man försöker lägga till en fråga i databasen. Tillåt större strängar.
 -- Namnet på ett test ska vara unikt i databasen (för tillfället iaf)
+-- Lägga till ett fält för öppningsdatum
 
 NODE
 -- Hitta en modul som krypterar lösenord och använda den
