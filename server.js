@@ -135,6 +135,23 @@ app.get("/statistics", function(req, res) {
     res.render("statistics", req.session);
 });
 
+app.get("/testMenu", function(req, res) {
+    sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
+        console.log(result);
+        req.session.tests = dcopy(result);
+        res.render("testMenu", req.session);
+    });
+});
+
+app.get("/test/:testIdLink", function(req, res) {
+    res.render('index');
+/*   sql.connection.query("SELECT * FROM Test WHERE TestId = " + req.params.testIdLink, function(error, result) {
+       if(error) throw error;
+       console.log(result);
+       res.render("index", req.session);
+   });*/
+});
+
 app.get("/register", function(req, res) {
     res.render("register");
 });

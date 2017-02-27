@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="col-md-4 col-md-offset-4">
+        <h3 class="page-header">Gör test</h3>
+        <form action="/test" method="get">
+            <select name="test" id="testName" class="form-control">
+                {{#each tests}}
+                    <option class="{{this.TestId}}">{{this.TTitle}}</option>
+                {{/each}}
+            </select>
+            <br>
+            <button type="button" class="btn btn-info btn-block" id="startTestButton">Starta test</button>
+        </form>
+
+    </div>
+</div>
+
+<script>
+
+    $(function() {
+        $("#startTestButton").on("click", function(e) {;
+            $.ajax({
+                url: '/test/' + $('#testName').find(":selected").attr('class'),
+                method: 'get',
+                success: function(){
+                   console.log('yeah');
+                }
+            });
+
+        });
+    });
+
+</script>
