@@ -10,6 +10,7 @@ const session = require('client-sessions');
 const sql = require('./public/js/sql.js');
 var key = 'dsfdsfdsfds3432432sdfdsf';
 var encryptor = require('simple-encryptor')(key);
+const dcopy = require('deepcopy');
 
 //Säg till appen (express) var den hittar statiska filer, så som javascript-filer och css-filer
 app.use(express.static(path.join(__dirname, '/public')));
@@ -175,3 +176,22 @@ function delayRedirect(res, delay){
         res.sendStatus(200);
     }, delay);
 }
+
+app.get('/group', function(req, res) {
+    var userList = "";
+    sql.connection.query('SELECT * FROM User WHERE Role = "student"', function(err, result) {
+        if(err){
+            console.log(err);
+        }
+        else{
+
+            console.log(result);
+
+            req.session.elever = dcopy(result);
+            res.render('group', req.session);
+            delete req.session.elever;
+
+        }
+    })
+
+});
