@@ -6,25 +6,31 @@
               </div>
               <div class="panel-body">
                   <p>Välj ett test nedan för att se hittils samlad statistik.</p>
+                  <!-- Test selection -->
                   <select name="test" id="testSelect" class="form-control">
                       <option value="">Välj test</option>
                       <option value="" id="genTest1">Generic test 1</option>
                       <option value="" id="genTest2">Generic test 2</option>
                   </select>
 
+                  <!-- Table showing statistics -->
                   <table class="table" id="statsTable">
                       <br><br>
                       <tr>
+                          <th>Genomförda test <span class="label label-success">Totalt antal</span></th>
+                          <td>10</td>
+                      </tr>
+                      <tr>
                           <th>Godkända resultat <span class="label label-success">Totalt antal</span></th>
-                          <td>X</td>
+                          <td>8</td>
                       </tr>
                       <tr>
                           <th>Poäng <span class="label label-primary">Medelvärde</span></th>
-                          <td>X</td>
+                          <td>15.50 / 20</td>
                       </tr>
                       <tr>
-                          <th>Tid <span class="label label-primary">Medelvärde</span></th>
-                          <td>X</td>
+                          <th>Tidåtgång <span class="label label-primary">Medelvärde</span></th>
+                          <td>26 minuter</td>
                       </tr>
                   </table>
               </div>
@@ -33,7 +39,6 @@
 </div>
 
 <script>
-
     $("#statsTable").hide();
 
     $(function() {
