@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/samuellundin/Testverktyg#readme",
   "dependencies": {
+    "async": "^2.1.5",
     "body-parser": "^1.16.1",
     "client-sessions": "^0.7.0",
     "deepcopy": "^0.6.3",

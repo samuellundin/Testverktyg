@@ -1,3 +1,88 @@
-<h1>VÄlkommen till {{test.TTitle}}</h1>
+<div class="col-md-3 pull-right text-center">
+    <h2>10:00</h2>
+</div>
+<div class="container">
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="">
+            <h2>{{test.TTitle}}</h2>
+        </div>
 
-<h1>Fråga {{test.}}</h1>
+        {{#questions}}
+            {{#if alternativ}}
+            <!-- Radio button -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{Question}}<span class="pull-right">Poäng: </span></h3>
+                </div>
+                <div class="panel-body">
+                    {{#answers}}
+                        <div class="radio">
+                            <label><input type="radio" name="optradio" id="A">{{AText}}</label>
+                        </div>
+                    {{/answers}}
+                </div>
+            </div>
+            {{/if}}
+
+            {{#if rangordning}}
+                <!-- Sortera -->
+                <div class="panel panel-default">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#panel-body">
+                        <h3 class="panel-title">{{Question}}<span class="pull-right">Poäng: </span></h3>
+                    </div>
+                    <div class="panel-body" id="panel-body">
+                        <ul class="list-group" id="sortable">
+                            {{#answers}}
+                                <li class="list-group-item">{{AText}}</li>
+                            {{/answers}}
+                        </ul>
+                    </div>
+                </div>
+            {{/if}}
+
+            {{#if flerval}}
+                <!-- Checkbox -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{Question}}<span class="pull-right">Poäng: </span></h3>
+                    </div>
+                    <div class="panel-body">
+                        {{#answers}}
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="">{{AText}}</label>
+                            </div>
+                        {{/answers}}
+                    </div>
+                </div>
+            {{/if}}
+
+            {{#if oppna}}
+                <!-- Textarea -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{Question}}<span class="pull-right">Poäng: </span></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label>Svar:</label>
+                            <textarea class="form-control" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+        {{/questions}}
+
+        <button type="submit" class='btn btn-primary pull-right'>Lämna In</button>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $("#sortable").sortable();
+
+
+        $('.container').on('click', '.panel-heading', function(e) {
+            $(this).next('.panel-body').slideToggle();
+        });
+    });
+</script>

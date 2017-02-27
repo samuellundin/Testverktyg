@@ -11,6 +11,7 @@ const sql = require('./public/js/sql.js');
 var key = 'dsfdsfdsfds3432432sdfdsf';
 var encryptor = require('simple-encryptor')(key);
 const dcopy = require('deepcopy');
+const async = require('async');
 
 //Säg till appen (express) var den hittar statiska filer, så som javascript-filer och css-filer
 app.use(express.static(path.join(__dirname, '/public')));
@@ -144,19 +145,50 @@ app.get("/testMenu", function(req, res) {
 });
 
 app.get("/test=:testIdLink", function(req, res) {
-   sql.connection.query("SELECT * FROM Test WHERE TestId = " + mysql.escape(req.params.testIdLink), function(error, result) {
-       if(error) throw error;
-       req.session.test = dcopy(result[0]);
-       sql.connection.query("SELECT * FROM Questions WHERE QTestId = " + mysql.escape(req.session.test.TestId), function(error, result) {
-           req.session.questions = dcopy(result);
-           /*sql.connection.query("SELECT * FROM Answers WHERE AQuestionId = " + mysql.escape(req.session.questions.QuestionId), function(error, result) {
-              req.session.answers = dcopy(result);
 
-           });*/
-           res.render('test', req.session);
-       });
+    async.waterfall([
+        function(callback){
+            sql.connection.query("SELECT * FROM Test WHERE TestId = " + mysql.escape(req.params.testIdLink), function(error, result) {
+                if(error) throw error;
+                req.session.test = dcopy(result[0]);
+            callback(null)});
+        },
+        function(callback){
+            console.log(req.session);
+            sql.connection.query("SELECT * FROM Questions WHERE QTestId = " + mysql.escape(req.session.test.TestId), function(error2, result2) {
+                if(error2) throw error2;
+                req.session.questions = dcopy(result2);
+                for(var j = 0; j < result2.length; j++){
+                    var k = 0;
+                    sql.connection.query("SELECT * FROM Answers WHERE AQuestionId = " + mysql.escape(req.session.questions[j].QuestionId), function(error3, result3) {
+                        if(error3) throw error3;
+                        req.session.questions[k].answers = dcopy(result3);
+                        switch(req.session.questions[k].QType){
+                            case 'Flervalsfrågor':
+                                req.session.questions[k].flerval = true;
+                                break;
+                            case 'Alternativfrågor':
+                                req.session.questions[k].alternativ = true;
+                                break;
+                            case 'Rangordningsfrågor':
+                                req.session.questions[k].rangordning = true;
+                                break;
+                            case 'Öppna frågor':
+                                req.session.questions[k].oppna = true;
+                                break;
+                        }
+                        k++;
+                    })
+                }
+            })
+        callback(null)},
+        function(callback){
+            res.render('test', req.session);
+        }
 
-   });
+    ], function(error){
+        if(error) throw error;
+    })
 });
 
 app.get("/register", function(req, res) {
@@ -199,6 +231,14 @@ function delayRedirect(res, delay){
     setTimeout(function(){
         res.sendStatus(200);
     }, delay);
+}
+
+function renderTest(req, res, answersArray){
+    console.log('rendering test');
+    req.session.answers = answersArray[0];
+    console.log(req.session.answers);
+    console.log('setting answers and rendering');
+    res.render('test', req.session);
 }
 
 app.get('/group', function(req, res) {
