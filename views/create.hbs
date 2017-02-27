@@ -18,7 +18,7 @@
                         <span class="input-group-addon">
                             <input type="checkbox">
                         </span>
-                        <input type="text" class="form-control" placeholder="Minuter">
+                        <input type="text" class="form-control" placeholder="HH:MM">
                     </div>
 
                     <!-- Datepicker -->
@@ -104,7 +104,7 @@
 
                 <div class="pull-right">
                     <button type="button" class="btn btn-default btn-sm">Redigera</button>
-                    <button type="button" class="btn btn-default btn-sm">
+                    <button type="button" class="btn btn-default btn-sm btn-remove">
                         &nbsp;<span class="glyphicon glyphicon-remove"></span>&nbsp;
                     </button>
                 </div>
@@ -118,7 +118,10 @@
 
     $('#test').on('click', '.panel-heading', function(e) {
         $(this).next('.panel-body').slideToggle();
-        console.log(this);
+    });
+
+    $(document).on('click', '.panel', function() {
+        $(this).remove();
     });
 
     function resetQuestionBox(){
