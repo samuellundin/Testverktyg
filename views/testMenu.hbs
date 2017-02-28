@@ -1,6 +1,10 @@
+<!-- Page displaying tests available to student -->
+
 <div class="container">
     <div class="col-md-4 col-md-offset-4">
-        <h3 class="page-header">Gör test</h3>
+
+        <!-- Test selection -->
+        <h3 class="page-header">Välj test</h3>
         <form action="/test" method="get">
             <select name="test" id="testName" class="form-control">
                 {{#each tests}}
@@ -10,16 +14,14 @@
             <br>
             <button type="button" class="btn btn-info btn-block" id="startTestButton">Starta test</button>
         </form>
-
     </div>
 </div>
 
 <script>
-
+    // Takes student to the selected test when clicking button
     $(function() {
         $("#startTestButton").on("click", function(e) {
             location.replace('/test=' + $('#testName').find(":selected").attr('class'));
         });
     });
-
 </script>
