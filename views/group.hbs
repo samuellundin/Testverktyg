@@ -1,0 +1,42 @@
+<div class="container" id="test">
+    <div class="col-lg-8 col-lg-offset-2">
+
+        <div class="panel panel-default notthis">
+            <div class="panel-heading">
+                <h1 class="panel-title">Skapa grupp!</h1>
+            </div>
+            <div class="panel-body">
+                <form>
+                    <!-- Test Name -->
+                    <label class="control-label">Namn på grupp:</label>
+                    <input type="text" class="form-control" placeholder="Testnamn" id="testName">
+
+                    <div class="col-lg-6">
+                        <h2>Elever:</h2>
+                        <ul class="list-group" id="list" style="min-height:100px "></ul>
+                    </div>
+                    <div class="col-lg-6">
+                        <h2>Tillagda elever:</h2>
+                    <ul class="list-group" id="groupList" style="min-height:100px ">
+
+                    </ul>
+                    </div>
+                    <button type="submit" class="btn btn-default" data-toggle="modal" data-target="#questionModal" >Skapa grupp</button>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    var studentList = $('#list');
+    //loopar igenom studenter som finns i databasen och skriver ut en lista på studenterna i webbläsaren.
+   {{#each elever}}
+       studentList.append('<li class="list-group-item"> {{this.FirstName}} {{this.LastName}} - {{this.Mail}}</li>');
+
+    {{/each}}
+    $('#list,#groupList').sortable({connectWith:'#list,#groupList'});//Gör det möjligt att dra elever mellan listor
+
+</script>

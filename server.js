@@ -10,6 +10,8 @@ const session = require('client-sessions');
 const sql = require('./public/js/sql.js');
 var key = 'dsfdsfdsfds3432432sdfdsf';
 var encryptor = require('simple-encryptor')(key);
+const dcopy = require('deepcopy');
+const async = require('async');
 
 //Säg till appen (express) var den hittar statiska filer, så som javascript-filer och css-filer
 app.use(express.static(path.join(__dirname, '/public')));
@@ -134,6 +136,63 @@ app.get("/statistics", function(req, res) {
     res.render("statistics", req.session);
 });
 
+app.get("/testMenu", function(req, res) {
+    sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
+        console.log(result);
+        req.session.tests = dcopy(result);
+        res.render("testMenu", req.session);
+    });
+});
+
+app.get("/test=:testIdLink", function(req, res) {
+
+    async.waterfall([
+        function(callback){
+            sql.connection.query("SELECT * FROM Test WHERE TestId = " + mysql.escape(req.params.testIdLink), function(error, result) {
+                if(error) throw error;
+                req.session.test = dcopy(result[0]);
+            callback(null)});
+        },
+        function(callback){
+            console.log(req.session);
+            sql.connection.query("SELECT * FROM Questions WHERE QTestId = " + mysql.escape(req.session.test.TestId), function(error2, result2) {
+                if(error2) throw error2;
+                req.session.questions = dcopy(result2);
+                for(var j = 0; j < result2.length; j++){
+                    var k = 0;
+                    sql.connection.query("SELECT * FROM Answers WHERE AQuestionId = " + mysql.escape(req.session.questions[j].QuestionId), function(error3, result3) {
+                        if(error3) throw error3;
+                        req.session.questions[k].answers = dcopy(result3);
+                        switch(req.session.questions[k].QType){
+                            case 'Flervalsfrågor':
+                                req.session.questions[k].flerval = true;
+                                break;
+                            case 'Alternativfrågor':
+                                req.session.questions[k].alternativ = true;
+                                break;
+                            case 'Rangordningsfrågor':
+                                req.session.questions[k].rangordning = true;
+                                break;
+                            case 'Öppna frågor':
+                                req.session.questions[k].oppna = true;
+                                break;
+                        }
+                        k++;
+                    })
+                }
+            })
+        callback(null)},
+        function(callback){
+            setTimeout(function(){
+                res.render('test', req.session);
+            }, 300)
+        }
+
+    ], function(error){
+        if(error) throw error;
+    })
+});
+
 app.get("/register", function(req, res) {
     res.render("register");
 });
@@ -175,3 +234,30 @@ function delayRedirect(res, delay){
         res.sendStatus(200);
     }, delay);
 }
+
+function renderTest(req, res, answersArray){
+    console.log('rendering test');
+    req.session.answers = answersArray[0];
+    console.log(req.session.answers);
+    console.log('setting answers and rendering');
+    res.render('test', req.session);
+}
+
+app.get('/group', function(req, res) {
+    var userList = "";
+    sql.connection.query('SELECT * FROM User WHERE Role = "student"', function(err, result) {
+        if(err){
+            console.log(err);
+        }
+        else{
+
+            console.log(result);
+
+            req.session.elever = dcopy(result);
+            res.render('group', req.session);
+            delete req.session.elever;
+
+        }
+    })
+
+});
