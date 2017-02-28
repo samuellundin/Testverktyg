@@ -132,10 +132,14 @@
     $(document).on('click', '.btn-edit', function() {
         var title = $(this).parent().parent().find('.panel-title').html();
         var n = title.indexOf("(");
-        var titleQuestion = title.substring(0, n).trim();
-        var titleType = title.substring(n);
+        var titleQuestion = title.substring(0, n).trim(); // variabel för fråga
+        var titleType = title.substring(n); // variabel för typ av fråga
 
-        var answers = $(this).parent().parent().parent().find('.panel-body').find('.ul');
+        var answers = $(this).parent().parent().parent().find('.panel-body').find('ul li');
+        var answerlist = new Array(); // Array för svaren
+        answers.each(function (i) {
+            answerlist.push($(this).text());
+        });
 
         $('#editModal').html(`
                 <div class="modal-dialog">
@@ -164,22 +168,7 @@
 
 
                 <div id="answersBox">
-                <div class="input-group answer">
-                <span class="input-group-btn">
-                <button class="btn btn-default removeButton" type="button">
-                <span class="glyphicon glyphicon-remove"></span>
-                </button>
-                </span>
-                <input type="text" class="form-control" placeholder="Svar 1">
-                </div>
-                <div class="input-group answer">
-                <span class="input-group-btn">
-                <button class="btn btn-default removeButton" type="button">
-                <span class="glyphicon glyphicon-remove"></span>
-                </button>
-                </span>
-                <input type="text" class="form-control" placeholder="Svar 2">
-                </div>
+
                 </div>
                 <p id="infoText"></p>
                 </form>
@@ -191,6 +180,19 @@
                 </div>
                 </div>`
         );
+        // loopa ut svaren i answerBox
+        for(var i = 0; i < answerlist.length; i++){
+            $('#editModal').find('#answersBox').append(`
+                <div class="input-group answer">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default removeButton" type="button">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </span>
+                    <input type="text" class="form-control" placeholder="Svar 1" value="`+ answerlist[i] +`">
+                </div>
+            `);
+        }
         if(title.substring(n).search("Flervalsfråga") > -1){
             $('#typeSelect option[value=fler]').attr('selected','selected');
         } else if (title.substring(n).search("Alternativfråga") > -1){
