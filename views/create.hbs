@@ -91,6 +91,12 @@
         <!-- Buttons -->
         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#questionModal" id="createQuestion">Skapa Fråga</button>
         <button type="button" class="btn btn-default pull-right" id="saveTest">Spara Test</button>
+
+        <!-- Error message (missing date input) -->
+        <div class="collapse col-md-6 col-md-offset-3 alert alert-danger text-center" id="missingInput">
+            <span class="">Vänligen fyll i start- och slutdatum!</span>
+        </div>
+        
     </div>
 </div>
 
@@ -377,19 +383,26 @@
     });
 
     $('#saveTest').on('click', function(){
-        var testData = {};
-        getTestData(testData);
-        getQuestionData(testData);
-        getAnswerData(testData);
-        $.ajax({
-            url: '/create',
-            method: 'post',
-            data: testData,
-            success: function(){
-                console.log('Created test successfully');
-                location.replace('/');
-            }
-        });
+        if($("#dateStart").val()=='' || $("#date").val()=='') {
+            $("#missingInput").show();
+            console.log("Inte tillåtet!")
+        } else {
+            $("#missingInput").hide();
+            console.log("Tillåtet!")
+            var testData = {};
+            getTestData(testData);
+            getQuestionData(testData);
+            getAnswerData(testData);
+            $.ajax({
+                url: '/create',
+                method: 'post',
+                data: testData,
+                success: function(){
+                    console.log('Created test successfully');
+                    location.replace('/');
+                }
+            });
+        }
     });
 
     function getTestData(storeVariable){
