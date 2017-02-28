@@ -33,7 +33,6 @@ exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
         console.log(err);
         return false;
        }
-       console.log("Bra jobbat hayoti");
        return true;
        })
 };

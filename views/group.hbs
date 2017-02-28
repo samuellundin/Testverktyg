@@ -8,16 +8,16 @@
             <div class="panel-body">
                 <form>
 
-                    <label class="control-label">Namn på grupp:</label>
+                    <label class="control-label">Namn på grupp</label>
                     <input type="text" class="form-control" placeholder="Testnamn" id="testName">
 
                     <div class="col-lg-6">
-                        <h2>Elever:</h2>
+                        <label for="name" class="cols-sm-2 control-label">Elever</label>
                         <!-- Display list of students in the database. -->
                         <ul class="list-group" id="list" style="min-height:100px "></ul>
                     </div>
                     <div class="col-lg-6">
-                        <h2>Tillagda elever:</h2>
+                        <label for="name" class="cols-sm-2 control-label">Tillagda elever</label>
                         <!-- contains students of the group that the user creates-->
                     <ul class="list-group" id="groupList" style="min-height:100px ">
 
@@ -33,6 +33,7 @@
 </div>
 
 <script src="js/saveGroup.js"></script>
+
 <script>
     var studentList = $('#list');
 
