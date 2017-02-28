@@ -22,7 +22,8 @@
                     </div>
 
                     <!-- Datepicker -->
-                    <div class="form-group col-lg-6">
+                    <div class="form-group col-lg-6" style="padding: 0">
+                        <div class="col-lg-11" style="padding: 0">
                         <label class="control-label" for="date">Startdatum:</label>
                         <div class="input-group">
                             <span class="input-group-addon">
@@ -30,34 +31,41 @@
                             </span>
                             <input class="form-control" id="dateStart" placeholder="YYYY-MM-DD" type="text"/>
                         </div>
+                        </div>
                     </div>
-                    <div class="form-group col-lg-6">
+                    <div class="form-group col-lg-6 pull-right" style="padding: 0">
+                        <div class="col-lg-11 pull-right" style="padding: 0">
                         <label class="control-label" for="date">Starttid:</label>
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                             </span>
-                            <input class="form-control" placeholder="HH:MM" type="text"/>
+                            <input class="form-control timepicker" type="text" placeholder="HH:MM"/>
+                        </div>
                         </div>
                     </div>
 
                     <!-- Datepicker -->
-                    <div class="form-group col-lg-6">
-                        <label class="control-label" for="date">Slutdatum:</label>
-                        <div class="input-group">
+                    <div class="form-group col-lg-6" style="padding: 0">
+                        <div class="col-lg-11" style="padding: 0">
+                            <label class="control-label" for="date">Slutdatum:</label>
+                            <div class="input-group">
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
-                            <input class="form-control" id="date" placeholder="YYYY-MM-DD" type="text"/>
+                                <input class="form-control" id="dateStart" placeholder="YYYY-MM-DD" type="text"/>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group col-lg-6">
-                        <label class="control-label" for="date">Sluttid:</label>
-                        <div class="input-group">
+                    <div class="form-group col-lg-6 pull-right" style="padding: 0">
+                        <div class="col-lg-11 pull-right" style="padding: 0">
+                            <label class="control-label" for="date">Sluttid:</label>
+                            <div class="input-group">
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                             </span>
-                            <input class="form-control" placeholder="HH:MM" type="text"/>
+                                <input class="form-control timepicker" type="text" placeholder="HH:MM"/>
+                            </div>
                         </div>
                     </div>
 
@@ -101,6 +109,26 @@
 </footer>
 
 <script>
+
+    YUI().use(
+            'aui-timepicker',
+            function(Y) {
+                new Y.TimePicker(
+                        {
+                            trigger: 'input.timepicker',
+                            mask: '%H:%M',
+                            popover: {
+                                zIndex: 999
+                            },
+                            on: {
+                                selectionChange: function(event) {
+                                    console.log(event.newSelection)
+                                }
+                            }
+                        }
+                );
+            }
+    );
 
     $('#createQuestion').on('click', function(){
         resetQuestionBox();
