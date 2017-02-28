@@ -1,5 +1,5 @@
 <div class="col-md-3 pull-right text-center">
-    <h2 id="timer">Tid: {{test.TTimeMin}}</h2>
+    <h2 id="timer"></h2>
 </div>
 <div class="container">
     <div class="col-lg-8 col-lg-offset-2">
@@ -92,6 +92,9 @@
     timer({{test.TTimeMin}});
     //Function timer start function countDown every second.
     function timer(time) {
+        if(time == 0){
+            return;
+        }
         min = time;
         countDown(); //Call function countDown too show starttime before count down.
         myVar = setInterval(countDown, 1000);
