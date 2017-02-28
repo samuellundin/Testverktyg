@@ -22,32 +22,30 @@
                     </div>
 
                     <!-- Datepicker -->
-                    <div class="form-group col-lg-6" style="padding: 0">
-                        <div class="col-lg-11" style="padding: 0">
-                        <label class="control-label" for="date">Startdatum:</label>
-                        <div class="input-group">
+                    <div class="row form-group">
+                        <div class="col-lg-6">
+                            <label class="control-label" for="date">Startdatum:</label>
+                            <div class="input-group">
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
-                            <input class="form-control" id="dateStart" placeholder="YYYY-MM-DD" type="text"/>
+                                <input class="form-control" id="dateStart" placeholder="YYYY-MM-DD" type="text"/>
+                            </div>
                         </div>
-                        </div>
-                    </div>
-                    <div class="form-group col-lg-6 pull-right" style="padding: 0">
-                        <div class="col-lg-11 pull-right" style="padding: 0">
-                        <label class="control-label" for="date">Starttid:</label>
-                        <div class="input-group">
+                        <div class="col-lg-6">
+                            <label class="control-label" for="date">Starttid:</label>
+                            <div class="input-group">
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                             </span>
-                            <input class="form-control timepicker" type="text" placeholder="HH:MM"/>
-                        </div>
+                                <input class="form-control timepicker" type="text" placeholder="HH:MM"/>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Datepicker -->
-                    <div class="form-group col-lg-6" style="padding: 0">
-                        <div class="col-lg-11" style="padding: 0">
+                    <div class="row form-group">
+                        <div class="col-lg-6">
                             <label class="control-label" for="date">Slutdatum:</label>
                             <div class="input-group">
                             <span class="input-group-addon">
@@ -56,9 +54,7 @@
                                 <input class="form-control" id="dateStart" placeholder="YYYY-MM-DD" type="text"/>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group col-lg-6 pull-right" style="padding: 0">
-                        <div class="col-lg-11 pull-right" style="padding: 0">
+                        <div class="col-lg-6">
                             <label class="control-label" for="date">Sluttid:</label>
                             <div class="input-group">
                             <span class="input-group-addon">
@@ -319,17 +315,20 @@
                 <input type="text" class="form-control questionTitle" placeholder="Fråga?">
                 </div>
 
-
-                <div class="form-group">
-                <select class="form-control" id="typeSelect">
-                <option hidden>Välj Typ</option>
-                <option id="qTypeMulti">Flervalsfråga</option>
-                <option id="qTypeAlt">Alternativfråga</option>
-                <option id="qTypeOrder">Rangordningsfråga</option>
-                <option id="qTypeOpen">Öppen fråga</option>
-                </select>
+                <div class="row form-group">
+                    <div class="col-lg-6">
+                        <select class="form-control" id="typeSelect">
+                            <option hidden>Välj Typ</option>
+                            <option id="qTypeMulti">Flervalsfråga</option>
+                            <option id="qTypeAlt">Alternativfråga</option>
+                            <option id="qTypeOrder">Rangordningsfråga</option>
+                            <option id="qTypeOpen">Öppen fråga</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6">
+                        <input type="text" class="form-control" placeholder="Poäng">
+                    </div>
                 </div>
-
 
                 <div id="answersBox">
                 <div class="input-group answer">
