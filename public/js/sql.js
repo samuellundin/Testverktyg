@@ -39,13 +39,14 @@ exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
 };
 
 exports.addTest = function(testData){
-    connection.query("INSERT INTO Test (TUserId, TTitle, TStartTestDate, TEndTestDate, TTimeMin, TMaxPoints) VALUES ("
+    connection.query("INSERT INTO Test (TUserId, TTitle, TStartTestDate, TEndTestDate, TTimeMin, TMaxPoints, TSelfCorrecting) VALUES ("
     + mysql.escape(testData.userId) + ", "
     + mysql.escape(testData.testTitle) + ", "
-    + "now(), "
-    + "now(), "
+    + mysql.escape(testData.startDT) + ", "
+    + mysql.escape(testData.endDT) + ", "
     + testData.minutes + ", "
-    + testData.maxPoints + ")", function(err, result){
+    + 0 + ", "
+    + 0 + ")", function(err, result){
         if(err){
             console.log(err);
             return false;
