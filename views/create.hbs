@@ -146,6 +146,8 @@
         $(this).closest('.panel').remove();
     });
 
+
+    var thisPanel = '';
     $(document).on('click', '.btn-edit', function() {
         var title = $(this).parent().parent().find('.panel-title').html();
         var n = title.indexOf("(");
@@ -158,45 +160,42 @@
             answerlist.push($(this).text());
         });
 
+        thisPanel = $(this).parent().parent().parent();
+
         $('#editModal').html(`
                 <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Fråga</h4>
-                </div>
-                <div class="modal-body">
-                <form>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Fråga</h4>
+                        </div>
+                        <div class="modal-body">
+                        <form>
+                            <div class="form-group" id="question">
+                                <input type="text" class="form-control questionTitle" placeholder="Fråga?" value="`+ titleQuestion +`">
+                            </div>
 
-                <div class="form-group" id="question">
-                <input type="text" class="form-control questionTitle" placeholder="Fråga?" value="`+ titleQuestion +`">
+                            <div class="form-group">
+                                <select class="form-control" id="typeSelect">
+                                    <option hidden>Välj Typ</option>
+                                    <option value="fler" id="qTypeMulti">Flervalsfråga</option>
+                                    <option value="alternativ" id="qTypeAlt">Alternativfråga</option>
+                                    <option value="rang" id="qTypeOrder">Rangordningsfråga</option>
+                                    <option value="oppen" id="qTypeOpen">Öppen fråga</option>
+                                </select>
+                            </div>
+                            <div id="answersBox">
+                            </div>
+                            <p id="infoText"></p>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" id="addButton">Lägg till Svar</button>
+                        <button type="button" class="btn btn-default" id="saveEditButton">Spara</button>
+                    </div>
                 </div>
-
-
-                <div class="form-group">
-                <select class="form-control" id="typeSelect">
-                <option hidden>Välj Typ</option>
-                <option value="fler" id="qTypeMulti">Flervalsfråga</option>
-                <option value="alternativ" id="qTypeAlt">Alternativfråga</option>
-                <option value="rang" id="qTypeOrder">Rangordningsfråga</option>
-                <option value="oppen" id="qTypeOpen">Öppen fråga</option>
-                </select>
-                </div>
-
-
-                <div id="answersBox">
-
-                </div>
-                <p id="infoText"></p>
-                </form>
-                </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" id="addButton">Lägg till Svar</button>
-                <button type="button" class="btn btn-default">Spara</button>
-                </div>
-                </div>
-                </div>`
-        );
+            </div>
+        `);
         // loopa ut svaren i answerBox
         for(var i = 0; i < answerlist.length; i++){
             $('#editModal').find('#answersBox').append(`
@@ -210,6 +209,7 @@
                 </div>
             `);
         }
+
         if(title.substring(n).search("Flervalsfråga") > -1){
             $('#typeSelect option[value=fler]').attr('selected','selected');
         } else if (title.substring(n).search("Alternativfråga") > -1){
@@ -219,6 +219,38 @@
         } else if (title.substring(n).search("Öppen fråga") > -1){
             $('#typeSelect option[value=oppen]').attr('selected','selected');
         }
+    });
+    $('#editModal').on('click', '#saveEditButton', function () {
+        var i = "";
+        $('.answer input').each(function() {
+            i += '<li class="list-group-item">'+ $(this).val() +'</li>';
+        });
+        thisPanel.html(`
+            <div class="panel-heading clearfix">
+                <meta class="` + $('#typeSelect').val() + `">
+
+                <div class="pull-right">
+                    <button type="button" class="btn btn-default btn-sm btn-edit" data-toggle="modal" data-target="#editModal">Redigera</button>
+                    <button type="button" class="btn btn-default btn-sm btn-remove">
+                        &nbsp;<span class="glyphicon glyphicon-remove"></span>&nbsp;
+                    </button>
+                </div>
+                <h3 class="panel-title">`+ $("#question").find('input').val() +' ('+ $('#typeSelect').val() +')'+`</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">`+ i +`</ul>
+            </div>
+        `);
+    });
+    $('#editModal').on('click', '#addButton', function () {
+        var answerCount = $('.answer').length + 1;
+        $('#editModal').find('#answersBox').append(`<div class="input-group answer">
+            <span class="input-group-btn">
+                <button class="btn btn-default removeButton" type="button">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </span>
+            <input type="text" class="form-control" placeholder="Svar ` + answerCount + `"> </div>`);
     });
 
     function resetQuestionBox(){
