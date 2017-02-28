@@ -164,16 +164,16 @@ app.get("/test=:testIdLink", function(req, res) {
                         if(error3) throw error3;
                         req.session.questions[k].answers = dcopy(result3);
                         switch(req.session.questions[k].QType){
-                            case 'Flervalsfrågor':
+                            case 'Flervalsfråga':
                                 req.session.questions[k].flerval = true;
                                 break;
-                            case 'Alternativfrågor':
+                            case 'Alternativfråga':
                                 req.session.questions[k].alternativ = true;
                                 break;
-                            case 'Rangordningsfrågor':
+                            case 'Rangordningsfråga':
                                 req.session.questions[k].rangordning = true;
                                 break;
-                            case 'Öppna frågor':
+                            case 'Öppen fråga':
                                 req.session.questions[k].oppna = true;
                                 break;
                         }
@@ -250,9 +250,7 @@ app.get('/group', function(req, res) {
             console.log(err);
         }
         else{
-
             console.log(result);
-
             req.session.elever = dcopy(result);
             res.render('group', req.session);
             delete req.session.elever;
