@@ -1,22 +1,50 @@
 <div class="container">
     <div class="col-md-4 col-md-offset-4">
         <h3 class="page-header">Välj test</h3>
-        <form action="results" method="post">
-            <select name="test" id="testResults" class="form-control"></select>
+        <form action="/test" method="get">
+            <select name="test" id="testName" class="form-control">
+                {{#each tests}}
+                    <option class="{{this.TestId}}">{{this.TTitle}}</option>
+                {{/each}}
+            </select>
             <br>
-            <button type="button" class="btn btn-info btn-block" id="registerButton">Se resultat</button>
+            <button type="button" class="btn btn-info btn-block" id="showResultsButton">Se resultat</button>
         </form>
+
+        <table class="table collapse" id="statsTable">
+            <br><br>
+            <tr>
+                <th>Poäng:</th>
+                <td>15/20</td>
+            </tr>
+            <tr>
+                <th>Tidsåtgång:</th>
+                <td>35 minuter</td>
+            </tr>
+            <tr>
+                <th>Betyg:</th>
+                <td>MVG+++</td>
+            </tr>
+            <tr>
+                <th colspan="2"><br>
+                    Lärarens kommentarer:
+                    <div class="form-group">
+                        <textarea class="form-control" id="textArea" rows="10">Bra jobbat!</textarea>
+                    </div>
+                </th>
+            </tr>
+        </table>
     </div>
 </div>
 
-<script>
-    //Array should be filled with scored tests
-    var allTests = ["Djungelprov 0103-2017","Sportprov 0203-2017","Failprov 0105-2020"];
 
-    //Fills String to be loaded onto website
-    var testInsert = "";
-    for(var i=0; i < allTests.length; i++) {
-        testInsert += "<option value=allTests[i]>"+allTests[i]+"</option>";
-    }
-    $("#testResults").append(testInsert);
+
+<script>
+    $("#textArea").prop("disabled", true);
+
+    $(function() {
+        $("#showResultsButton").on("click", function() {
+            $("#statsTable").slideDown(5000);
+        });
+    });
 </script>

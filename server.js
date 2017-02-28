@@ -113,7 +113,11 @@ app.post('/create', function(req, res){
 });
 
 app.get("/results", function(req, res) {
-    res.render("results", req.session);
+    sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
+        console.log(result);
+        req.session.tests = dcopy(result);
+        res.render("results", req.session);
+    });
 });
 
 app.get("/share", function(req, res) {
