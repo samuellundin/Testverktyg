@@ -3,7 +3,7 @@
  */
 
 var exports = module.exports = {};
-
+//Connection to database
 var mysql = require('mysql');
 var dcopy = require('deepcopy');
 var connection = mysql.createConnection({
@@ -15,12 +15,12 @@ var connection = mysql.createConnection({
 connection.connect();
 
 exports.connection = connection;
-
+//Function add user to database
 exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
     if(!validateEmail(umail)){
         return {err: 'Not a valid email adress'};
     }
-
+    //Create object user
     var newUser ={
         firstname: ufirstName,
         lastname: ulastName,
@@ -28,6 +28,7 @@ exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
         password:upassword,
         role: urole
     };
+    //Save user in database
    var query = connection.query('INSERT INTO User set ?', newUser, function(err,resilt){
        if(err){
         console.log(err);
