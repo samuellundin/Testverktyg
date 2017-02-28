@@ -38,7 +38,7 @@
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                             </span>
-                                <input class="form-control timepicker" type="text" placeholder="HH:MM"/>
+                                <input class="form-control timepicker" id="timeStart" type="text" placeholder="HH:MM"/>
                             </div>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
-                                <input class="form-control" id="dateStart" placeholder="YYYY-MM-DD" type="text"/>
+                                <input class="form-control" id="date" placeholder="YYYY-MM-DD" type="text"/>
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -60,7 +60,7 @@
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                             </span>
-                                <input class="form-control timepicker" type="text" placeholder="HH:MM"/>
+                                <input class="form-control timepicker" type="text" id="timeEnd" placeholder="HH:MM"/>
                             </div>
                         </div>
                     </div>
@@ -117,6 +117,7 @@
             function(Y) {
                 new Y.TimePicker(
                         {
+                            timeFormat: '%H:%M',
                             trigger: 'input.timepicker',
                             mask: '%H:%M',
                             popover: {
@@ -124,7 +125,6 @@
                             },
                             on: {
                                 selectionChange: function(event) {
-                                    console.log(event.newSelection)
                                 }
                             }
                         }
@@ -410,6 +410,9 @@
         data.userId = {{id}};
         data.testTitle = $('#testName').val();
         data.minutes = $('#timed').is(':checked')? Number($('#time').val()) : 0;
+        data.startDT = $('#dateStart').val() + " " + $('#timeStart').val() + ":00";
+        data.endDT = $('#date').val() + " " + $('#timeEnd').val() + ":00";
+        data.checked = $('#selfCorrecting').is(':checked');
         storeVariable.data = data;
     }
 
