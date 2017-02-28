@@ -1,19 +1,23 @@
-{{#if admin}}
+{{#if fName}}
+    {{#if admin}}
+
+        {{>_adminIndex}}
+
+    {{/if}}
+
+    {{#if teacher}}
+
+        {{>_teacherIndex}}
+
+    {{/if}}
+
+    {{#if student}}
+
+        {{>_studentIndex}}
+
+    {{/if}}
+
+{{else}}
 
     {{>_adminIndex}}
-
 {{/if}}
-
-{{#if teacher}}
-
-    {{>_teacherIndex}}
-
-{{/if}}
-
-{{#if student}}
-
-    {{>_studentIndex}}
-
-{{/if}}
-
-{{>_adminIndex}}
