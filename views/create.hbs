@@ -23,6 +23,17 @@
 
                     <!-- Datepicker -->
                     <div class="form-group">
+                        <label class="control-label" for="date">Startdatum:</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                            <input class="form-control" id="dateStart" placeholder="YYYY-MM-DD" type="text"/>
+                        </div>
+                    </div>
+
+                    <!-- Datepicker -->
+                    <div class="form-group">
                         <label class="control-label" for="date">Slutdatum:</label>
                         <div class="input-group">
                             <span class="input-group-addon">
@@ -31,6 +42,7 @@
                             <input class="form-control" id="date" placeholder="YYYY-MM-DD" type="text"/>
                         </div>
                     </div>
+
 
                     <!-- Checkbox -->
                     <div class="checkbox">
@@ -82,7 +94,7 @@
                     <span class="glyphicon glyphicon-remove"></span>
                 </button>
             </span>
-            <input type="text" class="form-control" placeholder="Svar ' + answerCount + '"> </div>`)
+            <input type="text" class="form-control" placeholder="Svar ` + answerCount + `"> </div>`)
     });
 
     $(document).on('click', 'button.removeButton', function (events) {
@@ -90,6 +102,11 @@
     });
 
     $('#date').datepicker({
+        format: 'yyyy-mm-dd',
+        todayHighlight: true,
+        autoclose: true
+    });
+    $('#dateStart').datepicker({
         format: 'yyyy-mm-dd',
         todayHighlight: true,
         autoclose: true
