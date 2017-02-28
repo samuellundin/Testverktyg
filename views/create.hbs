@@ -46,7 +46,10 @@
 
                     <!-- Checkbox -->
                     <div class="checkbox">
-                        <label><input type="checkbox" value="">Självrättande</label>
+                        <label><input type="checkbox" value="" id="selfCorrecting">Självrättande</label>
+                    </div>
+                    <div class="checkbox hidden" id="directResult">
+                        <label><input type="checkbox" value="">Direktresultat</label>
                     </div>
                 </form>
             </div>
@@ -316,7 +319,6 @@
 
     $(function() {
         $(document).on("change", "#typeSelect", function() {
-            console.log("haha");
             if($("#qTypeOpen").is(":selected")){
                 $("#answersBox").html('<form>Egen notering:<br>' +
                 '<input type="text" name="firstname" class="form-control"></form>');
@@ -324,6 +326,10 @@
 
             }
         });
+    });
+
+    $('#selfCorrecting').on('change', function(){
+       $('#directResult').toggleClass('hidden');
     });
 
     $('#saveTest').on('click', function(){
