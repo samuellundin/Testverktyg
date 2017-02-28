@@ -186,7 +186,7 @@ app.get("/test=:testIdLink", function(req, res) {
 });
 
 app.get("/register", function(req, res) {
-    res.render("register");
+    res.render("register", req.session);
 });
 //Krypterar användarens lösenord innan reg
 app.post("/register", function(req, res) {
