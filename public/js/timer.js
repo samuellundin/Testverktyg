@@ -27,8 +27,6 @@ function countDown() {
         sec = 60;
     }
         sec--;
-
-
 }
 
 

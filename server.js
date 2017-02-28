@@ -99,30 +99,18 @@ app.post('/login', function(req, res){
 });
 
 app.post('/create', function(req, res){
-    console.log(req.body);
     sql.addTest(req.body.data);
     for(var i = 0; i < req.body.questions.length; i++){
-        console.log('Add question');
         sql.addQuestion(req.body.questions[i]);
     }
     setTimeout(function(){
         for(var i = 0; i < req.body.answers.length; i++){
-            console.log('Add answer');
             sql.addAnswer(req.body.answers[i]);
         }
     }, 500);
-/*    addQuestions(req);*/
+    console.log('Created test successfully');
     res.send('Yay');
 });
-
-function addQuestions(req){
-
-    setTimeout(function(){addAnswers(req)}, 2000);
-}
-
-function addAnswers(req){
-
-}
 
 app.get("/results", function(req, res) {
     res.render("results", req.session);
