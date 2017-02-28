@@ -64,5 +64,11 @@
                 <option>{{groupName}}</option>
             {{/studentGroups}}
         `)
+
+        $('#shareStudentSelect').append(`
+            {{#students}}
+                <option>{{FirstName}}</option>
+            {{/students}}
+        `)
     });
 </script>

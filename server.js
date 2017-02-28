@@ -137,7 +137,13 @@ app.get("/share", function(req, res) {
         if(error) throw error;
         req.session.studentGroups = dcopy(result);
     })
-    res.render("share", req.session);
+    sql.connection.query("SELECT * FROM User WHERE Role = 'student'", function(error, result) {
+       if(error) throw error;
+       req.session.students = dcopy(result);
+    });
+    setTimeout(function(){
+        res.render("share", req.session);
+    }, 200);
 });
 
 //Get statistics
