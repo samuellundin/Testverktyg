@@ -7,7 +7,7 @@ var myVar;
 //Function timer start function countDown every second.
 function timer(test, time) {
     min = time;
-    countDown(); //Call function countDown too show starttime before count down.
+    countDown(); //Call function countDown too show start time before count down.
     myVar = setInterval(countDown, 1000);
 }
 //Function countDown display time in HTML

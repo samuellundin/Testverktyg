@@ -7,21 +7,23 @@
             </div>
             <div class="panel-body">
                 <form>
-                    <!-- Test Name -->
+
                     <label class="control-label">Namn på grupp:</label>
                     <input type="text" class="form-control" placeholder="Testnamn" id="testName">
 
                     <div class="col-lg-6">
                         <h2>Elever:</h2>
+                        <!-- Display list of students in the database. -->
                         <ul class="list-group" id="list" style="min-height:100px "></ul>
                     </div>
                     <div class="col-lg-6">
                         <h2>Tillagda elever:</h2>
+                        <!-- contains students of the group that the user creates-->
                     <ul class="list-group" id="groupList" style="min-height:100px ">
 
                     </ul>
                     </div>
-                    <button type="submit" class="btn btn-default" data-toggle="modal" data-target="#questionModal" >Skapa grupp</button>
+                    <button id="createGroup" type="submit" class="btn btn-default" data-toggle="modal" data-target="#questionModal" >Skapa grupp</button>
                 </form>
             </div>
         </div>
@@ -30,13 +32,15 @@
     </div>
 </div>
 
+<script src="js/saveGroup.js"></script>
 <script>
     var studentList = $('#list');
-    //loopar igenom studenter som finns i databasen och skriver ut en lista på studenterna i webbläsaren.
-   {{#each elever}}
-       studentList.append('<li class="list-group-item"> {{this.FirstName}} {{this.LastName}} - {{this.Mail}}</li>');
+
+    //Loops trough students in the database and display it in a list in the browser.
+        {{#each elever}}
+       studentList.append('<li class="list-group-item" id = {{this.UserId}}>  {{this.FirstName}} {{this.LastName}} - {{this.Mail}}</li>');
 
     {{/each}}
-    $('#list,#groupList').sortable({connectWith:'#list,#groupList'});//Gör det möjligt att dra elever mellan listor
+    $('#list,#groupList').sortable({connectWith:'#list,#groupList'});//Makes it possible to move students between lists.
 
 </script>
