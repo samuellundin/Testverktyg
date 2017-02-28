@@ -242,7 +242,6 @@ app.get('/group', function(req, res) {
             req.session.elever = dcopy(result);
             res.render('group', req.session);
             delete req.session.elever;
-
         }
     })
 

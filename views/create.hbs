@@ -155,10 +155,10 @@
                 <div class="form-group">
                 <select class="form-control" id="typeSelect">
                 <option hidden>Välj Typ</option>
-                <option id="qTypeMulti">Flervalsfråga</option>
-                <option id="qTypeAlt">Alternativfråga</option>
-                <option id="qTypeOrder">Rangordningsfråga</option>
-                <option id="qTypeOpen">Öppen fråga</option>
+                <option value="fler" id="qTypeMulti">Flervalsfråga</option>
+                <option value="alternativ" id="qTypeAlt">Alternativfråga</option>
+                <option value="rang" id="qTypeOrder">Rangordningsfråga</option>
+                <option value="oppen" id="qTypeOpen">Öppen fråga</option>
                 </select>
                 </div>
 
@@ -191,9 +191,14 @@
                 </div>
                 </div>`
         );
-        if(title.substring(n).search("Flervalsfrågor") > -1){
-            $('#qTypeMulti').attr('selected', true);
-            console.log($('#qTypeMulti'));
+        if(title.substring(n).search("Flervalsfråga") > -1){
+            $('#typeSelect option[value=fler]').attr('selected','selected');
+        } else if (title.substring(n).search("Alternativfråga") > -1){
+            $('#typeSelect option[value=alternativ]').attr('selected','selected');
+        } else if (title.substring(n).search("Rangordningsfråga") > -1){
+            $('#typeSelect option[value=rang]').attr('selected','selected');
+        } else if (title.substring(n).search("Öppen fråga") > -1){
+            $('#typeSelect option[value=oppen]').attr('selected','selected');
         }
     });
 

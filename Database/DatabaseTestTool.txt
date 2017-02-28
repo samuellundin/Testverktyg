@@ -23,10 +23,11 @@ CREATE TABLE Test(
 		TestId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 		TUserId INT,
 		TTitle VARCHAR(20) NOT NULL UNIQUE,
-                TStartTestDate DATE,
+        TStartTestDate DATE,
 		TEndTestDate DATE,
 		TTimeMin INT(10) NOT NULL,
 		TMaxPoints INT(10) NOT NULL,
+		TSelfCorrecting BIT NOT NULL,
 		CONSTRAINT TUserIdFK FOREIGN KEY (TUserId) REFERENCES User(UserId)
 		);	
 
