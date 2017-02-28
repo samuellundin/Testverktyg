@@ -1,4 +1,4 @@
-//Importera alla moduler
+//Import all modules
 const path = require('path');
 const express = require('express');
 const exphbs = require('express-handlebars');
@@ -13,11 +13,10 @@ var encryptor = require('simple-encryptor')(key);
 const dcopy = require('deepcopy');
 const async = require('async');
 
-//Säg till appen (express) var den hittar statiska filer, så som javascript-filer och css-filer
+//Configure the app to look for static files (javascript, css) in the /public folder
 app.use(express.static(path.join(__dirname, '/public')));
 
-//Säg till appen vilken view engine vi använder, handlebars, och berätta i vilken mapp våra .hbs-filer
-//kommer ligga (dvs handlebars-filer)
+//Configure the app to use express-handlebars as the template engine
 app.engine('.hbs', exphbs({
     defaultLayout: 'main',
     extname: '.hbs',
@@ -27,12 +26,13 @@ app.engine('.hbs', exphbs({
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-//Säg till appen hur vi vill parsa inkommande data som skickas från en sida till en annan (via t ex formulär)
+//Configure the app to parse urlencoded information into objects
 app.use(bodyparser.urlencoded({
     extended: true
 }));
 app.use(bodyparser.json());
 
+//configure the app to use session
 app.use(session({
     cookieName: 'session',
     secret: 'secret',
@@ -40,42 +40,23 @@ app.use(session({
     activeDuration: 5 * 60 * 1000
 }));
 
-//Säg till vilken port appen ska lyssna på.
+//Configure the app to listen on port 3000
 app.listen(3000);
 
 
-//APP REQUESTS
+//APP REQUESTS/END POINTS
+//Get Index
 app.get('/', function(req, res, next){
         res.render('index', req.session);
         delete req.session.err;
 });
 
+//Get Login
 app.get('/login', function(req, res, next){
     res.render('login');
 });
 
-app.get('/create', function(req, res){
-    if(checkAccess(req, 'teacher') || checkAccess(req, 'admin')){
-        res.render('create', req.session);
-    } else {
-        req.session.err = 'Permission denied';
-        res.redirect('/');
-    }
-});
-
-app.get('/logout', function(req, res){
-    req.session.reset();
-    res.send('index');
-});
-
-app.get('/api/users', function(req, res){
-    sql.connection.query('SELECT * FROM User', function(err, result){
-        res.send(result);
-    });
-});
-
-
-
+//Post login
 app.post('/login', function(req, res){
     sql.connection.query("SELECT * FROM User WHERE Mail = '" + req.body.email +"'", function(err, result){
         if(err || result[0] == null){
@@ -98,6 +79,17 @@ app.post('/login', function(req, res){
     });
 });
 
+//Get Create
+app.get('/create', function(req, res){
+    if(checkAccess(req, 'teacher') || checkAccess(req, 'admin')){
+        res.render('create', req.session);
+    } else {
+        req.session.err = 'Permission denied';
+        res.redirect('/');
+    }
+});
+
+//Post create
 app.post('/create', function(req, res){
     sql.addTest(req.body.data);
     for(var i = 0; i < req.body.questions.length; i++){
@@ -112,6 +104,20 @@ app.post('/create', function(req, res){
     res.send('Yay');
 });
 
+//Get logout
+app.get('/logout', function(req, res){
+    req.session.reset();
+    res.send('index');
+});
+
+//Get API users
+app.get('/api/users', function(req, res){
+    sql.connection.query('SELECT * FROM User', function(err, result){
+        res.send(result);
+    });
+});
+
+//Get results
 app.get("/results", function(req, res) {
     sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
         console.log(result);
@@ -120,14 +126,17 @@ app.get("/results", function(req, res) {
     });
 });
 
+//Get share
 app.get("/share", function(req, res) {
     res.render("share", req.session);
 });
 
+//Get statistics
 app.get("/statistics", function(req, res) {
     res.render("statistics", req.session);
 });
 
+//Get testMenu
 app.get("/testMenu", function(req, res) {
     sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
         console.log(result);
@@ -136,6 +145,7 @@ app.get("/testMenu", function(req, res) {
     });
 });
 
+//Get test=:id
 app.get("/test=:testIdLink", function(req, res) {
 
     async.waterfall([
@@ -185,56 +195,19 @@ app.get("/test=:testIdLink", function(req, res) {
     })
 });
 
+//Get register
 app.get("/register", function(req, res) {
     res.render("register", req.session);
 });
-//Krypterar användarens lösenord innan reg
+
+//Post register
 app.post("/register", function(req, res) {
-
     var encrypted = encryptor.encrypt(req.body.password);
-    console.log(encrypted);
-    console.log(encrypted.length);
-
     sql.addUser(req.body.fName, req.body.lName, req.body.mail, encrypted, req.body.role);
     res.redirect("/");
 });
 
-app.get('/questions', function(req, res, next){
-    res.render('questions');
-});
-
-function setupRole(req){
-    switch (req.session.role){
-        case 'student':
-            req.session.student = true;
-            break;
-        case 'teacher':
-            req.session.teacher = true;
-            break;
-        case 'admin':
-            req.session.admin = true;
-            break;
-    }
-}
-
-function checkAccess(req, targRole) {
-    return req.session.role === targRole;
-}
-
-function delayRedirect(res, delay){
-    setTimeout(function(){
-        res.sendStatus(200);
-    }, delay);
-}
-
-function renderTest(req, res, answersArray){
-    console.log('rendering test');
-    req.session.answers = answersArray[0];
-    console.log(req.session.answers);
-    console.log('setting answers and rendering');
-    res.render('test', req.session);
-}
-
+//Get group
 app.get('/group', function(req, res) {
     var userList = "";
     sql.connection.query('SELECT * FROM User WHERE Role = "student"', function(err, result) {
@@ -250,3 +223,31 @@ app.get('/group', function(req, res) {
     })
 
 });
+
+//HELPER FUNCTIONS
+//Sets our session variable to know what role our user has
+function setupRole(req){
+    switch (req.session.role){
+        case 'student':
+            req.session.student = true;
+            break;
+        case 'teacher':
+            req.session.teacher = true;
+            break;
+        case 'admin':
+            req.session.admin = true;
+            break;
+    }
+}
+
+//Checks whether the session role matches the target role
+function checkAccess(req, targRole) {
+    return req.session.role === targRole;
+}
+
+//Delays a redirect. This is to give time to other functions to finish before loading in the page
+function delayRedirect(res, delay){
+    setTimeout(function(){
+        res.sendStatus(200);
+    }, delay);
+}
