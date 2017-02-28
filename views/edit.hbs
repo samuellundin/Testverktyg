@@ -1,0 +1,18 @@
+<!-- Page for editing a test -->
+
+<div class="container">
+    <div class="col-md-4 col-md-offset-4">
+
+        <!-- Test selection -->
+        <h3 class="page-header">Välj test att redigera</h3>
+        <form action="/test" method="get">
+            <select name="test" id="testName" class="form-control">
+                {{#each tests}}
+                    <option class="{{this.TestId}}">{{this.TTitle}}</option>
+                {{/each}}
+            </select>
+            <br>
+            <button type="button" class="btn btn-info btn-block" id="editButton">Redigera test</button>
+        </form>
+    </div>
+</div>
