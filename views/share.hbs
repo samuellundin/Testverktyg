@@ -58,5 +58,11 @@
                 $("#shareStudentContainer").hide();
             }
         });
+
+        $('#shareGroupSelect').append(`
+            {{#studentGroups}}
+                <option>{{groupName}}</option>
+            {{/studentGroups}}
+        `)
     });
 </script>

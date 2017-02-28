@@ -74,9 +74,7 @@ CREATE TABLE UserAnswer(
 
 CREATE TABLE StudentGroup(
   StudentGroupId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  STUserId INT,
-  groupName VARCHAR(50),
-  CONSTRAINT STUserIdFK FOREIGN KEY (STUserId) REFERENCES User(UserId)
+  groupName VARCHAR(50)
 );		
 
 CREATE TABLE GroupDetails(

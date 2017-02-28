@@ -133,6 +133,10 @@ app.get("/edit", function(req, res) {
 
 //Get share
 app.get("/share", function(req, res) {
+    sql.connection.query("SELECT * FROM StudentGroup", function(error, result){
+        if(error) throw error;
+        req.session.studentGroups = dcopy(result);
+    })
     res.render("share", req.session);
 });
 
@@ -220,13 +224,28 @@ app.get('/group', function(req, res) {
             console.log(err);
         }
         else{
-            console.log(result);
             req.session.elever = dcopy(result);
             res.render('group', req.session);
             delete req.session.elever;
         }
     })
+});
 
+app.post('/group', function(req, res){
+    sql.connection.query('INSERT INTO StudentGroup (groupName) VALUES (' + mysql.escape(req.body.title) + ')', function(error, result){
+        if(error) throw error;
+    });
+
+    sql.connection.query('SELECT StudentGroupId FROM StudentGroup WHERE groupName = ' + mysql.escape(req.body.title), function(error, result){
+        if(error) throw error;
+        var id = result[0].StudentGroupId;
+        for(var i = 0; i < req.body.ids.length; i++){
+            sql.connection.query('INSERT INTO GroupDetails (GDStudentGroupId, GDUserId) VALUES (' + id + ', ' + req.body.ids[i] + ')', function(error, res){
+                if (error) throw error;
+            })
+        }
+    })
+    res.send('Yay');
 });
 
 //HELPER FUNCTIONS

@@ -6,7 +6,6 @@
 $(function(){
     $("#createGroup").click(function (event) {
         event.preventDefault();
-        var groupTitle = document.getElementById(testName);
         var ids = [];
         $('ul#groupList li').each(function(){//Loops through the amount of users in the group
 
@@ -14,14 +13,18 @@ $(function(){
         });
         //Create object groupData and save groupData in Ajax
         var groupData = {};
-        groupData.title = groupTitle;
+        console.log($('#testName').val());
+        groupData.title = $('#testName').val();
         groupData.ids = ids;
 
         $.ajax({
             url: '/group',
             method: 'post',
-            data: testData,
-            success: function(){}});
+            data: groupData,
+            success: function(){
+                console.log('Hurra?');
+                location.replace('/');
+            }});
 
 
     });
