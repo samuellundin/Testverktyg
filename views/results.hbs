@@ -1,5 +1,9 @@
+<!-- Page accessable for students, showing results of graded tests -->
+
 <div class="container">
     <div class="col-md-4 col-md-offset-4">
+
+        <!-- Test selection -->
         <h3 class="page-header">Välj test</h3>
         <form action="/test" method="get">
             <select name="test" id="testName" class="form-control">
@@ -11,6 +15,7 @@
             <button type="button" class="btn btn-info btn-block" id="showResultsButton">Se resultat</button>
         </form>
 
+        <!-- Displaying results -->
         <table class="table collapse" id="statsTable">
             <br><br>
             <tr>
@@ -37,11 +42,11 @@
     </div>
 </div>
 
-
-
 <script>
+    // Making text field (teacher comments) read-only
     $("#textArea").prop("disabled", true);
 
+    // Displays results of selected test when clicking button
     $(function() {
         $("#showResultsButton").on("click", function() {
             $("#statsTable").slideDown(5000);

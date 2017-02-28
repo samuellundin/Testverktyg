@@ -1,3 +1,5 @@
+<!-- Page showing statistics for selected test -->
+
 <div class="container" id="statistics">
     <div class="col-lg-8">
         <div class="panel panel-default">
@@ -5,16 +7,17 @@
                     <h1 class="panel-title">Statistik</h1>
               </div>
               <div class="panel-body">
-                  <p>Välj ett test nedan för att se hittils samlad statistik.</p>
+
                   <!-- Test selection -->
+                  <p>Välj ett test nedan för att se hittils samlad statistik.</p>
                   <select name="test" id="testSelect" class="form-control">
                       <option value="">Välj test</option>
                       <option value="" id="genTest1">Generic test 1</option>
                       <option value="" id="genTest2">Generic test 2</option>
                   </select>
 
-                  <!-- Table showing statistics -->
-                  <table class="table" id="statsTable">
+                  <!-- Displaying statistics -->
+                  <table class="table collapse" id="statsTable">
                       <br><br>
                       <tr>
                           <th>Genomförda test <span class="label label-success">Totalt antal</span></th>
@@ -39,8 +42,7 @@
 </div>
 
 <script>
-    $("#statsTable").hide();
-
+    // Displays statistics for selected test when clicking button
     $(function() {
         $("#testSelect").change(function() {
             if ($("#genTest1").is(":selected")) {
