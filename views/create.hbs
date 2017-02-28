@@ -130,11 +130,12 @@
     });
 
     $(document).on('click', '.btn-edit', function() {
+        var title = $(this).parent().parent().find('.panel-title').html();
+        var n = title.indexOf("(");
+        console.log(title.substring(n));
+
         $('#editModal').html(`
-
                 <div class="modal-dialog">
-
-
                 <div class="modal-content">
                 <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -187,6 +188,10 @@
                 </div>
                 </div>`
         );
+        if(title.substring(n).search("Flervalsfrågor") > -1){
+            $('#qTypeMulti').attr('selected', true);
+            console.log($('#qTypeMulti'));
+        }
     });
 
     function resetQuestionBox(){
