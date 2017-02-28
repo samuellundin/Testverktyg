@@ -126,6 +126,11 @@ app.get("/results", function(req, res) {
     });
 });
 
+//Get edit
+app.get("/edit", function(req, res) {
+    res.render("edit", req.session);
+});
+
 //Get share
 app.get("/share", function(req, res) {
     res.render("share", req.session);
