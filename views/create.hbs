@@ -144,7 +144,11 @@
                     <span class="glyphicon glyphicon-remove"></span>
                 </button>
             </span>
-            <input type="text" class="form-control" placeholder="Svar ` + answerCount + `"> </div>`)
+            <input type="text" class="form-control" placeholder="Svar ` + answerCount + `">
+            <span class="input-group-addon">
+                <input type="checkbox">
+            </span>
+            </div>`)
     });
 
     $(document).on('click', 'button.removeButton', function (events) {
@@ -164,8 +168,14 @@
 
     $(document).on('click', '#saveQuestion', function() {
         var i = "";
-        $('#questionModal .answer input').each(function() {
-            i += '<li class="list-group-item">'+ $(this).val() +'<span class="pull-right">Rätt svar: <input type="checkbox" value=""></span></li>';
+        $('#questionModal .answer input:text').each(function() {
+            i += '<li class="list-group-item">'+ $(this).val() +'<span class="pull-right">Rätt svar: ';
+            if($(this).parent().find('input:checkbox').is(':checked')){
+                i += '<input type="checkbox" checked="checked"></span></li>';
+            } else {
+                i += '<input type="checkbox"></span></li>';
+            }
+
         });
         $('#questionBox').append(`
         <div class="panel panel-default">
@@ -178,7 +188,7 @@
                         &nbsp;<span class="glyphicon glyphicon-remove"></span>&nbsp;
                     </button>
                 </div>
-                <h3 class="panel-title" style="margin-top: 5px">`+ $("#question").find('input').val() +' ('+ $('#typeSelect').val() +')'+`<span style="margin-right: 15px" class="pull-right">Poäng: `+ $('#points').val() +`</span></h3>
+                <h3 class="panel-title" style="margin-top: 5px">`+ $("#question").find('input[type=text]').val() +' ('+ $('#typeSelect').val() +')'+`<span style="margin-right: 15px" class="pull-right">Poäng: `+ $('#points').val() +`</span></h3>
             </div>
             <div class="panel-body">
                 <ul class="list-group">`+ i +`</ul>
@@ -204,7 +214,13 @@
         var titleQuestion = title.substring(0, n).trim(); // variabel för fråga
         var titleType = title.substring(n); // variabel för typ av fråga
         var points = title.substring(title.indexOf('Poäng: ') + 7, title.indexOf('</span>'));
-        console.log(points);
+
+        var checks = $(this).parent().parent().parent().find('.panel-body').find('ul li');
+        var checkslist = new Array();
+        checks.each(function(i) {
+            checkslist.push($(this).find('input:checkbox').is(':checked'));
+        });
+
         var answers = $(this).parent().parent().parent().find('.panel-body').find('ul li');
         var answerlist = new Array(); // Array för svaren
         answers.each(function (i) {
@@ -254,6 +270,12 @@
         `);
         // loopa ut svaren i answerBox
         for(var i = 0; i < answerlist.length; i++){
+            var checkscode = '';
+            if(checkslist[i]){
+                checkscode = '<input type="checkbox" checked="checked">';
+            } else {
+                checkscode = '<input type="checkbox">';
+            }
             $('#editModal').find('#answersBox').append(`
                 <div class="input-group answer">
                     <span class="input-group-btn">
@@ -262,6 +284,9 @@
                         </button>
                     </span>
                     <input type="text" class="form-control" placeholder="Svar 1" value="`+ answerlist[i].substring(0, answerlist[i].indexOf('Rätt svar:')) +`">
+                    <span class="input-group-addon">
+                        `+ checkscode +`
+                    </span>
                 </div>
             `);
         }
@@ -278,8 +303,13 @@
     });
     $('#editModal').on('click', '#saveEditButton', function () {
         var i = "";
-        $('#editModal .answer input').each(function() {
-            i += '<li class="list-group-item">'+ $(this).val() +'<span class="pull-right">Rätt svar: <input type="checkbox" value=""></span></li>';
+        $('#editModal .answer input:text').each(function() {
+            i += '<li class="list-group-item">'+ $(this).val() +'<span class="pull-right">Rätt svar: ';
+            if($(this).parent().find('input:checkbox').is(':checked')){
+                i += '<input type="checkbox" checked="checked"></span></li>';
+            } else {
+                i += '<input type="checkbox"></span></li>';
+            }
         });
         thisPanel.html(`
             <div class="panel-heading clearfix">
@@ -306,7 +336,11 @@
                     <span class="glyphicon glyphicon-remove"></span>
                 </button>
             </span>
-            <input type="text" class="form-control" placeholder="Svar ` + answerCount + `"> </div>`);
+            <input type="text" class="form-control" placeholder="Svar ` + answerCount + `">
+            <span class="input-group-addon">
+                <input type="checkbox">
+            </span>
+            </div>`);
     });
 
     function resetQuestionBox(){
@@ -350,6 +384,9 @@
                 </button>
                 </span>
                 <input type="text" class="form-control" placeholder="Svar 1">
+                <span class="input-group-addon">
+                    <input type="checkbox">
+                </span>
                 </div>
                 <div class="input-group answer">
                 <span class="input-group-btn">
@@ -358,6 +395,9 @@
                 </button>
                 </span>
                 <input type="text" class="form-control" placeholder="Svar 2">
+                <span class="input-group-addon">
+                    <input type="checkbox">
+                </span>
                 </div>
                 </div>
                 <p id="infoText"></p>
