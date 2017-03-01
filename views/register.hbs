@@ -11,19 +11,27 @@
 
                         <!-- First Name -->
                         <label for="name" class="cols-sm-2 control-label">Förnamn</label>
-                        <input type="text" name="fName" class="form-control" id="firstname" placeholder="Förnamn"/>
+                        <div id = "controlFName" class=""> </div>
+                        <div id = "errorFName" class="">
+                        <input type="text" name="fName" class="form-control" id="firstname" placeholder="Förnamn" required/></div>
 
                         <!-- Last Name -->
                         <label for="email" class="cols-sm-2 control-label">Efternamn</label>
-                        <input type="text" name="lName" class="form-control" id="lastname" placeholder="Efternamn"/>
+                        <div id = "controlLName" class=""> </div>
+                        <div id = "errorLName" class="">
+                            <input type="text" name="lName" class="form-control" id="lastname" placeholder="Efternamn"required/></div>
 
                         <!-- Email -->
                         <label for="username" class="cols-sm-2 control-label">Email</label>
-                        <input type="text" name="mail" class="form-control" id="email" placeholder="Email"/>
+                        <div id = "controlEmail" class=""> </div>
+                        <div id = "errorEmail" class="">
+                            <input type="text" name="mail" class="form-control" id="email" placeholder="Email"required/></div>
 
                         <!-- Password -->
                         <label for="password" class="cols-sm-2 control-label">Lösenord</label>
-                        <input type="password" name="password" class="form-control" id="password" placeholder="Lösenord"/>
+                        <div id = "controlPassword" class=""> </div>
+                        <div id = "errorPassword" class="">
+                            <input type="password" name="password" class="form-control" id="password" placeholder="Lösenord"required/></div>
 
                         <!-- Role -->
                         <select name="role" class="form-control" style="margin: 15px 0">
@@ -44,3 +52,35 @@
             margin-top: 50px;
         }
 </style>
+//Script controls that the user enters all the values when registering new user.
+<script>
+    $("#registerButton").click(function (event) {
+        event.preventDefault();
+
+        var fname = $('#firstname').val();
+        if (fname == '') {
+
+            document.getElementById('controlFName').className = 'alert alert-danger';
+            document.getElementById('controlFName').textContent = 'Ange förnamn';
+            document.getElementById('errorFName').className = 'form-group  has-error';
+        }
+        else if ($('#lastname').val() =='') {
+
+            document.getElementById('controlLName').className = 'alert alert-danger';
+            document.getElementById('controlLName').textContent = 'Ange efternamn';
+            document.getElementById('errorLName').className = 'form-group  has-error';
+        }
+        else if ($('#email').val() =='') {
+
+            document.getElementById('controlEmail').className = 'alert alert-danger';
+            document.getElementById('controlEmail').textContent = 'Ange mejladress';
+            document.getElementById('errorEmail').className = 'form-group  has-error';
+        }
+        else if ($('#password').val() =='') {
+
+            document.getElementById('controlPassword').className = 'alert alert-danger';
+            document.getElementById('controlPassword').textContent = 'Ange lösenord';
+            document.getElementById('errorPassword').className = 'form-group  has-error';
+        }
+    });
+</script>
