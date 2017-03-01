@@ -55,28 +55,30 @@
 //Script controls that the user enters all the values when registering new user.
 <script>
     $("#registerButton").click(function (event) {
-        event.preventDefault();
 
         var fname = $('#firstname').val();
         if (fname == '') {
-
+            event.preventDefault();
             document.getElementById('controlFName').className = 'alert alert-danger';
             document.getElementById('controlFName').textContent = 'Ange förnamn';
             document.getElementById('errorFName').className = 'form-group  has-error';
         }
         else if ($('#lastname').val() =='') {
+            event.preventDefault();
 
             document.getElementById('controlLName').className = 'alert alert-danger';
             document.getElementById('controlLName').textContent = 'Ange efternamn';
             document.getElementById('errorLName').className = 'form-group  has-error';
         }
         else if ($('#email').val() =='') {
+            event.preventDefault();
 
             document.getElementById('controlEmail').className = 'alert alert-danger';
             document.getElementById('controlEmail').textContent = 'Ange mejladress';
             document.getElementById('errorEmail').className = 'form-group  has-error';
         }
         else if ($('#password').val() =='') {
+            event.preventDefault();
 
             document.getElementById('controlPassword').className = 'alert alert-danger';
             document.getElementById('controlPassword').textContent = 'Ange lösenord';

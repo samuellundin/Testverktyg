@@ -492,10 +492,16 @@
             }
             var questionTitle = $(this).find('h3').text().split('\(')[0];
             $(this).find('li').each(function(index){
+                var correctAnswer;
+                if($(this).find('input:checkbox').is(':checked')){
+                    correctAnswer = 1;
+                } else {
+                    correctAnswer = 0;
+                }
                 answerData.qTitle = questionTitle;
-                answerData.title = $(this).text();
+                answerData.title = $(this).text().substring(0, $(this).text().indexOf('Rätt svar:'));
                 answerData.order = index;
-                answerData.score = 0;
+                answerData.score = correctAnswer;
                 answerData.corrected = 0;
                 answersArray.push(answerData);
                 answerData = new Object();
