@@ -165,7 +165,7 @@
     $(document).on('click', '#saveQuestion', function() {
         var i = "";
         $('#questionModal .answer input').each(function() {
-            i += '<li class="list-group-item">'+ $(this).val() +'</li>';
+            i += '<li class="list-group-item">'+ $(this).val() +'<span class="pull-right">Rätt svar: <input type="checkbox" value=""></span></li>';
         });
         $('#questionBox').append(`
         <div class="panel panel-default">
@@ -261,7 +261,7 @@
                             <span class="glyphicon glyphicon-remove"></span>
                         </button>
                     </span>
-                    <input type="text" class="form-control" placeholder="Svar 1" value="`+ answerlist[i] +`">
+                    <input type="text" class="form-control" placeholder="Svar 1" value="`+ answerlist[i].substring(0, answerlist[i].indexOf('Rätt svar:')) +`">
                 </div>
             `);
         }
@@ -279,7 +279,7 @@
     $('#editModal').on('click', '#saveEditButton', function () {
         var i = "";
         $('#editModal .answer input').each(function() {
-            i += '<li class="list-group-item">'+ $(this).val() +'</li>';
+            i += '<li class="list-group-item">'+ $(this).val() +'<span class="pull-right">Rätt svar: <input type="checkbox" value=""></span></li>';
         });
         thisPanel.html(`
             <div class="panel-heading clearfix">
