@@ -12,6 +12,7 @@
             <!-- Radio button -->
             <div class="panel panel-default">
                 <div class="panel-heading">
+                    <meta class="alternativ">
                     <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
                 </div>
                 <div class="panel-body">
@@ -28,6 +29,7 @@
                 <!-- Sortera -->
                 <div class="panel panel-default">
                     <div class="panel-heading" data-toggle="collapse" data-target="#panel-body">
+                        <meta class="rang">
                         <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
                     </div>
                     <div class="panel-body" id="panel-body">
@@ -44,6 +46,7 @@
                 <!-- Checkbox -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
+                        <meta class="flerval">
                         <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
                     </div>
                     <div class="panel-body">
@@ -60,6 +63,7 @@
                 <!-- Textarea -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
+                        <meta class="oppna">
                         <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
                     </div>
                     <div class="panel-body">
@@ -127,27 +131,58 @@
     }
 
     function turnIn(){
-        console.log('turning in');
         var data = {};
         createTakenTest(data);
         createAnswers(data);
         $.ajax({
             url: '/turnin',
-            method: post,
+            method: 'post',
             data: data,
             success: function(){
                 console.log('Turning in');
-                location.replace('/');
+/*                location.replace('/');*/
             }
         })
     }
 
     function createTakenTest(data){
-
+        data.ATestId = {{test.TestId}};
+        data.ATDate = 'now()';
+        data.ATCorrected = 0;
+        data.ATPoints = 0;
+        data.ATGrade = 0;
     }
 
     function createAnswers(data){
+        var userAnswers = [];
+        var userAnswer;
 
+        $('.panel-default').each(function(index){
+            userAnswer = new Object();
+            switch($(this).find('meta').attr('class')){
+                case 'flerval':
+                    for)
+                    break;
+                case 'rang':
+
+                    break;
+
+                case 'oppna':
+
+                    break;
+
+                case 'alternativ':
+
+                    break;
+            }
+            userAnswer.UAUserId = {{id}};
+        })
+
+/*        userAnswer.UAAnswersId
+        userAnswer.UADate
+        userAnswer.UACorrected
+        userAnswer.UAPoints
+        userAnswer.UAGrade*/
     }
 
 

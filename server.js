@@ -119,7 +119,6 @@ app.get('/api/users', function(req, res){
 //Get results
 app.get("/results", function(req, res) {
     sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
-        console.log(result);
         req.session.tests = dcopy(result);
         res.render("results", req.session);
     });
@@ -160,7 +159,6 @@ app.get("/statistics", function(req, res) {
 //Get testMenu
 app.get("/testMenu", function(req, res) {
     sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
-        console.log(result);
         req.session.tests = dcopy(result);
         res.render("testMenu", req.session);
     });
@@ -177,7 +175,6 @@ app.get("/test=:testIdLink", function(req, res) {
             callback(null)});
         },
         function(callback){
-            console.log(req.session);
             sql.connection.query("SELECT * FROM Questions WHERE QTestId = " + mysql.escape(req.session.test.TestId), function(error2, result2) {
                 if(error2) throw error2;
                 req.session.questions = dcopy(result2);
@@ -217,7 +214,7 @@ app.get("/test=:testIdLink", function(req, res) {
 });
 
 app.post('/turnin', function(req, res){
-
+    res.send('200');
 })
 
 //Get register
@@ -269,7 +266,6 @@ app.post('/group', function(req, res){
 //Updates session with tests from datebase
 function updateSessionTests(req) {
     sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
-        console.log(result);
         req.session.tests = dcopy(result);
     });
 }
