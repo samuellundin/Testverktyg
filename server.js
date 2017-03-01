@@ -40,6 +40,18 @@ app.use(session({
     activeDuration: 5 * 60 * 1000
 }));
 
+app.use(function(req, res, next){
+    if(!req.session.id
+        && (req.url != '/'
+        && req.url != '/register'
+        && req.url != '/api/users'
+        && req.url != '/login')){
+        req.session.err = 'You are not logged in';
+        req.url = '/';
+    }
+        next();
+})
+
 //Configure the app to listen on port 3000
 app.listen(3000);
 
@@ -49,6 +61,7 @@ app.listen(3000);
 app.get('/', function(req, res, next){
         res.render('index', req.session);
         delete req.session.err;
+        console.log(req.session);
 });
 
 //Get Login
@@ -214,6 +227,11 @@ app.get("/test=:testIdLink", function(req, res) {
 });
 
 app.post('/turnin', function(req, res){
+    req.body.userAnswers.TestId = req.session.test.TestId;
+    console.log(req.body.userAnswers);
+    req.body.userAnswers.UserId = req.session.id;
+    sql.addUserAnsweredTest(req.body.takenTest);
+    sql.addUserAnswers(req.body.userAnswers);
     res.send('200');
 })
 

@@ -366,7 +366,7 @@
         });
         thisPanel.html(`
             <div class="panel-heading clearfix">
-                <meta class="` + $('#typeSelectEdit').val() + `">
+                <meta class="` + $('#typeSelectEdit :selected').text() + `">
 
                 <div class="pull-right">
                     <button type="button" class="btn btn-default btn-sm btn-edit" data-toggle="modal" data-target="#editModal">Redigera</button>
@@ -469,10 +469,32 @@
     $(function() {
         $(document).on("change", "#typeSelect", function() {
             if($("#qTypeOpen").is(":selected")){
-                $("#answersBox").html('<form>Egen notering:<br>' +
-                '<input type="text" name="firstname" class="form-control"></form>');
+                $("#answersBox").html(`<div class="input-group answer">
+                        <input type="text" class="form-control" placeholder="Detta är en öppen textfråga">
+                        </div>`);
             } else {
-
+                $("#answersBox").html(`                <div class="input-group answer">
+                <span class="input-group-btn">
+                <button class="btn btn-default removeButton" type="button">
+                <span class="glyphicon glyphicon-remove"></span>
+                </button>
+                </span>
+                <input type="text" class="form-control" placeholder="Svar 1">
+                <span class="input-group-addon">
+                    <input type="checkbox">
+                </span>
+                </div>
+                <div class="input-group answer">
+                <span class="input-group-btn">
+                <button class="btn btn-default removeButton" type="button">
+                <span class="glyphicon glyphicon-remove"></span>
+                </button>
+                </span>
+                <input type="text" class="form-control" placeholder="Svar 2">
+                <span class="input-group-addon">
+                    <input type="checkbox">
+                </span>
+                </div>`);
             }
         });
     });
@@ -527,7 +549,7 @@
            questionData.testTitle = $('#testName').val();
            questionData.qType = $(this).find('meta').attr('class');
            questionData.qOrder = index;
-           questionData.score = $(this).find('span').text().match(/\d+/);
+           questionData.score = $(this).find('span').text().match(/\d+/) || 0;
            maxPointsTest += Number(questionData.score);
            questionsArray.push(questionData);
            questionData = new Object();

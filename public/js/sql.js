@@ -116,6 +116,44 @@ function addQ(questionData, testId){
     });
 }
 
+exports.addUserAnsweredTest = function(data){
+    connection.query("INSERT INTO AnsweredTest (ATestId, ATDate, ATCorrected, ATPoints, ATGrade, ATUserId) VALUES ("
+        + mysql.escape(data.ATestId) + ", "
+        + data.ATDate + ", "
+        + mysql.escape(data.ATCorrected) + ", "
+        + mysql.escape(data.ATPoints) + ", "
+        + mysql.escape(data.ATGrade) + ", "
+        + mysql.escape(data.ATUserId) + ")", function(err, result){
+        if(err){
+            console.log(err);
+            return false;
+        }
+        return true;
+    });
+};
+
+exports.addUserAnswers = function(data){
+    connection.query('SELECT AnsweredTestId FROM AnsweredTest WHERE ATestId =' + mysql.escape(data.TestId) + ' AND ATUserId = ' + mysql.escape(data.UserId), function(error, result){
+        var TestId = dcopy(result[0].AnsweredTestId);
+        for(var i = 0; i < data.length; i++){
+            connection.query('INSERT INTO UserAnswer (UAQuestionId, UAAnswersId, UATestId, UADate, UACorrected, UAPoints, UAOrder, UAGrade, UAText) VALUES ('
+                + mysql.escape(data[i].UAQuestionId) + ", "
+                + mysql.escape(data[i].UAAnswersId) + ", "
+                + mysql.escape(TestId) + ", "
+                + 'NOW()' + ", "
+                + mysql.escape(data[i].UACorrected) + ", "
+                + mysql.escape(data[i].UAPoints) + ", "
+                + mysql.escape(data[i].UAOrder) + ", "
+                + mysql.escape(data[i].UAGrade) + ", "
+                + mysql.escape(data[i].UAText) + ")", function(error, result){
+                    if(error) throw error;
+                    console.log('Added user answers successfully');
+                    return true;
+            });
+        }
+    })
+};
+
 exports.getAllUsers = function(){
     var resultat = "";
     connection.query('SELECT * FROM User', function(err, result){

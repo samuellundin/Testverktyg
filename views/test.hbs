@@ -69,7 +69,9 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <label>Svar:</label>
-                            <textarea class="form-control" rows="5"></textarea>
+                            {{#answers}}
+                                <textarea class="form-control" rows="5" id="{{AnswersId}}"></textarea>
+                            {{/answers}}
                         </div>
                     </div>
                 </div>
@@ -134,6 +136,7 @@
         var data = {};
         createTakenTest(data);
         createAnswers(data);
+        console.log(data);
         $.ajax({
             url: '/turnin',
             method: 'post',
@@ -146,43 +149,73 @@
     }
 
     function createTakenTest(data){
-        data.ATestId = {{test.TestId}};
-        data.ATDate = 'now()';
-        data.ATCorrected = 0;
-        data.ATPoints = 0;
-        data.ATGrade = 0;
+        var takenTest = {};
+        takenTest.ATestId = {{test.TestId}};
+        takenTest.ATDate = 'now()';
+        takenTest.ATCorrected = 0;
+        takenTest.ATPoints = 0;
+        takenTest.ATGrade = 0;
+        takenTest.ATUserId = {{id}};
+        data.takenTest = takenTest;
     }
 
     function createAnswers(data){
         var userAnswers = [];
         var userAnswer;
 
-        $('.panel-default').each(function(index){
+        $('.panel-default').each(function(i){
             userAnswer = new Object();
+            var questionId = Number($(this).find('h3.panel-title').attr('id'));
             switch($(this).find('meta').attr('class')){
                 case 'flerval':
-                    for)
+                    $('input[type=checkbox]').each(function(index){
+                        userAnswer = new Object();
+                        if($(this).is(':checked')){
+                            userAnswer.UAAnswersId = $(this).attr('id');
+                            userAnswer.UAOrder = index;
+                            userAnswer.UAText = null;
+                            answerDataAppend(userAnswer, userAnswers, questionId);
+                            return true;
+                        }
+                    });
                     break;
                 case 'rang':
-
+                    $('li.list-group-item').each(function(index){
+                        userAnswer = new Object();
+                        userAnswer.UAAnswersId = $(this).attr('id');
+                        userAnswer.UAOrder = index;
+                        userAnswer.UAText = null;
+                        answerDataAppend(userAnswer, userAnswers, questionId);
+                        return true;
+                    });
                     break;
 
                 case 'oppna':
-
+                    userAnswer.UAAnswersId = $('textarea').attr('id');
+                    userAnswer.UAOrder = i;
+                    userAnswer.UAText = $('textarea').val();
+                    answerDataAppend(userAnswer, userAnswers, questionId);
                     break;
 
                 case 'alternativ':
-
+                    userAnswer.UAAnswersId = $('input:checked').attr('id');
+                    userAnswer.UAOrder = i;
+                    userAnswer.UAText = null;
+                    answerDataAppend(userAnswer, userAnswers, questionId);
                     break;
             }
-            userAnswer.UAUserId = {{id}};
         })
 
-/*        userAnswer.UAAnswersId
-        userAnswer.UADate
-        userAnswer.UACorrected
-        userAnswer.UAPoints
-        userAnswer.UAGrade*/
+        data.userAnswers = userAnswers;
+    }
+
+    function answerDataAppend(userAnswer, userAnswers, questionId){
+        userAnswer.UAQuestionId = questionId;
+        userAnswer.UADate = 'now()';
+        userAnswer.UACorrected = 0;
+        userAnswer.UAPoints = 0;
+        userAnswer.UAGrade = 0;
+        userAnswers.push(userAnswer);
     }
 
 
