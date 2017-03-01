@@ -44,9 +44,9 @@ exports.addTest = function(testData){
     + mysql.escape(testData.testTitle) + ", "
     + mysql.escape(testData.startDT) + ", "
     + mysql.escape(testData.endDT) + ", "
-    + testData.minutes + ", "
-    + 0 + ", "
-    + 0 + ")", function(err, result){
+    + mysql.escape(testData.minutes) + ", "
+    + mysql.escape(testData.maxPoints) + ", "
+    + mysql.escape(testData.checked) + ")", function(err, result){
         if(err){
             console.log(err);
             return false;

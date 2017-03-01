@@ -72,7 +72,7 @@
             {{/if}}
         {{/questions}}
 
-        <button type="submit" class='btn btn-primary pull-right'>Lämna In</button>
+        <button type="button" class='btn btn-primary pull-right' id="turnIn">Lämna In</button>
     </div>
 </div>
 
@@ -84,12 +84,19 @@
         $('.container').on('click', '.panel-heading', function(e) {
             $(this).next('.panel-body').slideToggle();
         });
+
+        $('#turnIn').on('click', function(){
+            turnIn();
+        })
     });
+
+
 
     var sec = 0;
     var min;
     var myVar;
     timer({{test.TTimeMin}});
+
     //Function timer start function countDown every second.
     function timer(time) {
         if(time == 0){
@@ -99,6 +106,7 @@
         countDown(); //Call function countDown too show starttime before count down.
         myVar = setInterval(countDown, 1000);
     }
+
     //Function countDown display time in HTML
     function countDown() {
         var element = document.getElementById('timer');
@@ -117,4 +125,30 @@
         }
         sec--;
     }
+
+    function turnIn(){
+        console.log('turning in');
+        var data = {};
+        createTakenTest(data);
+        createAnswers(data);
+        $.ajax({
+            url: '/turnin',
+            method: post,
+            data: data,
+            success: function(){
+                console.log('Turning in');
+                location.replace('/');
+            }
+        })
+    }
+
+    function createTakenTest(data){
+
+    }
+
+    function createAnswers(data){
+
+    }
+
+
 </script>

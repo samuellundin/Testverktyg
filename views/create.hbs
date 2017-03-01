@@ -465,6 +465,7 @@
     function getQuestionData(storeVariable){
         var questionData = new Object();
         var questionsArray = [];
+        var maxPointsTest = 0;
         $('.panel-default').each(function(index){
             if($(this).hasClass('notthis')){
                 return true;
@@ -473,10 +474,12 @@
            questionData.testTitle = $('#testName').val();
            questionData.qType = $(this).find('meta').attr('class');
            questionData.qOrder = index;
-           questionData.score = $(this).find('span').text().match(/\d+/);;
+           questionData.score = $(this).find('span').text().match(/\d+/);
+           maxPointsTest += Number(questionData.score);
            questionsArray.push(questionData);
            questionData = new Object();
         });
+        storeVariable.data.maxPoints = maxPointsTest;
         storeVariable.questions = questionsArray;
     }
 
