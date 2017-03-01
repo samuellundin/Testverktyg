@@ -57,8 +57,7 @@
     $("#registerButton").click(function (event) {
         event.preventDefault();
 
-        var fname = $('#firstname').val();
-        if (fname == '') {
+        if ($('#firstname').val() == '') {
 
             document.getElementById('controlFName').className = 'alert alert-danger';
             document.getElementById('controlFName').textContent = 'Ange förnamn';

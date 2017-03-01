@@ -10,27 +10,33 @@
                 <form>
                     <!-- Test Name -->
                     <label class="control-label">Namn på test:</label>
-                    <input type="text" class="form-control" placeholder="Testnamn" id="testName">
+                    <div id = "controlTestName" class=""> </div>
+                    <div id = "errorTestName" class="">
+                        <input type="text" class="form-control" placeholder="Testnamn" id="testName"></div>
 
                     <!-- Time Limit -->
                     <label class="control-label">Tidsbegränsning:</label>
+                    <div id = "controlTime" class=""> </div>
+                    <div id = "errorTime" class="">
                     <div class="input-group">
                         <span class="input-group-addon">
                             <input type="checkbox" id="timed">
                         </span>
                         <input type="text" class="form-control" placeholder="Minuter" id="time">
-                    </div>
+                    </div></div>
 
                     <!-- Datepicker -->
                     <div class="row">
                         <div class="col-lg-6">
                             <label class="control-label" for="date">Startdatum:</label>
+                            <div id = "controlStartdate" class=""> </div>
+                            <div id = "errorStartdate" class="">
                             <div class="input-group">
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
                                 <input class="form-control" id="dateStart" placeholder="YYYY-MM-DD" type="text"/>
-                            </div>
+                            </div></div>
                         </div>
                         <div class="col-lg-6">
                             <label class="control-label" for="date">Starttid:</label>
@@ -47,12 +53,14 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <label class="control-label" for="date">Slutdatum:</label>
+                            <div id = "controldate" class=""> </div>
+                            <div id = "errordate" class="">
                             <div class="input-group">
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
                                 <input class="form-control" id="date" placeholder="YYYY-MM-DD" type="text"/>
-                            </div>
+                            </div></div>
                         </div>
                         <div class="col-lg-6">
                             <label class="control-label" for="date">Sluttid:</label>
@@ -72,6 +80,8 @@
                     <div class="checkbox hidden" id="directResult">
                         <label><input type="checkbox" value="">Direktresultat</label>
                     </div>
+                    <div id =saved class="">
+                        <label class="control-label" id="testSaved"></label></div>
                 </form>
             </div>
         </div>
@@ -91,13 +101,8 @@
         <!-- Buttons -->
         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#questionModal" id="createQuestion">Skapa Fråga</button>
         <button type="button" class="btn btn-default pull-right" id="saveTest">Spara Test</button>
-
-        <!-- Error message (missing date input) -->
-        <div class="collapse col-md-6 col-md-offset-3 alert alert-danger text-center" id="missingInput">
-            <span class="">Vänligen fyll i start- och slutdatum!</span>
-        </div>
-        
     </div>
+
 </div>
 
 
@@ -109,6 +114,54 @@
         </p>
     </div>
 </footer>
+<script>
+    $("#saveTest").click(function (event) {
+    if ($('#testName').val() == '') {
+
+        document.getElementById('controlTestName').className = 'alert alert-danger';
+        document.getElementById('controlTestName').textContent = 'Ange titel för test';
+        document.getElementById('errorTestName').className = 'form-group  has-error';
+    }
+       else if ($('#timed').prop('checked') == true && $('#time').val() == '') {
+
+            document.getElementById('controlTime').className = 'alert alert-danger';
+            document.getElementById('controlTime').textContent = 'Ange tidsbegränsning i minuter';
+            document.getElementById('errorTime').className = 'form-group  has-error';
+
+        }
+        else if ($('#dateStart').val() == '') {
+
+            document.getElementById('controlStartdate').className = 'alert alert-danger';
+            document.getElementById('controlStartdate').textContent = 'Ange startdatum';
+            document.getElementById('errorStartdate').className = 'form-group  has-error';
+        }
+    else if ($('#date').val() == '') {
+
+        document.getElementById('controldate').className = 'alert alert-danger';
+        document.getElementById('controldate').textContent = 'Ange slutdatum';
+        document.getElementById('errordate').className = 'form-group  has-error';
+    }
+    else{
+        document.getElementById('controlTestName').className = '';
+        document.getElementById('controlTestName').textContent = '';
+        document.getElementById('errorTestName').className = '';
+        document.getElementById('controlTime').className = '';
+        document.getElementById('controlTime').textContent = '';
+        document.getElementById('errorTime').className = '';
+        document.getElementById('controlStartdate').className = '';
+        document.getElementById('controlStartdate').textContent = '';
+        document.getElementById('errorStartdate').className = '';
+        document.getElementById('controldate').className = '';
+        document.getElementById('controldate').textContent = '';
+        document.getElementById('errordate').className = '';
+        document.getElementById('testSaved').textContent = 'Ditt test har sparats';
+        document.getElementById('saved').className = 'alert alert-success';
+
+
+    }
+    });
+
+</script>
 
 <script>
 
