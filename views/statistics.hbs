@@ -6,15 +6,17 @@
               <div class="panel-heading">
                     <h1 class="panel-title">Statistik</h1>
               </div>
-              <div class="panel-body">
+              <div class="panel-body text-center">
 
                   <!-- Test selection -->
-                  <p>Välj ett test nedan för att se hittils samlad statistik.</p>
-                  <select name="test" id="testSelect" class="form-control">
-                      <option value="">Välj test</option>
-                      <option value="" id="genTest1">Generic test 1</option>
-                      <option value="" id="genTest2">Generic test 2</option>
-                  </select>
+                  <h4>Välj test för att se statistik</h4>
+                  <form action="/test" method="get">
+                      <select name="test" id="testSelect" class="form-control">
+                          {{#each tests}}
+                              <option class="{{this.TestId}}">{{this.TTitle}}</option>
+                          {{/each}}
+                      </select>
+                  </form>
 
                   <!-- Displaying statistics -->
                   <table class="table collapse" id="statsTable">
@@ -45,6 +47,7 @@
     // Displays statistics for selected test when clicking button
     $(function() {
         $("#testSelect").change(function() {
+            $("#statsTable").slideDown();
             if ($("#genTest1").is(":selected")) {
                 $("#statsTable").hide();
                 $("#statsTable").slideDown();
@@ -52,7 +55,7 @@
                 $("#statsTable").hide();
                 $("#statsTable").slideDown();
             } else {
-                $("#statsTable").hide();
+                //$("#statsTable").hide();
             }
         });
     });

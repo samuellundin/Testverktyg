@@ -3,11 +3,16 @@
 <div class="container" id="shareTest">
     <div class="col-md-4 col-md-offset-4">
 
-        <!-- Test selection -->
-        <h3 class="page-header">Välj test att dela</h3>
-        <form action="share" method="post">
-            <select name="share" id="shareTestSelect" class="form-control"></select>
-            <br>
+                <!-- Test selection -->
+                <h3 class="page-header">Välj test</h3>
+                <form action="/test" method="get">
+                    <select name="test" id="testName" class="form-control">
+                        {{#each tests}}
+                            <option class="{{this.TestId}}">{{this.TTitle}}</option>
+                        {{/each}}
+                    </select>
+                </form>
+
 
             <!-- Group/student selection -->
             <select name="share" id="shareSelect" class="form-control">

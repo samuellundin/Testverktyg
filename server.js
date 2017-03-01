@@ -61,7 +61,6 @@ app.post('/login', function(req, res){
     sql.connection.query("SELECT * FROM User WHERE Mail = '" + req.body.email +"'", function(err, result){
         if(err || result[0] == null){
             req.session.err = 'No such mail registered';
-            delayRedirect(res, 200);
             return;
 
         }
@@ -128,11 +127,15 @@ app.get("/results", function(req, res) {
 
 //Get edit
 app.get("/edit", function(req, res) {
-    res.render("edit", req.session);
+    updateSessionTests(req);
+    setTimeout(function(){
+        res.render("edit", req.session);
+    }, 200);
 });
 
 //Get share
 app.get("/share", function(req, res) {
+    updateSessionTests(req);
     sql.connection.query("SELECT * FROM StudentGroup", function(error, result){
         if(error) throw error;
         req.session.studentGroups = dcopy(result);
@@ -148,7 +151,10 @@ app.get("/share", function(req, res) {
 
 //Get statistics
 app.get("/statistics", function(req, res) {
-    res.render("statistics", req.session);
+    updateSessionTests(req);
+    setTimeout(function(){
+        res.render("statistics", req.session);
+    }, 200);
 });
 
 //Get testMenu
@@ -255,6 +261,15 @@ app.post('/group', function(req, res){
 });
 
 //HELPER FUNCTIONS
+
+//Updates session with tests from datebase
+function updateSessionTests(req) {
+    sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
+        console.log(result);
+        req.session.tests = dcopy(result);
+    });
+}
+
 //Sets our session variable to know what role our user has
 function setupRole(req){
     switch (req.session.role){
