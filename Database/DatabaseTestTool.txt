@@ -25,9 +25,9 @@ CREATE TABLE Test(
 		TEndTestDate DATETIME,
 		TTimeMin INT(10) NOT NULL,
 		TMaxPoints INT(10) NOT NULL,
-		TSelfCorrecting BIT NOT NULL,
+		TSelfCorrecting TINYINT(1) NOT NULL,
 		CONSTRAINT TUserIdFK FOREIGN KEY (TUserId) REFERENCES User(UserId)
-		);	
+		);
 
 CREATE TABLE Questions(
 		QuestionId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -37,7 +37,7 @@ CREATE TABLE Questions(
 		QPoints INT(10) NOT NULL,
 		QOrder INT(10) NOT NULL,
 		CONSTRAINT QTestIdFK FOREIGN KEY (QTestId) REFERENCES Test(TestId)
-		);	
+		);
 
 
 CREATE TABLE Answers(
@@ -48,7 +48,7 @@ CREATE TABLE Answers(
 		ACorrected BOOLEAN NOT NULL,
 		AText VARCHAR(60) NOT NULL,
 		CONSTRAINT AQuestionIdFK FOREIGN KEY (AQuestionId) REFERENCES Questions(QuestionId)
-		);										
+		);
 
 CREATE TABLE AnsweredTest(
 		ATestId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -58,15 +58,15 @@ CREATE TABLE AnsweredTest(
 		ATPoints INT(10) NOT NULL,
 		ATGrade INT(10) NOT NULL,
 		CONSTRAINT ATAnswersIdFK FOREIGN KEY (ATAnswersId) REFERENCES Answers(AnswersId)
-		);					
+		);
 
 CREATE TABLE UserAnswer(
 		UserAnswerId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 		UAUserId INT,
 		UAAnswersId INT,
 		UADate DATETIME NOT NULL,
-		UACorrected BOOLEAN NOT NULL,
-		UAPoints INT(10) NOT NULL,
+		UACorrected TINYINT(1) NOT NULL,
+		UAPoints TINYINT(1) NOT NULL,
 		UAGrade INT(10) NOT NULL,
 		CONSTRAINT UAAnswersIdFK FOREIGN KEY (UAAnswersId) REFERENCES Answers(AnswersId),
 		CONSTRAINT UAUserIdFK FOREIGN KEY (UAUserId) REFERENCES User(UserId)
@@ -75,7 +75,7 @@ CREATE TABLE UserAnswer(
 CREATE TABLE StudentGroup(
   StudentGroupId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   groupName VARCHAR(50)
-);		
+);
 
 CREATE TABLE GroupDetails(
        GroupDetailsId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -91,7 +91,7 @@ TestComment VARCHAR(60),
 TCUserId INT,
 TCATestId INT,
 CONSTRAINT TCUserIdFK FOREIGN KEY (TCUserId) REFERENCES User(UserId),
-CONSTRAINT TCATestIdFK FOREIGN KEY (TCATestId) REFERENCES AnsweredTest(ATestId));	
+CONSTRAINT TCATestIdFK FOREIGN KEY (TCATestId) REFERENCES AnsweredTest(ATestId));
 
 CREATE TABLE QuestionComment(
 QuestionCommentId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -99,5 +99,5 @@ QuestionComment VARCHAR (60),
 QCUserId INT,
 QCQuestionId INT,
 CONSTRAINT QCUserIdFK FOREIGN KEY (QCUserId) REFERENCES User(UserId),
-CONSTRAINT QCQuestionIdFK FOREIGN KEY (QCQuestionId) REFERENCES Questions(QuestionId));		
+CONSTRAINT QCQuestionIdFK FOREIGN KEY (QCQuestionId) REFERENCES Questions(QuestionId));
 

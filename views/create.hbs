@@ -418,7 +418,7 @@
         data.minutes = $('#timed').is(':checked')? Number($('#time').val()) : 0;
         data.startDT = $('#dateStart').val() + " " + $('#timeStart').val() + ":00";
         data.endDT = $('#date').val() + " " + $('#timeEnd').val() + ":00";
-        data.checked = $('#selfCorrecting').is(':checked');
+        data.checked = $('#selfCorrecting').is(':checked') ? 1 : 0;
         storeVariable.data = data;
     }
 
@@ -429,11 +429,11 @@
             if($(this).hasClass('notthis')){
                 return true;
             }
-           questionData.title = $(this).find('h3').text();
+           questionData.title = $(this).find('h3').text().split('\(')[0];
            questionData.testTitle = $('#testName').val();
            questionData.qType = $(this).find('meta').attr('class');
            questionData.qOrder = index;
-           questionData.score = 0;
+           questionData.score = $(this).find('span').text().match(/\d+/);;
            questionsArray.push(questionData);
            questionData = new Object();
         });
@@ -447,7 +447,7 @@
             if($(this).hasClass('notthis')){
                 return true;
             }
-            var questionTitle = $(this).find('h3').text();
+            var questionTitle = $(this).find('h3').text().split('\(')[0];
             $(this).find('li').each(function(index){
                 answerData.qTitle = questionTitle;
                 answerData.title = $(this).text();
