@@ -6,13 +6,34 @@
         <!-- Test selection -->
         <h3 class="page-header">Välj test att redigera</h3>
         <form action="/test" method="get">
-            <select name="test" id="testName" class="form-control">
+            <select name="test" id="testSelect" class="form-control">
                 {{#each tests}}
                     <option class="{{this.TestId}}">{{this.TTitle}}</option>
                 {{/each}}
             </select>
             <br>
-            <button type="button" class="btn btn-primary btn-block" id="editButton">Redigera test</button>
+            <button type="button" class="btn btn-primary btn-block" id="editButton" value="hh">Redigera test</button>
         </form>
     </div>
 </div>
+
+
+<script>
+
+    $(document).on('click', '#editButton', function() {
+        var currTestId = $('select option:selected').attr('class');
+
+        console.log("TestId är: " + currTestId);
+
+        $.ajax({
+            url: '/edit',
+            method: 'post',
+            data: currTestId,
+            success: function(){
+                console.log('Tryckt på edit');
+                location.replace('/');
+            }
+        });
+    });
+
+</script>

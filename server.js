@@ -140,9 +140,30 @@ app.get("/results", function(req, res) {
 //Get edit
 app.get("/edit", function(req, res) {
     updateSessionTests(req);
+
     setTimeout(function(){
         res.render("edit", req.session);
     }, 200);
+});
+
+//Saves questions for posted TestId in session
+app.post("/edit", function(res, req) {
+    console.log(req.getBody);
+    console.log("Japp");
+
+    sql.connection.query("SELECT QuestionId, QTestId,Question,QType,QPoints,QOrder FROM Questions WHERE QTestId =" + req.body, function(error, result) {
+        req.session.editQuestions = dcopy(result);
+    });
+
+    var questionIds = [];
+    sql.connection.query("SELECT QuestionId FROM Questions WHERE QTestId =" + req.body, function(error, result) {
+        for(var i = 0; i < result.length; i++) {
+            questionIds += result[i] + ",";
+        }
+    });
+    sql.connection.query("SELECT AQuestionId,AOrder,APoints,ACorrected,AText FROM Answers WHERE AQuestionId IN " + "(" + questionIds + ")", function(error, result) {
+        req.session.editAnswers = dcopy(result);
+    });
 });
 
 //Get share
