@@ -178,13 +178,13 @@ exports.getAllUsers = function(){
     return 'Whaat?';
 }
 
-exports.getAnsweredTest = function(ATId, Uid){
+exports.getAnsweredTest = function( Uid){
     var resultat = "";
     connection.query('SELECT ATPoints, ATTimeMin, ATGrade FROM AnsweredTest WHERE ATUserId ='  + Uid, function(err, result){
         resultat = result
         console.log(result);
     });
-    console.log(resultat + " yeah.");
-    return 'Whaat?';
+
+    return 'Whaat?';}
 
 
