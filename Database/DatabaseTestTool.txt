@@ -1,8 +1,4 @@
-/*
-source /Users/Sofia/Desktop/Testverktyg/Database/DatabaseTestTool.txt;
 
-
-*/
 
 DROP  DATABASE TestTool;
 CREATE DATABASE TestTool;
@@ -67,8 +63,6 @@ CREATE TABLE UserAnswer(
 		UAQuestionId INT,
 		UAAnswersId INT,
 		UATestId INT,
-		UADate DATETIME NOT NULL,
-		UACorrected TINYINT(1) NOT NULL,
 		UAPoints TINYINT(1) NOT NULL,
 		UAOrder INT(1) NOT NULL,
 		UAGrade INT(10) NOT NULL,
@@ -77,6 +71,16 @@ CREATE TABLE UserAnswer(
 		CONSTRAINT UATestIdFK FOREIGN KEY (UATestId) REFERENCES AnsweredTest(AnsweredTestId),
 		CONSTRAINT UAQuestionIdFK FOREIGN KEY (UAQuestionId) REFERENCES Questions(QuestionId)
 		);
+
+CREATE TABLE AnsweredQuestion(
+		AnsweredQuestionId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+		AQQuestionId INT,
+		AQAnsweredTestId INT,
+		CONSTRAINT AQQuestionIdFK FOREIGN KEY (AQQuestionId) REFERENCES Questions(QuestionId),
+		CONSTRAINT AQAnsweredTestIdFK FOREIGN KEY (AQAnsweredTestId) REFERENCES AnsweredTest(AnsweredTestId)
+		);
+
+
 
 CREATE TABLE StudentGroup(
   StudentGroupId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
