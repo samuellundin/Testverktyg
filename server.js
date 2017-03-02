@@ -148,34 +148,58 @@ app.get("/editMenu", function(req, res) {
 
 //Saves questions for posted TestId in session
 app.post("/editMenu", function(req, res) {
+    var question = [];  //ska innehålla samtliga frågeobjekt
+
+    var questionId = [];    //array som innehåller samtliga q-ids
+    var questionIds = "";   //sträng som används i select
+    var questionCounter = 0;
+
     sql.connection.query("SELECT QuestionId, QTestId,Question,QType,QPoints,QOrder FROM Questions WHERE QTestId = '" + req.body.testId + "'", function(error, result) {
         req.session.editQuestions = dcopy(result);
     });
 
-    var questionIds = "(";
-    sql.connection.query("SELECT QuestionId FROM Questions WHERE QTestId ='" + req.body.testId +"'", function(error, result) {
-        console.log("result längd: " + result.length);
-        for(var i = 0; i < result.length; i++) {
-            console.log(result[i].QuestionId);
-            console.log("loop: " + i);
-            if(i == result.length - 1) {
-                console.log("inne i if");
-                questionIds = questionIds + "'" + result[i].QuestionId + "')";
-            } else {
-                console.log("inne i else");
-                questionIds = questionIds + "'" + result[i].QuestionId + "',";
-            }
-            console.log("questionIds: " + questionIds);
-        }
-    });
-    sql.connection.query("SELECT AnswersId,AQuestionId,AOrder,APoints,ACorrected,AText FROM Answers WHERE AQuestionId IN " + questionIds , function(error, result) {
-        req.session.editAnswers = dcopy(result);
-    });
-    console.log("efter alla queries");
+    //Saves useful data to variables and also nrOfQuestions to session
     setTimeout(function(){
-        console.log("i timeout");
-        res.render("edit", req.session);
+        sql.connection.query("SELECT QuestionId FROM Questions WHERE QTestId ='" + req.body.testId +"'", function(error, result) {
+            for(var i = 0; i < result.length; i++) {
+                questionCounter += 1;
+                questionId.push(result[i].QuestionId);
+                if(i == result.length - 1) {
+                    questionIds = questionIds + "(AQuestionId = '" + result[i].QuestionId + "')";
+                    req.session.nrOfQuestions = dcopy(questionCounter);
+                } else {
+                    questionIds = questionIds + "(AQuestionId = '" + result[i].QuestionId + "') OR ";
+                }
+            }
+        });
     }, 200);
+
+    setTimeout(function(){
+        for(var i = 0; i < questionId.length; i++) {
+            sql.connection.query("SELECT AnswersId,AQuestionId,AOrder,APoints,ACorrected,AText FROM Answers WHERE AQuestionId =" + questionId[i], function(error, result) {
+                question.push({i:result});
+            });
+        }
+    }, 400);
+
+    setTimeout(function(){
+        console.log(question[0]);
+        console.log(question[1]);
+        req.session.questionGroup = dcopy(question);
+        for(var i = 0; i < questionId.length; i++) {
+            console.log("questionId-längd: " + questionId[i]);
+        }
+
+        sql.connection.query("SELECT AnswersId,AQuestionId,AOrder,APoints,ACorrected,AText FROM Answers WHERE " + questionIds , function(error, result) {
+            req.session.editAnswers = dcopy(result);
+        });
+    }, 600);
+
+    setTimeout(function(){
+        console.log("questionIds: " + questionIds);
+        console.log("nr of questions: " + questionCounter);
+        res.render("edit", req.session);
+    }, 800);
 });
 
 //Get edit

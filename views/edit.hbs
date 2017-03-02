@@ -11,8 +11,21 @@
             </select>
             <select name="test" id="testSelect" class="form-control">
                 {{#each editAnswers}}
-                    <option class="">{{this.AnswersId}}</option>
+                    <option class="">{{this.AText}}</option>
                 {{/each}}
+            </select>
+            <select name="test" id="testSelect" class="form-control">
+                <option class="">{{nrOfQuestions}}</option>
+            </select>
+            <select name="test" id="testSelect" class="form-control">
+                {{#questionGroup}}
+                    <option class="">{{this.[0].AnswersId}}</option>
+                {{/questionGroup}}
+            </select>
+            <select name="test" id="testSelect" class="form-control">
+                {{#questionGroup}}
+                    <option class="">{{this.[1].AnswersId}}</option>
+                {{/questionGroup}}
             </select>
             <br>
             <button type="button" class="btn btn-primary btn-block" id="editButton" value="hh">Redigera test</button>
@@ -23,6 +36,9 @@
 
 
 <script>
-    console.log("inne i edit");
+
+    /* for(nrOfQuestions)
+        var i =
+    */
 
 </script>
