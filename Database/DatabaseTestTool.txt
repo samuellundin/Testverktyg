@@ -1,3 +1,5 @@
+
+
 DROP  DATABASE TestTool;
 CREATE DATABASE TestTool;
 USE TestTool;
@@ -19,8 +21,7 @@ CREATE TABLE Test(
 		TEndTestDate DATETIME,
 		TTimeMin INT(10) NOT NULL,
 		TMaxPoints INT(10) NOT NULL,
-		TSelfCorrecting TINYINT(1) DEFAULT 0,
-		TResult TINYINT(1) DEFAULT 0,
+		TSelfCorrecting TINYINT(1) NOT NULL,
 		CONSTRAINT TUserIdFK FOREIGN KEY (TUserId) REFERENCES User(UserId)
 		);
 
@@ -52,7 +53,7 @@ CREATE TABLE AnsweredTest(
 		ATDate DATE NOT NULL,
 		ATCorrected BOOLEAN NOT NULL,
 		ATPoints INT(10) NOT NULL,
-                ATTimeMin INT(10), NOT NULL,
+                ATTimeMin INT(10) NOT NULL,
 		ATGrade INT(10) NOT NULL,
 		CONSTRAINT ATAnswersIdFK FOREIGN KEY (ATestId) REFERENCES Test(TestId),
 		CONSTRAINT UAUserIdFK FOREIGN KEY (ATUserId) REFERENCES User(UserId)
@@ -60,9 +61,9 @@ CREATE TABLE AnsweredTest(
 
 CREATE TABLE AnsweredQuestion(
 		AnsweredQuestionId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		AQAnsweredTestId INT,
 		AQQuestionId INT,
-		AQPoints INT NOT NULL,
+		AQAnsweredTestId INT,
+		UAPoints TINYINT(1) NOT NULL,
 		CONSTRAINT AQQuestionIdFK FOREIGN KEY (AQQuestionId) REFERENCES Questions(QuestionId),
 		CONSTRAINT AQAnsweredTestIdFK FOREIGN KEY (AQAnsweredTestId) REFERENCES AnsweredTest(AnsweredTestId)
 		);

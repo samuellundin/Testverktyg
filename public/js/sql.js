@@ -180,7 +180,7 @@ exports.getAllUsers = function(){
 
 exports.getAnsweredTest = function(ATId, Uid){
     var resultat = "";
-    connection.query('SELECT ATPoints, FROM UserAnswer WHERE UserAnswerId =' , function(err, result){
+    connection.query('SELECT ATPoints, ATTimeMin, ATGrade FROM AnsweredTest WHERE ATUserId ='  + Uid, function(err, result){
         resultat = result
         console.log(result);
     });
