@@ -5,27 +5,19 @@
         <h3 class="page-header">Välj test att redigera</h3>
         <form action="/test" method="get">
             <select name="test" id="testSelect" class="form-control">
-                {{#each editQuestions}}
+                {{#each eQuestion}}
                     <option class="{{this.QuestionId}}">{{this.Question}}</option>
                 {{/each}}
             </select>
             <select name="test" id="testSelect" class="form-control">
-                {{#each editAnswers}}
-                    <option class="">{{this.AText}}</option>
-                {{/each}}
+                {{#eAnswer}}
+                    <option class="">{{this.[0].[0].AText}}</option>
+                {{/eAnswer}}
             </select>
             <select name="test" id="testSelect" class="form-control">
-                <option class="">{{nrOfQuestions}}</option>
-            </select>
-            <select name="test" id="testSelect" class="form-control">
-                {{#questionGroup}}
-                    <option class="">{{this.[0].AnswersId}}</option>
-                {{/questionGroup}}
-            </select>
-            <select name="test" id="testSelect" class="form-control">
-                {{#questionGroup}}
-                    <option class="">{{this.[1].AnswersId}}</option>
-                {{/questionGroup}}
+                {{#eAnswer}}
+                    <option class="">{{this.[0].[1].AText}}</option>
+                {{/eAnswer}}
             </select>
             <br>
             <button type="button" class="btn btn-primary btn-block" id="editButton" value="hh">Redigera test</button>
@@ -37,8 +29,5 @@
 
 <script>
 
-    /* for(nrOfQuestions)
-        var i =
-    */
 
 </script>

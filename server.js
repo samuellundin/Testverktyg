@@ -148,14 +148,14 @@ app.get("/editMenu", function(req, res) {
 
 //Saves questions for posted TestId in session
 app.post("/editMenu", function(req, res) {
-    var question = [];  //ska innehålla samtliga frågeobjekt
+    var answers = [];  //contains all answers
 
     var questionId = [];    //array som innehåller samtliga q-ids
     var questionIds = "";   //sträng som används i select
     var questionCounter = 0;
 
     sql.connection.query("SELECT QuestionId, QTestId,Question,QType,QPoints,QOrder FROM Questions WHERE QTestId = '" + req.body.testId + "'", function(error, result) {
-        req.session.editQuestions = dcopy(result);
+        req.session.eQuestion = dcopy(result);
     });
 
     //Saves useful data to variables and also nrOfQuestions to session
@@ -177,22 +177,18 @@ app.post("/editMenu", function(req, res) {
     setTimeout(function(){
         for(var i = 0; i < questionId.length; i++) {
             sql.connection.query("SELECT AnswersId,AQuestionId,AOrder,APoints,ACorrected,AText FROM Answers WHERE AQuestionId =" + questionId[i], function(error, result) {
-                question.push({i:result});
+                answers.push(result);
             });
         }
     }, 400);
 
     setTimeout(function(){
-        console.log(question[0]);
-        console.log(question[1]);
-        req.session.questionGroup = dcopy(question);
-        for(var i = 0; i < questionId.length; i++) {
-            console.log("questionId-längd: " + questionId[i]);
-        }
-
-        sql.connection.query("SELECT AnswersId,AQuestionId,AOrder,APoints,ACorrected,AText FROM Answers WHERE " + questionIds , function(error, result) {
+        req.session.eAnswer = [];
+        req.session.eAnswer.push(answers);
+        //req.session.questionGroup.qArray: question;
+        /*sql.connection.query("SELECT AnswersId,AQuestionId,AOrder,APoints,ACorrected,AText FROM Answers WHERE " + questionIds , function(error, result) {
             req.session.editAnswers = dcopy(result);
-        });
+        });*/
     }, 600);
 
     setTimeout(function(){
