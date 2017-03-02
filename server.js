@@ -269,7 +269,9 @@ app.get("/test=:testIdLink", function(req, res) {
 
 app.post('/turnin', function(req, res){
     req.body.UAQuestions.TestId = req.session.test.TestId;
+    req.body.userAnswers.TestId = req.session.test.TestId;
     req.body.UAQuestions.UserId = req.session.id;
+    req.body.userAnswers.UserId = req.session.id;
     sql.addUserAnsweredTest(req.body.takenTest);
     sql.addUserQuestions(req.body.UAQuestions);
     setTimeout(function(){

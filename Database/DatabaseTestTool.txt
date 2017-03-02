@@ -107,3 +107,31 @@ QCQuestionId INT,
 CONSTRAINT QCUserIdFK FOREIGN KEY (QCUserId) REFERENCES User(UserId),
 CONSTRAINT QCQuestionIdFK FOREIGN KEY (QCQuestionId) REFERENCES Questions(QuestionId));
 
+CREATE VIEW ElevStatistik AS
+(SELECT u.UserId, u.FirstName, t.TTitle AS Titel, t.ATDate AS Inlämnad, t.ATGrade AS Betyg
+FROM User AS u
+INNER JOIN
+(SELECT Test.TTitle, AnsweredTest.ATUserId, AnsweredTest.ATDate, AnsweredTest.ATGrade
+FROM Test
+INNER JOIN AnsweredTest
+ON AnsweredTest.ATestId = Test.TestId) AS t
+ON u.UserId = t.ATUserId);
+
+CREATE VIEW ATTable AS
+(SELECT at.ATestId, at.ATUserId, aq.*, ua.* FROM AnsweredTest AS at
+INNER JOIN AnsweredQuestion AS aq ON aq.AQAnsweredTestId = at.AnsweredTestId
+INNER JOIN UserAnswer AS ua ON ua.UAQuestionId = aq.AnsweredQuestionId);
+
+CREATE VIEW Correcting AS
+(SELECT AnsweredTest.ATUserId, AnsweredTest.AnsweredTestId, AnsweredTest.ATestId, Answers.*, UserAnswer.*, AnsweredQuestion.AQAnsweredTestId, AnsweredQuestion.AQQuestionId, Questions.QType
+FROM Answers INNER JOIN UserAnswer ON UserAnswer.UAAnswersId = Answers.AnswersId
+INNER JOIN AnsweredQuestion ON AnsweredQuestion.AnsweredQuestionId = UserAnswer.UAQuestionId
+INNER JOIN AnsweredTest ON AnsweredQuestion.AQAnsweredTestId = AnsweredTest.AnsweredTestId
+INNER JOIN Questions ON Questions.QuestionId = AnsweredQuestion.AQQuestionId);
+
+INSERT INTO User (FirstName, LastName, Mail, Password, Role) VALUES ('Gurkan', 'Gurksson', 'Gurkan4life@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
+('Bönan', 'Bönsson', 'Bönor@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
+('Nöten', 'Nötsson', 'Nötter@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
+('Bruttan', 'Bruttsson', 'Bruttis@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
+('Gösta', 'Göstasson', 'Gösta@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'teacher'),
+('Admin', 'Adminsson', 'Admin@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'admin');
