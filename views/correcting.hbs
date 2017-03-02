@@ -1,0 +1,56 @@
+<div class="container">
+    <div class="col-lg-10 col-lg-offset-1">
+        <h1 class="title">Rätta test</h1>
+        <hr/>
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <h3 class="panel-title">Fråga<span class="pull-right">Poäng: <input type="text"> / 10</span></h3>
+            </div>
+            <div class="panel-body collapse">
+                <ul class="list-group">
+                    <li class="list-group-item">1</li>
+                    <li class="list-group-item">2</li>
+                    <li class="list-group-item">3</li>
+                </ul>
+                <textarea class="form-control collapse" style="resize: vertical"></textarea>
+                <button type="button" class="btn btn-default commentButton">Kommentar på fråga</button>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <h3 class="panel-title">Fråga<span class="pull-right">Poäng: <input type="text"> / 10</span></h3>
+            </div>
+            <div class="panel-body collapse">
+                <ul class="list-group">
+                    <li class="list-group-item">1</li>
+                    <li class="list-group-item">2</li>
+                    <li class="list-group-item">3</li>
+                </ul>
+                <textarea class="form-control collapse" style="resize: vertical"></textarea>
+                <button type="button" class="btn btn-default commentButton">Kommentar på fråga</button>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <h3 class="panel-title">Kommentar för test</h3>
+            </div>
+            <div class="panel-body collapse">
+                <ul class="list-group">
+                    <textarea class="form-control" style="resize: vertical"></textarea>
+                </ul>
+            </div>
+        </div>
+        <button type="button" class="btn btn-info">Rätta test</button>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $('.commentButton').on('click', function() {
+            $(this).parent().find('textarea').toggle();
+        });
+        $(document).on('click', '.panel-heading', function(e) {
+            $(this).next('.panel-body').slideToggle();
+        });
+    });
+</script>

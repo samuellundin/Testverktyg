@@ -300,6 +300,11 @@ app.post('/group', function(req, res){
     res.send('Yay');
 });
 
+//Get correcting
+app.get('/correcting', function(req, res) {
+    res.render('correcting', req.session);
+});
+
 //HELPER FUNCTIONS
 
 //Updates session with tests from datebase
