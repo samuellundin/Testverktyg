@@ -1,5 +1,3 @@
-<!-- Page for editing a test -->
-
 <div class="container">l
     <div class="col-md-4 col-md-offset-4">
 
@@ -7,8 +5,13 @@
         <h3 class="page-header">Välj test att redigera</h3>
         <form action="/test" method="get">
             <select name="test" id="testSelect" class="form-control">
-                {{#each tests}}
-                    <option class="{{this.TestId}}">{{this.TTitle}}</option>
+                {{#each editQuestions}}
+                    <option class="{{this.QuestionId}}">{{this.Question}}</option>
+                {{/each}}
+            </select>
+            <select name="test" id="testSelect" class="form-control">
+                {{#each editAnswers}}
+                    <option class="">{{this.AnswersId}}</option>
                 {{/each}}
             </select>
             <br>
@@ -18,22 +21,8 @@
 </div>
 
 
+
 <script>
-
-    $(document).on('click', '#editButton', function() {
-        var currTestId = $('select option:selected').attr('class');
-
-        console.log("TestId är: " + currTestId);
-
-        $.ajax({
-            url: '/edit',
-            method: 'post',
-            data: currTestId,
-            success: function(){
-                console.log('Tryckt på edit');
-                location.replace('/');
-            }
-        });
-    });
+    console.log("inne i edit");
 
 </script>

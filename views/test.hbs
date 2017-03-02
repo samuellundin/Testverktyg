@@ -135,6 +135,7 @@
     function turnIn(){
         var data = {};
         createTakenTest(data);
+        createAnsweredQuestions(data);
         createAnswers(data);
         console.log(data);
         $.ajax({
@@ -159,13 +160,25 @@
         data.takenTest = takenTest;
     }
 
+    function createAnsweredQuestions(data){
+        var UAQuestions = [];
+        $('.panel-default').each(function(i){
+            var UAQuestion = {};
+            var questionId = Number($(this).find('h3.panel-title').attr('id'));
+            UAQuestion.AQQuestionId = questionId;
+            UAQuestion.AQPoints = 0;
+            UAQuestions.push(UAQuestion);
+        });
+        console.log(UAQuestions);
+        data.UAQuestions = UAQuestions;
+    }
+
     function createAnswers(data){
         var userAnswers = [];
         var userAnswer;
 
         $('.panel-default').each(function(i){
             userAnswer = new Object();
-            var questionId = Number($(this).find('h3.panel-title').attr('id'));
             switch($(this).find('meta').attr('class')){
                 case 'flerval':
                     $('input[type=checkbox]').each(function(index){
@@ -174,7 +187,7 @@
                             userAnswer.UAAnswersId = $(this).attr('id');
                             userAnswer.UAOrder = index;
                             userAnswer.UAText = null;
-                            answerDataAppend(userAnswer, userAnswers, questionId);
+                            userAnswers.push(userAnswer);
                             return true;
                         }
                     });
@@ -185,7 +198,7 @@
                         userAnswer.UAAnswersId = $(this).attr('id');
                         userAnswer.UAOrder = index;
                         userAnswer.UAText = null;
-                        answerDataAppend(userAnswer, userAnswers, questionId);
+                        userAnswers.push(userAnswer);
                         return true;
                     });
                     break;
@@ -194,29 +207,19 @@
                     userAnswer.UAAnswersId = $('textarea').attr('id');
                     userAnswer.UAOrder = i;
                     userAnswer.UAText = $('textarea').val();
-                    answerDataAppend(userAnswer, userAnswers, questionId);
+                    userAnswers.push(userAnswer);
                     break;
 
                 case 'alternativ':
                     userAnswer.UAAnswersId = $('input:checked').attr('id');
                     userAnswer.UAOrder = i;
                     userAnswer.UAText = null;
-                    answerDataAppend(userAnswer, userAnswers, questionId);
+                    userAnswers.push(userAnswer);
                     break;
             }
         })
 
         data.userAnswers = userAnswers;
     }
-
-    function answerDataAppend(userAnswer, userAnswers, questionId){
-        userAnswer.UAQuestionId = questionId;
-        userAnswer.UADate = 'now()';
-        userAnswer.UACorrected = 0;
-        userAnswer.UAPoints = 0;
-        userAnswer.UAGrade = 0;
-        userAnswers.push(userAnswer);
-    }
-
 
 </script>

@@ -17,9 +17,7 @@ connection.connect();
 exports.connection = connection;
 //Function add user to database
 exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
-    if(!validateEmail(umail)){
-        return {err: 'Not a valid email adress'};
-    }
+
     //Create object user
     var newUser ={
         firstname: ufirstName,
@@ -39,14 +37,15 @@ exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
 };
 
 exports.addTest = function(testData){
-    connection.query("INSERT INTO Test (TUserId, TTitle, TStartTestDate, TEndTestDate, TTimeMin, TMaxPoints, TSelfCorrecting) VALUES ("
+    connection.query("INSERT INTO Test (TUserId, TTitle, TStartTestDate, TEndTestDate, TTimeMin, TMaxPoints, TSelfCorrecting, TResult) VALUES ("
     + mysql.escape(testData.userId) + ", "
     + mysql.escape(testData.testTitle) + ", "
     + mysql.escape(testData.startDT) + ", "
     + mysql.escape(testData.endDT) + ", "
     + mysql.escape(testData.minutes) + ", "
     + mysql.escape(testData.maxPoints) + ", "
-    + mysql.escape(testData.checked) + ")", function(err, result){
+    + mysql.escape(testData.checked) + ", "
+    + mysql.escape(testData.showResult) + ")", function(err, result){
         if(err){
             console.log(err);
             return false;
@@ -132,27 +131,42 @@ exports.addUserAnsweredTest = function(data){
     });
 };
 
-exports.addUserAnswers = function(data){
-    connection.query('SELECT AnsweredTestId FROM AnsweredTest WHERE ATestId =' + mysql.escape(data.TestId) + ' AND ATUserId = ' + mysql.escape(data.UserId), function(error, result){
+exports.addUserQuestions = function(data){
+    connection.query("SELECT AnsweredTestId FROM AnsweredTest WHERE ATestId =" + mysql.escape(data.TestId) + ' AND ATUserId = ' + mysql.escape(data.UserId), function(error, result){
         var TestId = dcopy(result[0].AnsweredTestId);
         for(var i = 0; i < data.length; i++){
-            connection.query('INSERT INTO UserAnswer (UAQuestionId, UAAnswersId, UATestId, UADate, UACorrected, UAPoints, UAOrder, UAGrade, UAText) VALUES ('
-                + mysql.escape(data[i].UAQuestionId) + ", "
-                + mysql.escape(data[i].UAAnswersId) + ", "
-                + mysql.escape(TestId) + ", "
-                + 'NOW()' + ", "
-                + mysql.escape(data[i].UACorrected) + ", "
-                + mysql.escape(data[i].UAPoints) + ", "
-                + mysql.escape(data[i].UAOrder) + ", "
-                + mysql.escape(data[i].UAGrade) + ", "
-                + mysql.escape(data[i].UAText) + ")", function(error, result){
-                    if(error) throw error;
-                    console.log('Added user answers successfully');
-                    return true;
-            });
+            connection.query('INSERT INTO AnsweredQuestion (AQAnsweredTestId, AQQuestionId, AQPoints) VALUES ('
+            + mysql.escape(TestId) + ", "
+            + mysql.escape(data[i].AQQuestionId) + ", "
+            + mysql.escape(data[i].AQPoints) + ")");
         }
-    })
+    });
+    return true;
 };
+
+exports.addUserAnswers = function(data){
+    var k = 0;
+        for(var i = 0; i < data.length; i++){
+            connection.query('SELECT AnsweredQuestionId FROM AnsweredQuestion WHERE AQQuestionId = (SELECT AQuestionId FROM Answers WHERE AnswersId = ' + mysql.escape(data[i].UAAnswersId) + ')', function(error, result){
+                if(error) throw error;
+                var AQId = dcopy(result[0].AnsweredQuestionId);
+                userAnswer(data, AQId, k++);
+            });
+    }
+};
+
+function userAnswer(data, AQId, k){
+                connection.query('INSERT INTO UserAnswer (UAQuestionId, UAAnswersId, UAOrder, UAText) VALUES ('
+                    + mysql.escape(AQId) + ", "
+                    + mysql.escape(data[k].UAAnswersId) + ", "
+                    + mysql.escape(data[k].UAOrder) + ", "
+                    + mysql.escape(data[k].UAText) + ")", function(error, result){
+                        if(error) throw error;
+                        console.log('Added user answers successfully');
+                        return true;
+        });
+
+}
 
 exports.getAllUsers = function(){
     var resultat = "";
@@ -164,8 +178,3 @@ exports.getAllUsers = function(){
     return 'Whaat?';
 } 
 
-
-function validateEmail(email) {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
-}
