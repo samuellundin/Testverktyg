@@ -176,5 +176,15 @@ exports.getAllUsers = function(){
     });
     console.log(resultat + " yeah.");
     return 'Whaat?';
-} 
+}
+
+exports.getAnsweredTest = function(ATId, Uid){
+    var resultat = "";
+    connection.query('SELECT ATPoints, FROM UserAnswer WHERE UserAnswerId =' , function(err, result){
+        resultat = result
+        console.log(result);
+    });
+    console.log(resultat + " yeah.");
+    return 'Whaat?';
+
 
