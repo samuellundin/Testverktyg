@@ -331,6 +331,7 @@ app.get('/correcting', function(req, res) {
         for(var i = 0; i < result.length; i++){
             sql.connection.query('SELECT AnsweredTest.ATestId, User.FirstName FROM AnsweredTest INNER JOIN User ON AnsweredTest.ATUserId = User.UserId WHERE AnsweredTest.ATestId =' + result[i].TestId, function (err, result) {
                 req.session.testusers = dcopy(result);
+                console.log(result);
             });
         }
         setTimeout(function () {

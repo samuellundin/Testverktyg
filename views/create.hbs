@@ -245,6 +245,12 @@
                 <ul class="list-group sortable">`+ i +`</ul>
             </div>
         </div>`);
+        if($('#questionBox:contains("Öppen fråga")').length)
+        {
+            $('#selfCorrecting').prop('disabled', true);
+        } else {
+            $('#selfCorrecting').prop('disabled', false);
+        }
         $('.sortable').sortable();
     });
 
@@ -382,6 +388,12 @@
                 <ul class="list-group sortable">`+ i +`</ul>
             </div>
         `);
+        if($('#questionBox:contains("Öppen fråga")').length)
+        {
+            $('#selfCorrecting').prop('disabled', true);
+        } else {
+            $('#selfCorrecting').prop('disabled', false);
+        }
         $('.sortable').sortable();
     });
     $('#editModal').on('click', '#addButton', function () {
