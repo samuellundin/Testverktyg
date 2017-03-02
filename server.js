@@ -268,11 +268,13 @@ app.get("/test=:testIdLink", function(req, res) {
 });
 
 app.post('/turnin', function(req, res){
-    req.body.userAnswers.TestId = req.session.test.TestId;
-    console.log(req.body.userAnswers);
-    req.body.userAnswers.UserId = req.session.id;
+    req.body.UAQuestions.TestId = req.session.test.TestId;
+    req.body.UAQuestions.UserId = req.session.id;
     sql.addUserAnsweredTest(req.body.takenTest);
-    sql.addUserAnswers(req.body.userAnswers);
+    sql.addUserQuestions(req.body.UAQuestions);
+    setTimeout(function(){
+        sql.addUserAnswers(req.body.userAnswers);
+    }, 500);
     res.send('200');
 })
 

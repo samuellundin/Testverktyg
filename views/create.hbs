@@ -534,6 +534,7 @@
         data.startDT = $('#dateStart').val() + " " + $('#timeStart').val() + ":00";
         data.endDT = $('#date').val() + " " + $('#timeEnd').val() + ":00";
         data.checked = $('#selfCorrecting').is(':checked') ? 1 : 0;
+        data.showResult = $('#directResult').is(':checked') ? 1 : 0;
         storeVariable.data = data;
     }
 
