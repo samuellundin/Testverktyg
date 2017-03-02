@@ -58,34 +58,29 @@ CREATE TABLE AnsweredTest(
 		CONSTRAINT UAUserIdFK FOREIGN KEY (ATUserId) REFERENCES User(UserId)
 		);
 
-CREATE TABLE UserAnswer(
-		UserAnswerId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-		UAQuestionId INT,
-		UAAnswersId INT,
-		UATestId INT,
-		UAPoints TINYINT(1) NOT NULL,
-		UAOrder INT(1) NOT NULL,
-		UAGrade INT(10) NOT NULL,
-		UAText VARCHAR(500),
-		CONSTRAINT UAAnswersIdFK FOREIGN KEY (UAAnswersId) REFERENCES Answers(AnswersId),
-		CONSTRAINT UATestIdFK FOREIGN KEY (UATestId) REFERENCES AnsweredTest(AnsweredTestId),
-		CONSTRAINT UAQuestionIdFK FOREIGN KEY (UAQuestionId) REFERENCES Questions(QuestionId)
-		);
-
 CREATE TABLE AnsweredQuestion(
 		AnsweredQuestionId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 		AQQuestionId INT,
 		AQAnsweredTestId INT,
+		UAPoints TINYINT(1) NOT NULL,
 		CONSTRAINT AQQuestionIdFK FOREIGN KEY (AQQuestionId) REFERENCES Questions(QuestionId),
 		CONSTRAINT AQAnsweredTestIdFK FOREIGN KEY (AQAnsweredTestId) REFERENCES AnsweredTest(AnsweredTestId)
 		);
 
-
+CREATE TABLE UserAnswer(
+		UserAnswerId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+		UAQuestionId INT,
+		UAAnswersId INT,
+		UAOrder INT(1) NOT NULL,
+		UAText VARCHAR(500),
+		CONSTRAINT UAQuestionIdFK FOREIGN KEY (UAQuestionId) REFERENCES AnsweredQuestion(AnsweredQuestionId),
+		CONSTRAINT UAAnswersIdFK FOREIGN KEY (UAAnswersId) REFERENCES Answers(AnswersId)
+		);
 
 CREATE TABLE StudentGroup(
-  StudentGroupId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  groupName VARCHAR(50)
-);
+      StudentGroupId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      groupName VARCHAR(50)
+    );
 
 CREATE TABLE GroupDetails(
        GroupDetailsId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
