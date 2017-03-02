@@ -50,6 +50,7 @@
             $(this).parent().find('textarea').toggle();
         });
         $(document).on('click', '.panel-heading', function(e) {
+            if(!$(event.target).is('input')) {
                 $(this).next('.panel-body').slideToggle();
             }
         });
