@@ -17,9 +17,7 @@ connection.connect();
 exports.connection = connection;
 //Function add user to database
 exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
-    if(!validateEmail(umail)){
-        return {err: 'Not a valid email adress'};
-    }
+
     //Create object user
     var newUser ={
         firstname: ufirstName,
@@ -164,8 +162,3 @@ exports.getAllUsers = function(){
     return 'Whaat?';
 } 
 
-
-function validateEmail(email) {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
-}
