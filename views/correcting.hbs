@@ -6,15 +6,16 @@
             </div>
             <div class="col-md-4">
                 <select class="form-control" style="margin-top: 24px">
+                    {{#each test}}
                         <option>{{this.TTitle}}</option>
                     {{/each}}
                 </select>
             </div>
             <div class="col-md-4">
                 <select class="form-control" style="margin-top: 24px">
-                    {{#students}}
-                        <option>{{FirstName}}</option>
-                    {{/students}}
+                    {{#testusers}}
+                        <option>{{this.FirstName}}</option>
+                    {{/testusers}}
                 </select>
             </div>
         </div>
@@ -43,6 +44,7 @@
                         </ul>
                     </div>
                     <div class="col-md-12">
+                        <textarea class="form-control collapse" rows="5" style="resize: vertical; margin-bottom: 15px"></textarea>
                         <button type="button" class="btn btn-default commentButton">Kommentera fråga</button>
                     </div>
                 </div>

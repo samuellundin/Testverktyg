@@ -325,18 +325,18 @@ app.post('/group', function(req, res){
 //Get correcting
 app.get('/correcting', function(req, res) {
     sql.connection.query('SELECT * FROM Test', function(err, result) {
-        if(err){
-            console.log(err);
-        } else {
-            req.session.test = dcopy(result);
-            res.render('correcting', req.session);
-        }
+
+        req.session.test = dcopy(result);
+
         for(var i = 0; i < result.length; i++){
-            sql.connection.query('SELECT * FROM AnsweredTest WHERE ATestId =' + result[i].TestId, function (err, result) {
-                console.log(result);
-            })
+            sql.connection.query('SELECT AnsweredTest.ATestId, User.FirstName FROM AnsweredTest INNER JOIN User ON AnsweredTest.ATUserId = User.UserId WHERE AnsweredTest.ATestId =' + result[i].TestId, function (err, result) {
+                req.session.testusers = dcopy(result);
+            });
         }
-    })
+        setTimeout(function () {
+            res.render('correcting', req.session);
+        }, 500);
+    });
 });
 
 //HELPER FUNCTIONS
