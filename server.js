@@ -302,7 +302,19 @@ app.post('/group', function(req, res){
 
 //Get correcting
 app.get('/correcting', function(req, res) {
-    res.render('correcting', req.session);
+    sql.connection.query('SELECT * FROM Test', function(err, result) {
+        if(err){
+            console.log(err);
+        } else {
+            req.session.test = dcopy(result);
+            res.render('correcting', req.session);
+        }
+        for(var i = 0; i < result.length; i++){
+            sql.connection.query('SELECT * FROM AnsweredTest WHERE ATestId =' + result[i].TestId, function (err, result) {
+                console.log(result);
+            })
+        }
+    })
 });
 
 //HELPER FUNCTIONS

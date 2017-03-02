@@ -81,7 +81,8 @@
                         <label><input type="checkbox" value="">Direktresultat</label>
                     </div>
                     <div id =saved class="">
-                        <label class="control-label" id="testSaved"></label></div>
+                        <label class="control-label" id="testSaved"></label>
+                    </div>
                 </form>
             </div>
         </div>
@@ -243,9 +244,10 @@
                 <h3 class="panel-title" style="margin-top: 5px">`+ $("#question").find('input[type=text]').val() +' ('+ $('#typeSelect').val() +')'+`<span style="margin-right: 15px" class="pull-right">Poäng: `+ $('#points').val() +`</span></h3>
             </div>
             <div class="panel-body">
-                <ul class="list-group">`+ i +`</ul>
+                <ul class="list-group sortable">`+ i +`</ul>
             </div>
         </div>`);
+        $('.sortable').sortable();
     });
 
     $('#test').on('click', '.panel-heading', function(e) {
@@ -376,9 +378,10 @@
                 <h3 class="panel-title" style="margin-top: 5px">`+ $("#questionEdit").find('input').val() +' ('+ $('#typeSelectEdit :selected').text() +')'+`<span style="margin-right: 15px" class="pull-right">Poäng: `+ $('#questionpoint').val() +`</span></h3>
             </div>
             <div class="panel-body">
-                <ul class="list-group">`+ i +`</ul>
+                <ul class="list-group sortable">`+ i +`</ul>
             </div>
         `);
+        $('.sortable').sortable();
     });
     $('#editModal').on('click', '#addButton', function () {
         var answerCount = $('.answer').length + 1;
