@@ -345,7 +345,6 @@ app.post('/group', function(req, res){
 //Get correcting
 app.get('/correcting', function(req, res) {
     sql.connection.query('SELECT * FROM Test', function(err, result) {
-
         var test;
         var tests = [];
 
@@ -358,12 +357,14 @@ app.get('/correcting', function(req, res) {
     sql.connection.query('SELECT User.FirstName, AnsweredTest.ATestId FROM User INNER JOIN AnsweredTest ON AnsweredTest.ATUserID=User.UserID', function(err, result) {
         var user;
         var users = [];
+
         for(var i = 0; i < result.length; i++){
             user = {userid: result[i].ATestId, username: result[i].FirstName}
             users.push(user);
         }
         req.session.users = dcopy(users);
     });
+
     setTimeout(function () {
         res.render('correcting', req.session);
     }, 500);

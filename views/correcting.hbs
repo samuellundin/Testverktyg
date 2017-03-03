@@ -14,6 +14,7 @@
             </div>
             <div class="col-md-4">
                 <select class="form-control" id="userSelector" style="margin-top: 24px">
+                    <option hidden>Välj elev</option>
                 </select>
             </div>
         </div>
@@ -22,10 +23,9 @@
         <hr/>
         <div id="questionBox">
 
-        </div>
             <div class="panel panel-default">
                 <div class="panel-heading clearfix">
-                    <h3 class="panel-title">{{this.Question}} ({{this.QType}})<span class="pull-right">Poäng: <input type="text" size="1"> / {{this.QPoints}}</span></h3>
+                    <h3 class="panel-title">Fråga? (Frågetyp)<span class="pull-right">Poäng: <input type="text" size="1"> / 10</span></h3>
                 </div>
                 <div class="panel-body collapse">
                     <div class="col-md-6">
@@ -49,12 +49,13 @@
                 </div>
             </div>
 
-        <div class="panel panel-default">
-            <div class="panel-heading clearfix">
-                <h3 class="panel-title">Kommentar för test</h3>
-            </div>
-            <div class="panel-body collapse">
-                <textarea class="form-control" rows="4" style="resize: vertical"></textarea>
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title">Kommentar för test</h3>
+                </div>
+                <div class="panel-body collapse">
+                    <textarea class="form-control" rows="4" style="resize: vertical"></textarea>
+                </div>
             </div>
         </div>
         <button type="button" class="btn btn-primary">Rätta test</button>
@@ -89,7 +90,45 @@
             }
         });
         $('#userSelector').on('change', function () {
-            $('#questionBox').html('hej');
+            var selectedTest = $('#testSelector').find(":selected").text();
+            var selectedUser = $('#userSelector').find(":selected").text();
+
+            $('#questionBox').html(`
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <h3 class="panel-title">Fråga? (Frågetyp)<span class="pull-right">Poäng: <input type="text" size="1"> / 10</span></h3>
+                    </div>
+                    <div class="panel-body collapse">
+                        <div class="col-md-6">
+                            <h4 class="title">Svar:</h4>
+                            <ul class="list-group">
+                                <li class="list-group-item">1</li>
+                                <li class="list-group-item">2</li>
+                                <li class="list-group-item">3</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="title">Rätt svar:</h4>
+                            <ul class="list-group">
+                                <li class="list-group-item">1</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-12">
+                            <textarea class="form-control collapse" rows="5" style="resize: vertical; margin-bottom: 15px"></textarea>
+                            <button type="button" class="btn btn-default commentButton">Kommentera fråga</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <h3 class="panel-title">Kommentar för test</h3>
+                    </div>
+                    <div class="panel-body collapse">
+                        <textarea class="form-control" rows="4" style="resize: vertical"></textarea>
+                    </div>
+                </div>
+            `);
         });
     });
 </script>
