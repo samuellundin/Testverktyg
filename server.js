@@ -36,8 +36,8 @@ app.use(bodyparser.json());
 app.use(session({
     cookieName: 'session',
     secret: 'secret',
-    duration: 30 * 60 * 1000,
-    activeDuration: 5 * 60 * 1000
+    duration: 60 * 60 * 1000,
+    activeDuration: 15 * 60 * 1000
 }));
 
 app.use(function(req, res, next){
@@ -62,7 +62,6 @@ app.listen(3000);
 app.get('/', function(req, res, next){
         res.render('index', req.session);
         delete req.session.err;
-        console.log(req.session);
 });
 
 //Get Login
@@ -132,7 +131,7 @@ app.get('/api/users', function(req, res){
 
 //Get results
 app.get("/results", function(req, res) {
-    sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
+    sql.connection.query("SELECT * FROM Results WHERE ATCorrected = 1 AND ATUserId = " + req.session.id, function(error, result) {
         req.session.tests = dcopy(result);
         res.render("results", req.session);
     });
@@ -231,7 +230,7 @@ app.get("/statistics", function(req, res) {
 
 //Get testMenu
 app.get("/testMenu", function(req, res) {
-    sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
+    sql.connection.query("SELECT * FROM Test WHERE Test.TestId NOT IN (SELECT AnsweredTest.ATestId FROM AnsweredTest WHERE AnsweredTest.ATUserId = " + req.session.id + ")", function(error, result) {
         req.session.tests = dcopy(result);
         res.render("testMenu", req.session);
     });
@@ -256,20 +255,6 @@ app.get("/test=:testIdLink", function(req, res) {
                     sql.connection.query("SELECT * FROM Answers WHERE AQuestionId = " + mysql.escape(req.session.questions[j].QuestionId), function(error3, result3) {
                         if(error3) throw error3;
                         req.session.questions[k].answers = dcopy(result3);
-                        switch(req.session.questions[k].QType){
-                            case 'Flervalsfråga':
-                                req.session.questions[k].flerval = true;
-                                break;
-                            case 'Alternativfråga':
-                                req.session.questions[k].alternativ = true;
-                                break;
-                            case 'Rangordningsfråga':
-                                req.session.questions[k].rangordning = true;
-                                break;
-                            case 'Öppen fråga':
-                                req.session.questions[k].oppna = true;
-                                break;
-                        }
                         k++;
                     })
                 }
@@ -287,16 +272,16 @@ app.get("/test=:testIdLink", function(req, res) {
 });
 
 app.post('/turnin', function(req, res){
-    req.body.UAQuestions.TestId = req.session.test.TestId;
-    req.body.userAnswers.TestId = req.session.test.TestId;
-    req.body.UAQuestions.UserId = req.session.id;
-    req.body.userAnswers.UserId = req.session.id;
+    req.body.UAQuestions.TestId = req.body.takenTest.ATestId;
+    req.body.userAnswers.TestId = req.body.takenTest.ATestId;
+    req.body.UAQuestions.UserId = req.body.takenTest.ATUserId;
+    req.body.userAnswers.UserId = req.body.takenTest.ATUserId;
     sql.addUserAnsweredTest(req.body.takenTest);
     sql.addUserQuestions(req.body.UAQuestions);
     setTimeout(function(){
         sql.addUserAnswers(req.body.userAnswers, checkIfSelfCorrecting);
     }, 500);
-    res.send('200');
+    res.redirect('/');
 });
 
 //Get register
@@ -433,12 +418,9 @@ function autoCorrect(testId, takenTestId){
                         var ri = k;
                         sql.connection.query('SELECT UAOrder, AOrder FROM QuestionAnswers WHERE AQuestionId = ' + result[ri].QuestionId, function(err2, res2){
                             if(err2) throw err2;
-                            console.log(res2);
                             var correct = true;
                             for(var ind = 0; ind < res2.length; ind++){
-                                console.log(res2[ind].AOrder + " " + res2[ind].UAOrder);
                                 if(res2[ind].AOrder != res2[ind].UAOrder){
-                                    console.log('Men det var ju inte samma!');
                                     correct = false;
                                     break;
                                 }

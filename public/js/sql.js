@@ -148,12 +148,14 @@ exports.addUserQuestions = function(data){
 };
 
 exports.addUserAnswers = function(data, next){
+    console.log(data.TestId + " " + data.UserId);
     connection.query("SELECT AnsweredTestId FROM AnsweredTest WHERE ATestId =" + mysql.escape(data.TestId) + ' AND ATUserId = ' + mysql.escape(data.UserId), function(error, result){
 
+        console.log(data);
         var testId = dcopy(result[0].AnsweredTestId);
         var k = 0;
         for(var i = 0; i < data.length; i++){
-            connection.query('SELECT AnsweredQuestionId FROM AnsweredQuestion WHERE AQQuestionId = (SELECT AQuestionId FROM Answers WHERE AnswersId = ' + mysql.escape(data[i].UAAnswersId) + ') AND AQAnsweredTestId = ' + testId, function(error, result){
+        var query = connection.query('SELECT AnsweredQuestionId FROM AnsweredQuestion WHERE AQQuestionId = (SELECT AQuestionId FROM Answers WHERE AnswersId = ' + mysql.escape(data[i].UAAnswersId) + ') AND AQAnsweredTestId = ' + testId, function(error, result){
                 if(error) throw error;
                 var AQId = dcopy(result[0].AnsweredQuestionId);
                 userAnswer(data, AQId, k++, (k == data.length), next, data.TestId, testId);

@@ -136,6 +136,13 @@ UserAnswer AS ua ON a.AnswersId = ua.UAAnswersId INNER JOIN
 AnsweredQuestion AS aq ON ua.UAQuestionId = aq.AnsweredQuestionId
 INNER JOIN AnsweredTest AS t ON t.AnsweredTestId = aq.AQAnsweredTestId);
 
+CREATE VIEW Results AS
+(SELECT at.ATTimeMin, at.ATTimeSec, at.ATGrade, at.ATPoints, t.TMaxPoints, t.TestId,
+at.AnsweredTestId, at.ATUserId, at.ATCorrected, t.TTitle
+FROM AnsweredTest AS at
+INNER JOIN Test AS t
+ON t.TestId = at.ATestId);
+
 INSERT INTO User (FirstName, LastName, Mail, Password, Role) VALUES ('Gurkan', 'Gurksson', 'Gurkan4life@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
 ('Bönan', 'Bönsson', 'Bönor@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
 ('Nöten', 'Nötsson', 'Nötter@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),

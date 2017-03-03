@@ -6,81 +6,94 @@
         <div class="">
             <h2>{{test.TTitle}}</h2>
         </div>
+        <div id="content2">
 
-        {{#questions}}
-            {{#if alternativ}}
-            <!-- Radio button -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <meta class="alternativ">
-                    <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
-                </div>
-                <div class="panel-body">
-                    {{#answers}}
-                        <div class="radio">
-                            <label><input type="radio" name="optradio" id="{{AnswersId}}">{{AText}}</label>
-                        </div>
-                    {{/answers}}
-                </div>
-            </div>
-            {{/if}}
+        </div>
 
-            {{#if rangordning}}
-                <!-- Sortera -->
-                <div class="panel panel-default">
-                    <div class="panel-heading" data-toggle="collapse" data-target="#panel-body">
-                        <meta class="rang">
-                        <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
-                    </div>
-                    <div class="panel-body" id="panel-body">
-                        <ul class="list-group sortable" id="sortable">
-                            {{#answers}}
-                                <li class="list-group-item" id="{{AnswersId}}">{{AText}}</li>
-                            {{/answers}}
-                        </ul>
-                    </div>
-                </div>
-            {{/if}}
-
-            {{#if flerval}}
-                <!-- Checkbox -->
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <meta class="flerval">
-                        <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
-                    </div>
-                    <div class="panel-body">
-                        {{#answers}}
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" id="{{AnswersId}}">{{AText}}</label>
+                {{#questions}}
+            <script>
+                    if('{{QType}}' == 'Alternativfråga'){
+                        $('#content2').append(`
+                            <!-- Radio button -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <meta class="alternativ">
+                                    <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
+                                </div>
+                                <div class="panel-body">
+                                    {{#answers}}
+                                        <div class="radio">
+                                            <label><input type="radio" name="{{AQuestionId}}" id="{{AnswersId}}">{{AText}}</label>
+                                        </div>
+                                    {{/answers}}
+                                </div>
                             </div>
-                        {{/answers}}
-                    </div>
-                </div>
-            {{/if}}
+                        `);
+                    }
 
-            {{#if oppna}}
-                <!-- Textarea -->
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <meta class="oppna">
-                        <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label>Svar:</label>
-                            {{#answers}}
-                                <textarea class="form-control" rows="5" id="{{AnswersId}}"></textarea>
-                            {{/answers}}
+                    if('{{QType}}' == 'Rangordningsfråga'){
+                        $('#content2').append(`
+                        <!-- Sortera -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading" data-toggle="collapse" data-target="#panel-body">
+                                <meta class="rang">
+                                <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
+                            </div>
+                            <div class="panel-body" id="panel-body">
+                                <ul class="list-group sortable" id="sortable">
+                                    {{#answers}}
+                                        <li class="list-group-item" id="{{AnswersId}}">{{AText}}</li>
+                                    {{/answers}}
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            {{/if}}
-        {{/questions}}
+                    `);}
 
-        <button type="button" class='btn btn-primary pull-right' id="turnIn">Lämna In</button>
-    </div>
-</div>
+                    if('{{QType}}' == 'Flervalsfråga'){
+                        $('#content2').append(`
+                        <!-- Checkbox -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <meta class="flerval">
+                                <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
+                            </div>
+                            <div class="panel-body">
+                                {{#answers}}
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" value="" id="{{AnswersId}}">{{AText}}</label>
+                                    </div>
+                                {{/answers}}
+                            </div>
+                        </div>
+                    `);}
+
+                    if('{{QType}}' == 'Öppen fråga'){
+                        $('#content2').append(`
+                        <!-- Textarea -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <meta class="oppna">
+                                <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label>Svar:</label>
+                                    {{#answers}}
+                                        <textarea class="form-control" rows="5" id="{{AnswersId}}"></textarea>
+                                    {{/answers}}
+                                </div>
+                            </div>
+                        </div>
+                    `);}
+                 </script>
+                {{/questions}}
+
+                <button type="button" class='btn btn-primary pull-right' id="turnIn">Lämna In</button>
+            </div>
+        </div>
+
+
+
 
 <script>
     $(function(){
@@ -143,8 +156,7 @@
             method: 'post',
             data: data,
             success: function(){
-                console.log('Turning in');
-/*                location.replace('/');*/
+                location.replace('/');
             }
         })
     }

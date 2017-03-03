@@ -7,49 +7,60 @@
         <h3 class="page-header">Välj test</h3>
         <form action="/test" method="get">
             <select name="test" id="testName" class="form-control">
+                <option hidden>Välj prov</option>
                 {{#each tests}}
                     <option class="{{this.TestId}}">{{this.TTitle}}</option>
                 {{/each}}
             </select>
             <br>
-            <button type="button" class="btn btn-info btn-block" id="showResultsButton">Se resultat</button>
         </form>
 
         <!-- Displaying results -->
         <table class="table collapse" id="statsTable">
-            <br><br>
-            <tr>
-                <th>Poäng:</th>
-                <td>15/20</td>
-            </tr>
-            <tr>
-                <th>Tidsåtgång:</th>
-                <td>35 minuter</td>
-            </tr>
-            <tr>
-                <th>Betyg:</th>
-                <td>MVG+++</td>
-            </tr>
-            <tr>
-                <th colspan="2"><br>
-                    Lärarens kommentarer:
-                    <div class="form-group">
-                        <textarea class="form-control" id="textArea" rows="10">Bra jobbat!</textarea>
-                    </div>
-                </th>
-            </tr>
         </table>
     </div>
 </div>
 
 <script>
     // Making text field (teacher comments) read-only
-    $("#textArea").prop("disabled", true);
 
     // Displays results of selected test when clicking button
     $(function() {
-        $("#showResultsButton").on("click", function() {
+        $("select#testName").on("change", function() {
             $("#statsTable").slideDown(5000);
+            {{#tests}}
+            if('{{TTitle}}' == $('select#testName').val()){
+                var percentage = ({{ATPoints}}/{{TMaxPoints}});
+                percentage *= 100;
+                percentage = Math.round(percentage * 1000) / 1000;
+                $("#statsTable").html(`
+                    <br><br>
+                                <tr>
+                    <th>Poäng:</th>
+                    <td>{{ATPoints}}/{{TMaxPoints}}</td>
+                </tr>
+                <tr>
+                    <th>Tidsåtgång:</th>
+                    <td>{{ATTimeMin}}min {{ATTimeSec}}sek</td>
+                </tr>
+                <tr>
+                    <th>Betyg:</th>
+                    <td>{{ATGrade}} (` + percentage + `%)</td>
+                </tr>
+                <tr>
+                    <th colspan="2"><br>
+                        Lärarens kommentarer:
+                        <div class="form-group">
+                            <textarea class="form-control" id="textArea" rows="10">Bra jobbat!</textarea>
+                        </div>
+                    </th>
+                </tr>
+                `);
+
+            $("#textArea").prop("disabled", true);
+            }
+
+            {{/tests}}
         });
     });
 </script>
