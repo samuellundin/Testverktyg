@@ -5,14 +5,19 @@
         <h3 class="page-header">Välj test att redigera</h3>
         <form action="/test" method="get">
             <select name="test" id="testSelect" class="form-control">
-                {{#each editQuestions}}
-                    <option class="{{this.QuestionId}}">{{this.Question}}</option>
-                {{/each}}
+                {{#eQuestion}}
+                    <option class="{{this.QuestionId}}">{{this.[0].Question}}</option>
+                {{/eQuestion}}
             </select>
             <select name="test" id="testSelect" class="form-control">
-                {{#each editAnswers}}
-                    <option class="">{{this.AnswersId}}</option>
-                {{/each}}
+                {{#eAnswer}}
+                    <option class="">{{this.[0].[0].AText}}</option>
+                {{/eAnswer}}
+            </select>
+            <select name="test" id="testSelect" class="form-control">
+                {{#eAnswer}}
+                    <option class="">{{this.[1].[2].AText}}</option>
+                {{/eAnswer}}
             </select>
             <br>
             <button type="button" class="btn btn-primary btn-block" id="editButton" value="hh">Redigera test</button>
@@ -23,6 +28,5 @@
 
 
 <script>
-    console.log("inne i edit");
-
+    
 </script>

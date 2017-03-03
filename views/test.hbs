@@ -211,7 +211,7 @@
                     break;
 
                 case 'alternativ':
-                    userAnswer.UAAnswersId = $('input:checked').attr('id');
+                    userAnswer.UAAnswersId = $('input[type=radio]:checked').attr('id');
                     userAnswer.UAOrder = i;
                     userAnswer.UAText = null;
                     userAnswers.push(userAnswer);

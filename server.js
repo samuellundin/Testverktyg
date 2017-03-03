@@ -148,34 +148,52 @@ app.get("/editMenu", function(req, res) {
 
 //Saves questions for posted TestId in session
 app.post("/editMenu", function(req, res) {
-    sql.connection.query("SELECT QuestionId, QTestId,Question,QType,QPoints,QOrder FROM Questions WHERE QTestId = '" + req.body.testId + "'", function(error, result) {
-        req.session.editQuestions = dcopy(result);
-    });
+    var answers = [];  //contains all answers
 
-    var questionIds = "(";
+    var questionId = [];    //array som innehåller samtliga q-ids
+    var questionIds = "";   //sträng som används i select
+    var questionCounter = 0;
+
+    //Saves useful data to variables and also nrOfQuestions to session
     sql.connection.query("SELECT QuestionId FROM Questions WHERE QTestId ='" + req.body.testId +"'", function(error, result) {
-        console.log("result längd: " + result.length);
         for(var i = 0; i < result.length; i++) {
-            console.log(result[i].QuestionId);
-            console.log("loop: " + i);
+            questionCounter += 1;
+            questionId.push(result[i].QuestionId);
             if(i == result.length - 1) {
-                console.log("inne i if");
-                questionIds = questionIds + "'" + result[i].QuestionId + "')";
+                questionIds = questionIds + "(AQuestionId = '" + result[i].QuestionId + "')";
+                req.session.nrOfQuestions = dcopy(questionCounter);
             } else {
-                console.log("inne i else");
-                questionIds = questionIds + "'" + result[i].QuestionId + "',";
+                questionIds = questionIds + "(AQuestionId = '" + result[i].QuestionId + "') OR ";
             }
-            console.log("questionIds: " + questionIds);
         }
     });
-    sql.connection.query("SELECT AnswersId,AQuestionId,AOrder,APoints,ACorrected,AText FROM Answers WHERE AQuestionId IN " + questionIds , function(error, result) {
-        req.session.editAnswers = dcopy(result);
-    });
-    console.log("efter alla queries");
+
     setTimeout(function(){
-        console.log("i timeout");
-        res.render("edit", req.session);
+        sql.connection.query("SELECT QuestionId, QTestId,Question,QType,QPoints,QOrder FROM Questions WHERE QTestId = '" + req.body.testId + "'", function(error, result) {
+            req.session.eQuestion = [];
+            req.session.eQuestion.push(dcopy(result));
+            //req.session.eQuestion = dcopy(result);
+        });
     }, 200);
+
+    setTimeout(function(){
+        for(var i = 0; i < questionId.length; i++) {
+            sql.connection.query("SELECT AnswersId,AQuestionId,AOrder,APoints,ACorrected,AText FROM Answers WHERE AQuestionId =" + questionId[i], function(error, result) {
+                answers.push(result);
+            });
+        }
+    }, 400);
+
+    setTimeout(function(){
+        req.session.eAnswer = [];
+        req.session.eAnswer.push(dcopy(answers));
+    }, 600);
+
+    setTimeout(function(){
+        console.log("questionIds: " + questionIds);
+        console.log("nr of questions: " + questionCounter);
+        res.render("edit", req.session);
+    }, 800);
 });
 
 //Get edit
@@ -269,7 +287,9 @@ app.get("/test=:testIdLink", function(req, res) {
 
 app.post('/turnin', function(req, res){
     req.body.UAQuestions.TestId = req.session.test.TestId;
+    req.body.userAnswers.TestId = req.session.test.TestId;
     req.body.UAQuestions.UserId = req.session.id;
+    req.body.userAnswers.UserId = req.session.id;
     sql.addUserAnsweredTest(req.body.takenTest);
     sql.addUserQuestions(req.body.UAQuestions);
     setTimeout(function(){
