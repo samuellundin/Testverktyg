@@ -154,23 +154,25 @@ app.post("/editMenu", function(req, res) {
     var questionIds = "";   //sträng som används i select
     var questionCounter = 0;
 
-    sql.connection.query("SELECT QuestionId, QTestId,Question,QType,QPoints,QOrder FROM Questions WHERE QTestId = '" + req.body.testId + "'", function(error, result) {
-        req.session.eQuestion = dcopy(result);
+    //Saves useful data to variables and also nrOfQuestions to session
+    sql.connection.query("SELECT QuestionId FROM Questions WHERE QTestId ='" + req.body.testId +"'", function(error, result) {
+        for(var i = 0; i < result.length; i++) {
+            questionCounter += 1;
+            questionId.push(result[i].QuestionId);
+            if(i == result.length - 1) {
+                questionIds = questionIds + "(AQuestionId = '" + result[i].QuestionId + "')";
+                req.session.nrOfQuestions = dcopy(questionCounter);
+            } else {
+                questionIds = questionIds + "(AQuestionId = '" + result[i].QuestionId + "') OR ";
+            }
+        }
     });
 
-    //Saves useful data to variables and also nrOfQuestions to session
     setTimeout(function(){
-        sql.connection.query("SELECT QuestionId FROM Questions WHERE QTestId ='" + req.body.testId +"'", function(error, result) {
-            for(var i = 0; i < result.length; i++) {
-                questionCounter += 1;
-                questionId.push(result[i].QuestionId);
-                if(i == result.length - 1) {
-                    questionIds = questionIds + "(AQuestionId = '" + result[i].QuestionId + "')";
-                    req.session.nrOfQuestions = dcopy(questionCounter);
-                } else {
-                    questionIds = questionIds + "(AQuestionId = '" + result[i].QuestionId + "') OR ";
-                }
-            }
+        sql.connection.query("SELECT QuestionId, QTestId,Question,QType,QPoints,QOrder FROM Questions WHERE QTestId = '" + req.body.testId + "'", function(error, result) {
+            req.session.eQuestion = [];
+            req.session.eQuestion.push(dcopy(result));
+            //req.session.eQuestion = dcopy(result);
         });
     }, 200);
 
@@ -184,11 +186,7 @@ app.post("/editMenu", function(req, res) {
 
     setTimeout(function(){
         req.session.eAnswer = [];
-        req.session.eAnswer.push(answers);
-        //req.session.questionGroup.qArray: question;
-        /*sql.connection.query("SELECT AnswersId,AQuestionId,AOrder,APoints,ACorrected,AText FROM Answers WHERE " + questionIds , function(error, result) {
-            req.session.editAnswers = dcopy(result);
-        });*/
+        req.session.eAnswer.push(dcopy(answers));
     }, 600);
 
     setTimeout(function(){

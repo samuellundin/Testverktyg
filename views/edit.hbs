@@ -5,9 +5,9 @@
         <h3 class="page-header">Välj test att redigera</h3>
         <form action="/test" method="get">
             <select name="test" id="testSelect" class="form-control">
-                {{#each eQuestion}}
-                    <option class="{{this.QuestionId}}">{{this.Question}}</option>
-                {{/each}}
+                {{#eQuestion}}
+                    <option class="{{this.QuestionId}}">{{this.[0].Question}}</option>
+                {{/eQuestion}}
             </select>
             <select name="test" id="testSelect" class="form-control">
                 {{#eAnswer}}
@@ -16,7 +16,7 @@
             </select>
             <select name="test" id="testSelect" class="form-control">
                 {{#eAnswer}}
-                    <option class="">{{this.[0].[1].AText}}</option>
+                    <option class="">{{this.[1].[2].AText}}</option>
                 {{/eAnswer}}
             </select>
             <br>
@@ -28,6 +28,5 @@
 
 
 <script>
-
-
+    
 </script>
