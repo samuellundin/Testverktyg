@@ -42,7 +42,6 @@ CREATE TABLE Answers(
 		AQuestionId INT,
 		AOrder INT(10) NOT NULL,
 		APoints INT(10) NOT NULL,
-		ACorrected BOOLEAN NOT NULL,
 		AText VARCHAR(60) NOT NULL,
 		CONSTRAINT AQuestionIdFK FOREIGN KEY (AQuestionId) REFERENCES Questions(QuestionId)
 		);
@@ -51,10 +50,11 @@ CREATE TABLE AnsweredTest(
 		AnsweredTestId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 		ATestId INT,
 		ATUserId INT,
-		ATDate DATE NOT NULL,
+		ATDate DATETIME NOT NULL,
 		ATCorrected BOOLEAN NOT NULL,
 		ATPoints INT(10) NOT NULL,
         ATTimeMin INT(10) NOT NULL DEFAULT 0,
+        ATTimeSec INT(10) NOT NULL DEFAULT 0,
 		ATGrade VARCHAR(10) NOT NULL,
 		CONSTRAINT ATAnswersIdFK FOREIGN KEY (ATestId) REFERENCES Test(TestId),
 		CONSTRAINT UAUserIdFK FOREIGN KEY (ATUserId) REFERENCES User(UserId)
@@ -64,7 +64,7 @@ CREATE TABLE AnsweredQuestion(
 		AnsweredQuestionId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 		AQQuestionId INT,
 		AQAnsweredTestId INT,
-		AQPoints TINYINT(1) NOT NULL,
+		AQPoints INT(10) NOT NULL,
 		CONSTRAINT AQQuestionIdFK FOREIGN KEY (AQQuestionId) REFERENCES Questions(QuestionId),
 		CONSTRAINT AQAnsweredTestIdFK FOREIGN KEY (AQAnsweredTestId) REFERENCES AnsweredTest(AnsweredTestId)
 		);
@@ -129,6 +129,12 @@ FROM Answers INNER JOIN UserAnswer ON UserAnswer.UAAnswersId = Answers.AnswersId
 INNER JOIN AnsweredQuestion ON AnsweredQuestion.AnsweredQuestionId = UserAnswer.UAQuestionId
 INNER JOIN AnsweredTest ON AnsweredQuestion.AQAnsweredTestId = AnsweredTest.AnsweredTestId
 INNER JOIN Questions ON Questions.QuestionId = AnsweredQuestion.AQQuestionId);
+
+CREATE VIEW QuestionAnswers AS
+(SELECT t.AnsweredTestId, a.*, aq.AQPoints, ua.* FROM Answers AS a RIGHT OUTER JOIN
+UserAnswer AS ua ON a.AnswersId = ua.UAAnswersId INNER JOIN
+AnsweredQuestion AS aq ON ua.UAQuestionId = aq.AnsweredQuestionId
+INNER JOIN AnsweredTest AS t ON t.AnsweredTestId = aq.AQAnsweredTestId);
 
 INSERT INTO User (FirstName, LastName, Mail, Password, Role) VALUES ('Gurkan', 'Gurksson', 'Gurkan4life@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
 ('Bönan', 'Bönsson', 'Bönor@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),

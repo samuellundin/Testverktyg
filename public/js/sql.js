@@ -86,10 +86,9 @@ exports.addAnswer = function(answerData){
 };
 
 function addA(answerData, questionId){
-    connection.query("INSERT INTO Answers (AQuestionId, AText, ACorrected, APoints, AOrder) VALUES ("
+    connection.query("INSERT INTO Answers (AQuestionId, AText, APoints, AOrder) VALUES ("
         + mysql.escape(questionId) + ", "
         + mysql.escape(answerData.title) + ", "
-        + mysql.escape(answerData.corrected) + ", "
         + mysql.escape(answerData.score) + ", "
         + mysql.escape(answerData.order) + ")", function(err, result){
         if(err){
@@ -116,12 +115,14 @@ function addQ(questionData, testId){
 }
 
 exports.addUserAnsweredTest = function(data){
-    connection.query("INSERT INTO AnsweredTest (ATestId, ATDate, ATCorrected, ATPoints, ATGrade, ATUserId) VALUES ("
+    connection.query("INSERT INTO AnsweredTest (ATestId, ATDate, ATCorrected, ATPoints, ATGrade, ATTimeMin, ATTimeSec, ATUserId) VALUES ("
         + mysql.escape(data.ATestId) + ", "
         + data.ATDate + ", "
         + mysql.escape(data.ATCorrected) + ", "
         + mysql.escape(data.ATPoints) + ", "
         + mysql.escape(data.ATGrade) + ", "
+        + mysql.escape(data.ATTimeMin) + ", "
+        + mysql.escape(data.ATTimeSec) + ", "
         + mysql.escape(data.ATUserId) + ")", function(err, result){
         if(err){
             console.log(err);
@@ -134,7 +135,6 @@ exports.addUserAnsweredTest = function(data){
 exports.addUserQuestions = function(data){
     connection.query("SELECT AnsweredTestId FROM AnsweredTest WHERE ATestId =" + mysql.escape(data.TestId) + ' AND ATUserId = ' + mysql.escape(data.UserId), function(error, result){
         var TestId = dcopy(result[0].AnsweredTestId);
-        console.log(data);
         for(var i = 0; i < data.length; i++){
             connection.query('INSERT INTO AnsweredQuestion (AQAnsweredTestId, AQQuestionId, AQPoints) VALUES ('
             + mysql.escape(TestId) + ", "
@@ -147,7 +147,7 @@ exports.addUserQuestions = function(data){
     return true;
 };
 
-exports.addUserAnswers = function(data){
+exports.addUserAnswers = function(data, next){
     connection.query("SELECT AnsweredTestId FROM AnsweredTest WHERE ATestId =" + mysql.escape(data.TestId) + ' AND ATUserId = ' + mysql.escape(data.UserId), function(error, result){
 
         var testId = dcopy(result[0].AnsweredTestId);
@@ -156,21 +156,22 @@ exports.addUserAnswers = function(data){
             connection.query('SELECT AnsweredQuestionId FROM AnsweredQuestion WHERE AQQuestionId = (SELECT AQuestionId FROM Answers WHERE AnswersId = ' + mysql.escape(data[i].UAAnswersId) + ') AND AQAnsweredTestId = ' + testId, function(error, result){
                 if(error) throw error;
                 var AQId = dcopy(result[0].AnsweredQuestionId);
-                userAnswer(data, AQId, k++);
+                userAnswer(data, AQId, k++, (k == data.length), next, data.TestId, testId);
             });
     }
-
     });
 };
 
-function userAnswer(data, AQId, k){
+function userAnswer(data, AQId, k, lastCall, next, testId, takenTestId){
                 connection.query('INSERT INTO UserAnswer (UAQuestionId, UAAnswersId, UAOrder, UAText) VALUES ('
                     + mysql.escape(AQId) + ", "
                     + mysql.escape(data[k].UAAnswersId) + ", "
                     + mysql.escape(data[k].UAOrder) + ", "
                     + mysql.escape(data[k].UAText) + ")", function(error, result){
                         if(error) throw error;
-                        console.log('Added user answers successfully');
+                        if(lastCall){
+                            next(testId, takenTestId);
+                        }
                         return true;
         });
 

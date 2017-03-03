@@ -153,6 +153,8 @@
         var takenTest = {};
         takenTest.ATestId = {{test.TestId}};
         takenTest.ATDate = 'now()';
+        takenTest.ATTimeMin = $('#timer').text() ? {{test.TTimeMin}} - 1 - Number($('#timer').text().split(':')[0]) : 0;
+        takenTest.ATTimeSec = $('#timer').text() ? 59 - Number($('#timer').text().split(':')[1]) : 0;
         takenTest.ATCorrected = 0;
         takenTest.ATPoints = 0;
         takenTest.ATGrade = 0;
@@ -181,7 +183,7 @@
             userAnswer = new Object();
             switch($(this).find('meta').attr('class')){
                 case 'flerval':
-                    $('input[type=checkbox]').each(function(index){
+                    $(this).find('input[type=checkbox]').each(function(index){
                         userAnswer = new Object();
                         if($(this).is(':checked')){
                             userAnswer.UAAnswersId = $(this).attr('id');
@@ -193,7 +195,7 @@
                     });
                     break;
                 case 'rang':
-                    $('li.list-group-item').each(function(index){
+                    $(this).find('li.list-group-item').each(function(index){
                         userAnswer = new Object();
                         userAnswer.UAAnswersId = $(this).attr('id');
                         userAnswer.UAOrder = index;
@@ -204,14 +206,14 @@
                     break;
 
                 case 'oppna':
-                    userAnswer.UAAnswersId = $('textarea').attr('id');
+                    userAnswer.UAAnswersId = $(this).find('textarea').attr('id');
                     userAnswer.UAOrder = i;
-                    userAnswer.UAText = $('textarea').val();
+                    userAnswer.UAText = $(this).find('textarea').val();
                     userAnswers.push(userAnswer);
                     break;
 
                 case 'alternativ':
-                    userAnswer.UAAnswersId = $('input[type=radio]:checked').attr('id');
+                    userAnswer.UAAnswersId = $(this).find('input[type=radio]:checked').attr('id');
                     userAnswer.UAOrder = i;
                     userAnswer.UAText = null;
                     userAnswers.push(userAnswer);

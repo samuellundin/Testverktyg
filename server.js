@@ -47,9 +47,10 @@ app.use(function(req, res, next){
         && req.url != '/api/users'
         && req.url != '/login')){
         req.session.err = 'You are not logged in';
-        req.url = '/';
-    }
+        res.redirect('/');
+    } else {
         next();
+    }
 })
 
 //Configure the app to listen on port 3000
@@ -293,10 +294,10 @@ app.post('/turnin', function(req, res){
     sql.addUserAnsweredTest(req.body.takenTest);
     sql.addUserQuestions(req.body.UAQuestions);
     setTimeout(function(){
-        sql.addUserAnswers(req.body.userAnswers);
+        sql.addUserAnswers(req.body.userAnswers, checkIfSelfCorrecting);
     }, 500);
     res.send('200');
-})
+});
 
 //Get register
 app.get("/register", function(req, res) {
@@ -372,7 +373,114 @@ app.get('/correcting', function(req, res) {
 
 //HELPER FUNCTIONS
 
-//Updates session with tests from datebase
+//Check if it is self correcting, if it is, send it for autocorrect
+function checkIfSelfCorrecting(testId, takenTestId){
+    sql.connection.query('SELECT Test.TSelfCorrecting FROM Test WHERE TestID = ' + testId, function(error, result){
+        if(error) throw error;
+        if(result[0].TSelfCorrecting){
+            autoCorrect(testId, takenTestId);
+        }
+    });
+}
+
+function autoCorrect(testId, takenTestId){
+    var points = 0;
+    console.log('autocorrecting');
+    sql.connection.query('SELECT * FROM Questions WHERE QTestId = ' + testId, function(error, result){
+        if (error) throw error;
+        var k = 0;
+        for(var i = 0; i < result.length; i++){
+            var resultArray = [];
+            sql.connection.query('SELECT * FROM QuestionAnswers WHERE AnsweredTestId = ' + takenTestId + ' AND AQuestionId = ' + result[i].QuestionId, function(err, res){
+                resultArray.push(dcopy(res));
+                switch(result[k].QType){
+                    case 'Flervalsfråga':
+                        var correct = true;
+                        var fi = k;
+                        sql.connection.query('SELECT * FROM Answers WHERE AQuestionId = ' + result[fi].QuestionId + ' AND APoints = 1', function(err2, res2){
+                            if(err2) throw err2;
+                            var indexes = [];
+                            for(var j = 0; j < res2.length; j++){
+                                indexes.push(res2[j].AnswersId);
+                            }
+                            for(var j = 0; j < indexes.length; j++){
+                                var found = false;
+                                for(var h = 0; h < resultArray[fi].length; h++){
+                                    if(resultArray[fi][h].UAAnswersId == indexes[j]){
+                                        found = true;
+                                    }
+                                }
+                                if(!found){
+                                    correct = false;
+                                }
+                            }
+                            if(correct){
+                                sql.connection.query('UPDATE AnsweredQuestion SET AQPoints = ' + result[fi].QPoints + ' WHERE AnsweredQuestionId = ' + res[0].UAQuestionId, function(error2, result2){
+                                    points += result[fi].QPoints;
+                                } );
+                            }
+                        });
+                        break;
+                    case 'Alternativfråga':
+                        var ai = k;
+                        if(resultArray[ai][0].APoints == 1){
+                            sql.connection.query('UPDATE AnsweredQuestion SET AQPoints = ' + result[ai].QPoints + ' WHERE AnsweredQuestionId = ' + res[0].UAQuestionId, function(error2, result2){
+                                points += result[ai].QPoints;
+                            } );
+                        }
+                        break;
+                    case 'Rangordningsfråga':
+                        var ri = k;
+                        sql.connection.query('SELECT UAOrder, AOrder FROM QuestionAnswers WHERE AQuestionId = ' + result[ri].QuestionId, function(err2, res2){
+                            if(err2) throw err2;
+                            console.log(res2);
+                            var correct = true;
+                            for(var ind = 0; ind < res2.length; ind++){
+                                console.log(res2[ind].AOrder + " " + res2[ind].UAOrder);
+                                if(res2[ind].AOrder != res2[ind].UAOrder){
+                                    console.log('Men det var ju inte samma!');
+                                    correct = false;
+                                    break;
+                                }
+                            }
+                            if(correct){
+                                sql.connection.query('UPDATE AnsweredQuestion SET AQPoints = ' + result[ri].QPoints + ' WHERE AnsweredQuestionId = ' + res[0].UAQuestionId, function(error2, result2){
+                                    points += result[ri].QPoints;
+                                });
+                            }
+                        });
+                        break;
+                    case 'Öppen fråga':
+                        console.log("Something's wrong. This shouldn't be able to happen. Can't auto correct an open question.");
+                        break;
+                }
+                k++;
+                if(k==result.length){
+                    setTimeout(function(){
+                        updateTestScore(testId, takenTestId, points);
+                    }, 1000);
+                }
+            })
+
+        }
+    })
+}
+
+function updateTestScore(testId, takenTestId, points){
+    sql.connection.query('SELECT TMaxPoints FROM Test WHERE TestId = ' + testId, function(error, result){
+        var mPoints = result[0].TMaxPoints;
+        var percentage = (points/mPoints) * 100;
+        var grade = 'U';
+        if(percentage > 80){
+            grade = 'VG';
+        } else if (percentage > 60){
+            grade = 'G';
+        }
+        sql.connection.query('UPDATE AnsweredTest SET ATPoints = ' + points + ", ATGrade = " + mysql.escape(grade) + ", ATCorrected = TRUE WHERE AnsweredTestId = " + takenTestId, function(err, res){if (err) throw err;});
+    });
+}
+
+//Updates session with tests from database
 function updateSessionTests(req) {
     sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
         req.session.tests = dcopy(result);
