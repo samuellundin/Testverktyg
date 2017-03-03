@@ -346,18 +346,27 @@ app.post('/group', function(req, res){
 app.get('/correcting', function(req, res) {
     sql.connection.query('SELECT * FROM Test', function(err, result) {
 
-        req.session.test = dcopy(result);
+        var test;
+        var tests = [];
 
         for(var i = 0; i < result.length; i++){
-            sql.connection.query('SELECT AnsweredTest.ATestId, User.FirstName FROM AnsweredTest INNER JOIN User ON AnsweredTest.ATUserId = User.UserId WHERE AnsweredTest.ATestId =' + result[i].TestId, function (err, result) {
-                req.session.testusers = dcopy(result);
-                console.log(result);
-            });
+            test = {testid: result[i].TestId, testname: result[i].TTitle}
+            tests.push(test);
         }
-        setTimeout(function () {
-            res.render('correcting', req.session);
-        }, 500);
+        req.session.tests = dcopy(tests);
     });
+    sql.connection.query('SELECT User.FirstName, AnsweredTest.ATestId FROM User INNER JOIN AnsweredTest ON AnsweredTest.ATUserID=User.UserID', function(err, result) {
+        var user;
+        var users = [];
+        for(var i = 0; i < result.length; i++){
+            user = {userid: result[i].ATestId, username: result[i].FirstName}
+            users.push(user);
+        }
+        req.session.users = dcopy(users);
+    });
+    setTimeout(function () {
+        res.render('correcting', req.session);
+    }, 500);
 });
 
 //HELPER FUNCTIONS

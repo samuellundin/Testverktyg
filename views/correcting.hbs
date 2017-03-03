@@ -5,25 +5,24 @@
                 <h1 class="title">Rätta test</h1>
             </div>
             <div class="col-md-4">
-                <select class="form-control" style="margin-top: 24px">
-                    {{#each test}}
-                        <option>{{this.TTitle}}</option>
+                <select class="form-control" id="testSelector" style="margin-top: 24px">
+                    <option hidden>Välj test</option>
+                    {{#each tests}}
+                        <option>{{testname}}</option>
                     {{/each}}
                 </select>
             </div>
             <div class="col-md-4">
-                <select class="form-control" style="margin-top: 24px">
-                    {{#testusers}}
-                        <option>{{this.FirstName}}</option>
-                    {{/testusers}}
+                <select class="form-control" id="userSelector" style="margin-top: 24px">
                 </select>
             </div>
         </div>
 
 
         <hr/>
+        <div id="questionBox">
 
-        {{#each question}}
+        </div>
             <div class="panel panel-default">
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title">{{this.Question}} ({{this.QType}})<span class="pull-right">Poäng: <input type="text" size="1"> / {{this.QPoints}}</span></h3>
@@ -49,7 +48,6 @@
                     </div>
                 </div>
             </div>
-        {{/each}}
 
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
@@ -72,6 +70,26 @@
             if(!$(event.target).is('input')) {
                 $(this).next('.panel-body').slideToggle();
             }
+        });
+        $('#testSelector').on('change', function() {
+            var selected = $(this).find(":selected").text();
+            var testId;
+            $('#userSelector').html('<option hidden>Välj elev</option>')
+            {{#tests}}
+                if('{{testname}}' == selected){
+                    testId = {{testid}};
+                }
+            {{/tests}}
+            if(testId){
+                {{#users}}
+                    if('{{userid}}' == testId){
+                        $('#userSelector').append('<option>{{username}}</option>');
+                    }
+                {{/users}}
+            }
+        });
+        $('#userSelector').on('change', function () {
+            $('#questionBox').html('hej');
         });
     });
 </script>
