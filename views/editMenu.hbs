@@ -33,12 +33,11 @@
         test.testId = currTestId;
 
         $.ajax({
-            url: '/editMenu',
+            url: '/edit=' + currTestId,
             method: 'post',
             data: test,
             success: function(){
-                console.log('Tryckt på edit');
-                location.replace('/edit');
+                console.log('Yay');
             }
         });
     });

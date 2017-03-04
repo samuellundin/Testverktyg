@@ -147,53 +147,9 @@ app.get("/editMenu", function(req, res) {
 });
 
 //Saves questions for posted TestId in session
-app.post("/editMenu", function(req, res) {
-    var answers = [];  //contains all answers
-
-    var questionId = [];    //array som innehåller samtliga q-ids
-    var questionIds = "";   //sträng som används i select
-    var questionCounter = 0;
-
-    //Saves useful data to variables and also nrOfQuestions to session
-    sql.connection.query("SELECT QuestionId FROM Questions WHERE QTestId ='" + req.body.testId +"'", function(error, result) {
-        for(var i = 0; i < result.length; i++) {
-            questionCounter += 1;
-            questionId.push(result[i].QuestionId);
-            if(i == result.length - 1) {
-                questionIds = questionIds + "(AQuestionId = '" + result[i].QuestionId + "')";
-                req.session.nrOfQuestions = dcopy(questionCounter);
-            } else {
-                questionIds = questionIds + "(AQuestionId = '" + result[i].QuestionId + "') OR ";
-            }
-        }
-    });
-
-    setTimeout(function(){
-        sql.connection.query("SELECT QuestionId, QTestId,Question,QType,QPoints,QOrder FROM Questions WHERE QTestId = '" + req.body.testId + "'", function(error, result) {
-            req.session.eQuestion = [];
-            req.session.eQuestion.push(dcopy(result));
-            //req.session.eQuestion = dcopy(result);
-        });
-    }, 200);
-
-    setTimeout(function(){
-        for(var i = 0; i < questionId.length; i++) {
-            sql.connection.query("SELECT AnswersId,AQuestionId,AOrder,APoints,ACorrected,AText FROM Answers WHERE AQuestionId =" + questionId[i], function(error, result) {
-                answers.push(result);
-            });
-        }
-    }, 400);
-
-    setTimeout(function(){
-        req.session.eAnswer = [];
-        req.session.eAnswer.push(dcopy(answers));
-    }, 600);
-
-    setTimeout(function(){
-        console.log("questionIds: " + questionIds);
-        console.log("nr of questions: " + questionCounter);
-        res.render("edit", req.session);
-    }, 800);
+app.post("/edit=:testId", function(req, res) {
+    console.log(req.params.testId);
+        res.send(req.params.testId);
 });
 
 //Get edit
@@ -222,7 +178,7 @@ app.get("/share", function(req, res) {
 
 //Get statistics
 app.get("/statistics", function(req, res) {
-    updateSessionTests(req);
+
     setTimeout(function(){
         res.render("statistics", req.session);
     }, 200);
@@ -449,7 +405,7 @@ function autoCorrect(testId, takenTestId){
 }
 
 function updateTestScore(testId, takenTestId, points){
-    sql.connection.query('SELECT TMaxPoints FROM Test WHERE TestId = ' + testId, function(error, result){
+    sql.connection.query('SELECT TMaxPoints, TResult FROM Test WHERE TestId = ' + testId, function(error, result){
         var mPoints = result[0].TMaxPoints;
         var percentage = (points/mPoints) * 100;
         var grade = 'U';
@@ -458,7 +414,7 @@ function updateTestScore(testId, takenTestId, points){
         } else if (percentage > 60){
             grade = 'G';
         }
-        sql.connection.query('UPDATE AnsweredTest SET ATPoints = ' + points + ", ATGrade = " + mysql.escape(grade) + ", ATCorrected = TRUE WHERE AnsweredTestId = " + takenTestId, function(err, res){if (err) throw err;});
+        sql.connection.query('UPDATE AnsweredTest SET ATPoints = ' + points + ", ATGrade = " + mysql.escape(grade) + ", ATCorrected = TRUE, ATShowResult = "+ result[0].TResult +" WHERE AnsweredTestId = " + takenTestId, function(err, res){if (err) throw err;});
     });
 }
 

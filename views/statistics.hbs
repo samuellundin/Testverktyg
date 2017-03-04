@@ -18,11 +18,13 @@
                   <h4>Välj test för att se statistik</h4><br>
                   <form action="/test" method="get">
                       <select name="test" id="testSelect" class="form-control">
+                          <option hidden>Välj prov</option>
                           {{#each tests}}
                               <option class="{{this.TestId}}">{{this.TTitle}}</option>
                           {{/each}}
                       </select>
                       <select name="group" id="groupSelect" class="form-control">
+                          <option hidden>Välj grupp...</option>
                           {{#group}}
                               <option class="{{groupId}}">{{groupName}}</option>
                           {{/group}}

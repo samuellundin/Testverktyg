@@ -1,32 +1,124 @@
-<div class="container">l
-    <div class="col-md-4 col-md-offset-4">
+<div class="container" id="test">
+    <div class="col-lg-10 col-lg-offset-1">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="title">Redigera test</h1>
+            </div>
+        </div>
+        <hr>
+        <div class="panel panel-default notthis">
+            <div class="panel-heading" id="#createTest">
+                <meta class="{{id}}">
+                <h3 class="panel-title">Redigera test</h3>
+            </div>
+            <div class="panel-body">
+                <form>
+                    <!-- Test Name -->
+                    <label class="control-label">Namn på test:</label>
+                    <div id = "controlTestName" class=""> </div>
+                    <div id = "errorTestName" class="">
+                        <input type="text" class="form-control" value="Testnamn" id="testName"></div>
 
-        <!-- Test selection -->
-        <h3 class="page-header">Välj test att redigera</h3>
-        <form action="/test" method="get">
-            <select name="test" id="testSelect" class="form-control">
-                {{#eQuestion}}
-                    <option class="{{this.QuestionId}}">{{this.[0].Question}}</option>
-                {{/eQuestion}}
-            </select>
-            <select name="test" id="testSelect" class="form-control">
-                {{#eAnswer}}
-                    <option class="">{{this.[0].[0].AText}}</option>
-                {{/eAnswer}}
-            </select>
-            <select name="test" id="testSelect" class="form-control">
-                {{#eAnswer}}
-                    <option class="">{{this.[1].[2].AText}}</option>
-                {{/eAnswer}}
-            </select>
-            <br>
-            <button type="button" class="btn btn-primary btn-block" id="editButton" value="hh">Redigera test</button>
-        </form>
+                    <!-- Time Limit -->
+                    <label class="control-label">Tidsbegränsning:</label>
+                    <div id = "controlTime" class=""> </div>
+                    <div id = "errorTime" class="">
+                        <div class="input-group">
+                        <span class="input-group-addon">
+                            <input type="checkbox" id="timed">
+                        </span>
+                            <input type="text" class="form-control" placeholder="Minuter" id="time">
+                        </div></div>
+
+                    <!-- Datepicker -->
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="control-label" for="date">Startdatum:</label>
+                            <div id = "controlStartdate" class=""> </div>
+                            <div id = "errorStartdate" class="">
+                                <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                                    <input class="form-control" id="dateStart" placeholder="YYYY-MM-DD" type="text"/>
+                                </div></div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="control-label" for="date">Starttid:</label>
+                            <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-time"></span>
+                            </span>
+                                <input class="form-control timepicker" id="timeStart" type="text" placeholder="HH:MM"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Datepicker -->
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="control-label" for="date">Slutdatum:</label>
+                            <div id = "controldate" class=""> </div>
+                            <div id = "errordate" class="">
+                                <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                                    <input class="form-control" id="date" placeholder="YYYY-MM-DD" type="text"/>
+                                </div></div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="control-label" for="date">Sluttid:</label>
+                            <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-time"></span>
+                            </span>
+                                <input class="form-control timepicker" type="text" id="timeEnd" placeholder="HH:MM"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Checkbox -->
+                    <div class="checkbox">
+                        <label><input type="checkbox" value="" id="selfCorrecting">Självrättande</label>
+                    </div>
+                    <div class="checkbox hidden" id="directResult">
+                        <label><input type="checkbox" value="" class="directResult">Direktresultat</label>
+                    </div>
+                    <div id =saved class="">
+                        <label class="control-label" id="testSaved"></label>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div id="questionModal" class="modal fade" role="dialog">
+
+        </div>
+        <div id="editModal" class="modal fade" role="dialog">
+
+        </div>
+
+        <div id="questionBox">
+
+        </div>
+
+        <!-- Buttons -->
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#questionModal" id="createQuestion">Skapa Fråga</button>
+        <button type="button" class="btn btn-default pull-right" id="saveTest">Spara Test</button>
     </div>
+
 </div>
 
 
+<!-- Footer -->
+<footer class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container">
+        <p class="navbar-text text-center"> Web Design & Development by Winners
+            <span class="glyphicon glyphicon-star"></span>
+        </p>
+    </div>
+</footer>
 
-<script>
-    
-</script>
+<script src="js/createedit.js"></script>
