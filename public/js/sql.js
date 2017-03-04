@@ -115,13 +115,12 @@ function addQ(questionData, testId){
 }
 
 exports.addUserAnsweredTest = function(data){
-    connection.query("INSERT INTO AnsweredTest (ATestId, ATDate, ATCorrected, ATPoints, ATGrade, ATTimeMin, ATTimeSec, ATUserId) VALUES ("
+    connection.query("INSERT INTO AnsweredTest (ATestId, ATDate, ATCorrected, ATPoints, ATGrade, ATTimeSec, ATUserId) VALUES ("
         + mysql.escape(data.ATestId) + ", "
         + data.ATDate + ", "
         + mysql.escape(data.ATCorrected) + ", "
         + mysql.escape(data.ATPoints) + ", "
         + mysql.escape(data.ATGrade) + ", "
-        + mysql.escape(data.ATTimeMin) + ", "
         + mysql.escape(data.ATTimeSec) + ", "
         + mysql.escape(data.ATUserId) + ")", function(err, result){
         if(err){
@@ -148,10 +147,7 @@ exports.addUserQuestions = function(data){
 };
 
 exports.addUserAnswers = function(data, next){
-    console.log(data.TestId + " " + data.UserId);
     connection.query("SELECT AnsweredTestId FROM AnsweredTest WHERE ATestId =" + mysql.escape(data.TestId) + ' AND ATUserId = ' + mysql.escape(data.UserId), function(error, result){
-
-        console.log(data);
         var testId = dcopy(result[0].AnsweredTestId);
         var k = 0;
         for(var i = 0; i < data.length; i++){
@@ -183,17 +179,6 @@ exports.getAllUsers = function(){
     var resultat = "";
     connection.query('SELECT * FROM User', function(err, result){
         resultat = result;
-        console.log(result);
-    });
-    console.log(resultat + " yeah.");
-    return 'Whaat?';
-}
-
-exports.getAnsweredTest = function( Uid){
-    var resultat = "";
-    connection.query('SELECT ATPoints, ATTimeMin, ATGrade FROM AnsweredTest WHERE ATUserId =' + Uid, function (err, result) {
-        resultat = result
-        console.log(result);
     });
     console.log(resultat + " yeah.");
     return 'Whaat?';

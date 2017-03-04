@@ -166,8 +166,7 @@
         var takenTest = {};
         takenTest.ATestId = {{test.TestId}};
         takenTest.ATDate = 'now()';
-        takenTest.ATTimeMin = $('#timer').text() ? {{test.TTimeMin}} - 1 - Number($('#timer').text().split(':')[0]) : 0;
-        takenTest.ATTimeSec = $('#timer').text() ? 59 - Number($('#timer').text().split(':')[1]) : 0;
+        takenTest.ATTimeSec = elapsedTime;
         takenTest.ATCorrected = 0;
         takenTest.ATPoints = 0;
         takenTest.ATGrade = 0;

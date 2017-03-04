@@ -33,6 +33,12 @@
                 var percentage = ({{ATPoints}}/{{TMaxPoints}});
                 percentage *= 100;
                 percentage = Math.round(percentage * 1000) / 1000;
+                var min = 0;
+                var sec = {{ATTimeSec}};
+                while(sec > 60){
+                    sec -= 60;
+                    min++;
+                }
                 $("#statsTable").html(`
                     <br><br>
                                 <tr>
@@ -41,7 +47,7 @@
                 </tr>
                 <tr>
                     <th>Tidsåtgång:</th>
-                    <td>{{ATTimeMin}}min {{ATTimeSec}}sek</td>
+                    <td>`+ min +`min `+ sec +`sek</td>
                 </tr>
                 <tr>
                     <th>Betyg:</th>

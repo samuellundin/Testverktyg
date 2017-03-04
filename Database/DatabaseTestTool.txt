@@ -132,7 +132,7 @@ AnsweredQuestion AS aq ON ua.UAQuestionId = aq.AnsweredQuestionId
 INNER JOIN AnsweredTest AS t ON t.AnsweredTestId = aq.AQAnsweredTestId);
 
 CREATE VIEW Results AS
-(SELECT at.ATTimeMin, at.ATTimeSec, at.ATGrade, at.ATPoints, t.TMaxPoints, t.TestId,
+(SELECT at.ATTimeSec, at.ATGrade, at.ATPoints, t.TMaxPoints, t.TestId,
 at.AnsweredTestId, at.ATUserId, at.ATCorrected, t.TTitle
 FROM AnsweredTest AS at
 INNER JOIN Test AS t
