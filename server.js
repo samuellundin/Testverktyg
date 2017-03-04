@@ -272,7 +272,9 @@ app.get("/test=:testIdLink", function(req, res) {
                     var k = 0;
                     sql.connection.query("SELECT * FROM Answers WHERE AQuestionId = " + mysql.escape(req.session.questions[j].QuestionId), function(error3, result3) {
                         if(error3) throw error3;
+                        console.log('Am I here?');
                         req.session.questions[k].answers = dcopy(result3);
+                        console.log(req.session.questions[k]);
                         k++;
                     })
                 }
@@ -281,7 +283,7 @@ app.get("/test=:testIdLink", function(req, res) {
         function(callback){
             setTimeout(function(){
                 res.render('test', req.session);
-            }, 300)
+            }, 600)
         }
 
     ], function(error){
