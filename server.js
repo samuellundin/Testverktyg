@@ -286,6 +286,8 @@ app.post('/group', function(req, res){
 
 //Get correcting
 app.get('/correcting', function(req, res) {
+
+    // Get testdata for Combobox
     sql.connection.query('SELECT * FROM Test', function(err, result) {
         var test;
         var tests = [];
@@ -296,6 +298,7 @@ app.get('/correcting', function(req, res) {
         }
         req.session.tests = dcopy(tests);
     });
+    // Get userdata for combobox
     sql.connection.query('SELECT User.FirstName, AnsweredTest.ATestId FROM User INNER JOIN AnsweredTest ON AnsweredTest.ATUserID=User.UserID', function(err, result) {
         var user;
         var users = [];
@@ -307,6 +310,27 @@ app.get('/correcting', function(req, res) {
         req.session.users = dcopy(users);
     });
 
+    sql.connection.query(`
+        SELECT T.TestId, Q.QOrder, Q.Question, Q.QType, Q.QPoints, A.AText, A.APoints FROM Test AS T
+        INNER JOIN Questions AS Q ON T.TestId = Q.QTestId
+        INNER JOIN Answers AS A ON Q.QuestionId = A.AQuestionId`, function(err, result) {
+
+        var testdata = [];
+
+        for(var i = 0; i < result.length; i++) {
+            testdata.push({
+                testId: result[i].TestId,
+                questionOrder: result[i].QOrder,
+                questionText: result[i].Question,
+                questionType: result[i].QType,
+                questionPoints: result[i].QPoints,
+                answerText: result[i].AText,
+                answerCorrect: result[i].APoints
+            });
+        }
+
+        req.session.testdata = testdata;
+    });
     setTimeout(function () {
         res.render('correcting', req.session);
     }, 500);

@@ -23,40 +23,6 @@
         <hr/>
         <div id="questionBox">
 
-            <div class="panel panel-default">
-                <div class="panel-heading clearfix">
-                    <h3 class="panel-title">Fråga? (Frågetyp)<span class="pull-right">Poäng: <input type="text" size="1"> / 10</span></h3>
-                </div>
-                <div class="panel-body collapse">
-                    <div class="col-md-6">
-                        <h4 class="title">Svar:</h4>
-                        <ul class="list-group">
-                            <li class="list-group-item">1</li>
-                            <li class="list-group-item">2</li>
-                            <li class="list-group-item">3</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <h4 class="title">Rätt svar:</h4>
-                        <ul class="list-group">
-                            <li class="list-group-item">1</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-12">
-                        <textarea class="form-control collapse" rows="5" style="resize: vertical; margin-bottom: 15px"></textarea>
-                        <button type="button" class="btn btn-default commentButton">Kommentera fråga</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel panel-default">
-                <div class="panel-heading clearfix">
-                    <h3 class="panel-title">Kommentar för test</h3>
-                </div>
-                <div class="panel-body collapse">
-                    <textarea class="form-control" rows="4" style="resize: vertical"></textarea>
-                </div>
-            </div>
         </div>
         <button type="button" class="btn btn-primary">Rätta test</button>
     </div>
@@ -72,18 +38,18 @@
                 $(this).next('.panel-body').slideToggle();
             }
         });
+        var selectedTestId;
         $('#testSelector').on('change', function() {
             var selected = $(this).find(":selected").text();
-            var testId;
             $('#userSelector').html('<option hidden>Välj elev</option>')
             {{#tests}}
                 if('{{testname}}' == selected){
-                    testId = {{testid}};
+                    selectedTestId = {{testid}};
                 }
             {{/tests}}
-            if(testId){
+            if(selectedTestId){
                 {{#users}}
-                    if('{{userid}}' == testId){
+                    if('{{userid}}' == selectedTestId){
                         $('#userSelector').append('<option>{{username}}</option>');
                     }
                 {{/users}}
@@ -92,43 +58,45 @@
         $('#userSelector').on('change', function () {
             var selectedTest = $('#testSelector').find(":selected").text();
             var selectedUser = $('#userSelector').find(":selected").text();
+            $('#questionBox').empty();
+            {{#testdata}}
+                if(selectedTestId === {{testId}}){
+                    if('{{this.questionText}}' != question){
+                        $('#questionBox').append(`
+                            <div class="panel panel-default">
+                                <div class="panel-heading clearfix">
+                                    <h3 class="panel-title">{{this.questionText}} ({{this.questionType}})<span class="pull-right">Poäng: <input type="text" size="1"> / {{this.questionPoints}}</span></h3>
+                                </div>
+                                <div class="panel-body collapse">
+                                    <div class="col-md-6">
+                                        <h4 class="title">Svar:</h4>
+                                        <ul class="list-group useranswers">
+                                            <li class="list-group-item">1</li>
+                                            <li class="list-group-item">2</li>
+                                            <li class="list-group-item">3</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h4 class="title">Rätt svar:</h4>
+                                        <ul class="list-group correctanswers">
 
-            $('#questionBox').html(`
-                <div class="panel panel-default">
-                    <div class="panel-heading clearfix">
-                        <h3 class="panel-title">Fråga? (Frågetyp)<span class="pull-right">Poäng: <input type="text" size="1"> / 10</span></h3>
-                    </div>
-                    <div class="panel-body collapse">
-                        <div class="col-md-6">
-                            <h4 class="title">Svar:</h4>
-                            <ul class="list-group">
-                                <li class="list-group-item">1</li>
-                                <li class="list-group-item">2</li>
-                                <li class="list-group-item">3</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <h4 class="title">Rätt svar:</h4>
-                            <ul class="list-group">
-                                <li class="list-group-item">1</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-12">
-                            <textarea class="form-control collapse" rows="5" style="resize: vertical; margin-bottom: 15px"></textarea>
-                            <button type="button" class="btn btn-default commentButton">Kommentera fråga</button>
-                        </div>
-                    </div>
-                </div>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <textarea class="form-control collapse" rows="5" style="resize: vertical; margin-bottom: 15px"></textarea>
+                                        <button type="button" class="btn btn-default commentButton">Kommentera fråga</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    }
 
-                <div class="panel panel-default">
-                    <div class="panel-heading clearfix">
-                        <h3 class="panel-title">Kommentar för test</h3>
-                    </div>
-                    <div class="panel-body collapse">
-                        <textarea class="form-control" rows="4" style="resize: vertical"></textarea>
-                    </div>
-                </div>
-            `);
+                    if('{{answerCorrect}}' == 1){
+                        $('.correctanswers').eq({{questionOrder}} - 1).append('<li class="list-group-item">{{answerText}}</li>');
+                    }
+                    var question = '{{this.questionText}}';
+                }
+            {{/testdata}}
         });
     });
 </script>
