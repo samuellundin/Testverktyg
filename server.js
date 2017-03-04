@@ -219,7 +219,7 @@ app.get("/test=:testIdLink", function(req, res) {
         function(callback){
             setTimeout(function(){
                 res.render('test', req.session);
-            }, 300)
+            }, 600)
         }
 
     ], function(error){
