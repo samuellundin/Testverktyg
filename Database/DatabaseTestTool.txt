@@ -52,8 +52,8 @@ CREATE TABLE AnsweredTest(
 		ATUserId INT,
 		ATDate DATETIME NOT NULL,
 		ATCorrected BOOLEAN NOT NULL,
+		ATShowResult BOOLEAN NOT NULL DEFAULT 0,
 		ATPoints INT(10) NOT NULL,
-        ATTimeMin INT(10) NOT NULL DEFAULT 0,
         ATTimeSec INT(10) NOT NULL DEFAULT 0,
 		ATGrade VARCHAR(10) NOT NULL,
 		CONSTRAINT ATAnswersIdFK FOREIGN KEY (ATestId) REFERENCES Test(TestId),
@@ -117,11 +117,6 @@ FROM Test
 INNER JOIN AnsweredTest
 ON AnsweredTest.ATestId = Test.TestId) AS t
 ON u.UserId = t.ATUserId);
-
-CREATE VIEW ATTable AS
-(SELECT at.ATestId, at.ATUserId, aq.*, ua.* FROM AnsweredTest AS at
-INNER JOIN AnsweredQuestion AS aq ON aq.AQAnsweredTestId = at.AnsweredTestId
-INNER JOIN UserAnswer AS ua ON ua.UAQuestionId = aq.AnsweredQuestionId);
 
 CREATE VIEW Correcting AS
 (SELECT AnsweredTest.ATUserId, AnsweredTest.AnsweredTestId, AnsweredTest.ATestId, Answers.*, UserAnswer.*, AnsweredQuestion.AQAnsweredTestId, AnsweredQuestion.AQQuestionId, Questions.QType

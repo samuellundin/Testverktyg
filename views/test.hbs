@@ -113,7 +113,7 @@
 
     var sec = 0;
     var min;
-    var myVar;
+    var elapsedTime = 0;
     timer({{test.TTimeMin}});
 
     //Function timer start function countDown every second.
@@ -123,7 +123,7 @@
         }
         min = time;
         countDown(); //Call function countDown too show starttime before count down.
-        myVar = setInterval(countDown, 1000);
+        setInterval(countDown, 1000);
     }
 
     //Function countDown display time in HTML
@@ -143,6 +143,7 @@
             sec = 60;
         }
         sec--;
+        elapsedTime++;
     }
 
     function turnIn(){
