@@ -5,19 +5,20 @@
         <h3 class="page-header">Välj test att redigera</h3>
         <form action="/test" method="get">
             <select name="test" id="testSelect" class="form-control">
-                {{#eQuestion}}
-                    <option class="{{this.QuestionId}}">{{this.[0].Question}}</option>
-                {{/eQuestion}}
+                {{#eQuestions}}
+                    <option class="">{{this.QuestionId}}</option>
+                {{/eQuestions}}
             </select>
             <select name="test" id="testSelect" class="form-control">
-                {{#eAnswer}}
-                    <option class="">{{this.[0].[0].AText}}</option>
-                {{/eAnswer}}
+                {{#eQuestions}}
+                    <option class="">{{this.answers.[0].AnswersId}}</option>
+                {{/eQuestions}}
             </select>
             <select name="test" id="testSelect" class="form-control">
-                {{#eAnswer}}
-                    <option class="">{{this.[1].[2].AText}}</option>
-                {{/eAnswer}}
+                {{#eQuestions}}
+                    var i = 0;
+                    <option class="">{{this}}</option>
+                {{/eQuestions}}
             </select>
             <br>
             <button type="button" class="btn btn-primary btn-block" id="editButton" value="hh">Redigera test</button>
@@ -26,7 +27,41 @@
 </div>
 
 
-
 <script>
-    
+
+    //Question object
+    var questionData = {
+        QuestionId: "",
+        QTestId: "",
+        Question: "",
+        QType: "",
+        QPoints: "",
+        QOrder: "",
+        Answers: []}; //Every question object contains an array with answer data
+
+    // Variable nrOfQuestions stores the amount of questions
+    var nrOfQuestions = 0;
+    {{#each eQuestions}}
+        nrOfQuestions++;
+    {{/each}}
+
+    //Array containing a questionData object for each index/question
+    var question = [];
+    for(var i = 0; i < nrOfQuestions; i++) {
+        question.push(questionData);
+    }
+
+    //Fills up the array objects with data
+    //Av nån anledning skrivs question[0] över vid nästa loop trots att @index ökar med 1 för varje loop
+    {{#each eQuestions}}
+        console.log({{@index}});
+        question[{{@index}}].QuestionId = '{{this.QuestionId}}';
+        question[{{@index}}].QTestId = '{{this.QTestId}}';
+        question[{{@index}}].Question = '{{this.Question}}';
+        console.log(question[0].Question);
+        question[{{@index}}].QType = '{{this.QType}}';
+        question[{{@index}}].QPoints = '{{this.QPoints}}';
+        question[{{@index}}].QOrder = '{{this.QOrder}}';
+    {{/each}}
+    console.log(question[0].Question);
 </script>

@@ -148,52 +148,70 @@ app.get("/editMenu", function(req, res) {
 
 //Saves questions for posted TestId in session
 app.post("/editMenu", function(req, res) {
-    var answers = [];  //contains all answers
-
-    var questionId = [];    //array som innehåller samtliga q-ids
-    var questionIds = "";   //sträng som används i select
-    var questionCounter = 0;
+    var answers = [];  //contains all answers data
+    var questions = []; //contains all questions data
+    var questionId = [];    //Containing all question Ids
+    var questionIds = "";   //sträng som kan används i select
 
     //Saves useful data to variables and also nrOfQuestions to session
     sql.connection.query("SELECT QuestionId FROM Questions WHERE QTestId ='" + req.body.testId +"'", function(error, result) {
         for(var i = 0; i < result.length; i++) {
-            questionCounter += 1;
             questionId.push(result[i].QuestionId);
             if(i == result.length - 1) {
                 questionIds = questionIds + "(AQuestionId = '" + result[i].QuestionId + "')";
-                req.session.nrOfQuestions = dcopy(questionCounter);
             } else {
                 questionIds = questionIds + "(AQuestionId = '" + result[i].QuestionId + "') OR ";
             }
         }
     });
 
-    setTimeout(function(){
-        sql.connection.query("SELECT QuestionId, QTestId,Question,QType,QPoints,QOrder FROM Questions WHERE QTestId = '" + req.body.testId + "'", function(error, result) {
-            req.session.eQuestion = [];
-            req.session.eQuestion.push(dcopy(result));
-            //req.session.eQuestion = dcopy(result);
+    //TESTING
+    /*setTimeout(function() {  questions[i].answers
+        sql.connection.query("SELECT Questions.QuestionId, Questions.QTestId, Questions.Question, Questions.QType, Questions.QPoints, Questions.QOrder," +
+            " Answers.AnswersId, Answers.AQuestionId, Answers.AOrder, Answers.APoints, Answers.ACorrected, Answers.AText" +
+            " FROM Questions" +
+            " INNER JOIN Answers" +
+            " ON Questions.QuestionId = Answers.AQuestionId WHERE Questions.QTestId = " + + req.body.testId, function(error, result) {
+            if (error) throw error;
+            for(var i = 0; i < result.length; i++) {
+                questions.push(result[i]);
+            }
+            req.session.testings = dcopy(questions);
         });
-    }, 200);
+    }, 300);*/
 
+    //Save questions
+    setTimeout(function() {
+        sql.connection.query("SELECT * FROM Questions WHERE QTestId = " + mysql.escape(req.body.testId), function(error, result) {
+            if (error) throw error;
+            for(var i = 0; i < result.length; i++) {
+                req.session.eQuestions = dcopy(result);
+            }
+        });
+    }, 500);
+
+    //Save answers
     setTimeout(function(){
-        for(var i = 0; i < questionId.length; i++) {
-            sql.connection.query("SELECT AnswersId,AQuestionId,AOrder,APoints,ACorrected,AText FROM Answers WHERE AQuestionId =" + questionId[i], function(error, result) {
-                answers.push(result);
-            });
+        for (var j = 0; j < questionId.length; j++) {
+            var k = 0;
+            console.log(questionId[j]);
+
+                sql.connection.query("SELECT * FROM Answers WHERE AQuestionId = " + "'" + req.session.eQuestions[j].QuestionId + "'",function (error, result) {
+                    if(error) throw error;
+                    console.log("j: " + j)
+                    req.session.eQuestions[k].answers = dcopy(result);
+                    k++;
+                    console.log("k: " + k);
+                    //t = 5;
+                });
+
         }
-    }, 400);
-
-    setTimeout(function(){
-        req.session.eAnswer = [];
-        req.session.eAnswer.push(dcopy(answers));
-    }, 600);
+    }, 700);
 
     setTimeout(function(){
         console.log("questionIds: " + questionIds);
-        console.log("nr of questions: " + questionCounter);
         res.render("edit", req.session);
-    }, 800);
+    }, 1500);
 });
 
 //Get edit
