@@ -111,7 +111,7 @@ $(document).on('click', '#saveQuestion', function() {
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
                 <meta class="` + $('#typeSelect :selected').text() + `">
-
+                <input type="hidden" class="image" value="`+ $('#questionModal #imgURL').val() +`">
                 <div class="pull-right">
                     <button type="button" class="btn btn-default btn-sm btn-edit" data-toggle="modal" data-target="#editModal">Redigera</button>
                     <button type="button" class="btn btn-default btn-sm btn-remove">
@@ -147,6 +147,8 @@ $(document).on('click', '.btn-remove', function() {
 var thisPanel = '';
 $(document).on('click', '.btn-edit', function() {
     var title = $(this).parent().parent().find('.panel-title').html();
+    var imgUrl = $(this).parent().parent().parent().find('input[type=hidden]').val();
+    console.log(imgUrl);
     var n = title.indexOf("(");
     var titleQuestion = title.substring(0, n).trim(); // variabel för fråga
     var titleType = title.substring(n); // variabel för typ av fråga
@@ -196,6 +198,12 @@ $(document).on('click', '.btn-edit', function() {
                             <div id="answersBox">
                             </div>
                             <p id="infoText"></p>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-picture"></span>
+                                </span>
+                                <input class="form-control" id="imgURL" placeholder="Länk till bild" value="`+ imgUrl +`" type="text"/>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -254,7 +262,7 @@ $('#editModal').on('click', '#saveEditButton', function () {
     thisPanel.html(`
             <div class="panel-heading clearfix">
                 <meta class="` + $('#typeSelectEdit :selected').text() + `">
-
+                <input type="hidden" class="image" value="`+ $('#editModal #imgURL').val() +`">
                 <div class="pull-right">
                     <button type="button" class="btn btn-default btn-sm btn-edit" data-toggle="modal" data-target="#editModal">Redigera</button>
                     <button type="button" class="btn btn-default btn-sm btn-remove">
@@ -348,6 +356,12 @@ function resetQuestionBox(){
                 </div>
                 </div>
                 <p id="infoText"></p>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-picture"></span>
+                    </span>
+                    <input class="form-control" id="imgURL" placeholder="Länk till bild" type="text"/>
+                </div>
                 </form>
                 </div>
                 <div class="modal-footer">
@@ -449,6 +463,7 @@ function getQuestionData(storeVariable){
         questionData.qType = $(this).find('meta').attr('class');
         questionData.qOrder = index;
         questionData.score = $(this).find('span').text().match(/\d+/) || 0;
+        questionData.imgUrl = $(this).find('input[type=hidden].image').val() ? $(this).find('input[type=hidden].image').val() : false;
         maxPointsTest += Number(questionData.score);
         questionsArray.push(questionData);
         questionData = new Object();

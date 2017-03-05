@@ -73,16 +73,14 @@ exports.addQuestion = function(questionData, testIdIn){
 };
 
 function addQ(questionData, testId){
+    console.log('Lägger till en fråga');
     connection.query("INSERT INTO Questions (QTestId, Question, QType, QPoints, QOrder) VALUES ("
         + mysql.escape(testId) + ", "
         + mysql.escape(questionData.title) + ", "
         + mysql.escape(questionData.type) + ", "
         + mysql.escape(questionData.score) + ", "
         + mysql.escape(questionData.qOrder) + ")", function(err, result){
-        if(err){
-            console.log(err);
-            return false;
-        }
+        if(err) throw err;
         return true;
     });
 }
@@ -116,9 +114,14 @@ function addQ(questionData, testId){
         + mysql.escape(questionData.qType) + ", "
         + mysql.escape(questionData.score) + ", "
         + mysql.escape(questionData.qOrder) + ")", function(err, result){
-        if(err){
-            console.log(err);
-            return false;
+        if(err)throw err;
+        console.log(questionData.imgUrl);
+        if(questionData.imgUrl){
+            connection.query('INSERT INTO pictureURL (PURL, PQuestionId) VALUES ('
+                + mysql.escape(questionData.imgUrl) + ', '
+                + mysql.escape(result.insertId) + ')', function(error, res){
+                if(error) throw error;
+            })
         }
         return true;
     });

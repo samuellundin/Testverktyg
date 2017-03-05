@@ -104,7 +104,6 @@ app.get('/create', function(req, res){
 //Post create
 app.post('/create', function(req, res){
     sql.addTest(req.body.data, req.body.questions, req.body.answers);
-    console.log('Created test successfully');
     res.send('Yay');
 });
 
