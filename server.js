@@ -206,10 +206,97 @@ app.get("/share", function(req, res) {
 
 //Get statistics
 app.get("/statistics", function(req, res) {
+    updateSessionTests(req);
+    updateSessionGroups(req);
 
     setTimeout(function(){
         res.render("statistics", req.session);
     }, 200);
+});
+
+app.get("/statistics2", function(req, res) {
+    updateSessionTests(req);
+    updateSessionGroups(req);
+
+    setTimeout(function(){
+        res.render("statistics2", req.session);
+    }, 200);
+});
+
+//Post statistics
+app.post("/statistics", function(req, res) {
+    req.session.statsObject = {};
+
+    //Saves nr of group members
+    sql.connection.query("SELECT COUNT(GroupDetails.GDUserId) AS GDUserIdCount FROM GroupDetails" +
+        " WHERE GDStudentGroupId = " + req.body.groupId, function(error, result) {
+        req.session.statsObject.GDUserIdCount = dcopy(result[0].GDUserIdCount);
+    });
+
+    //Saves nr of answered tests
+    setTimeout(function(){
+        sql.connection.query("SELECT COUNT(AnsweredTest.ATUserId) AS ATUserIdCount FROM AnsweredTest" +
+            " INNER JOIN GroupDetails" +
+            " ON AnsweredTest.ATUserId = GroupDetails.GDUserId "  +
+            " WHERE AnsweredTest.ATestId = " + req.body.testId +
+            " AND GroupDetails.GDStudentGroupId = " + req.body.groupId, function(error, result) {
+
+            req.session.statsObject.ATUserIdCount = dcopy(result[0].ATUserIdCount);
+
+        });
+    }, 150)
+
+    //Saves nr of passed tests
+    setTimeout(function(){
+        sql.connection.query("SELECT COUNT(AnsweredTest.ATGrade) AS ATGradeCount FROM AnsweredTest" +
+        " INNER JOIN GroupDetails" +
+        " ON AnsweredTest.ATUserId = GroupDetails.GDUserId" +
+        " WHERE AnsweredTest.ATestId = " + req.body.testId +
+        " AND (AnsweredTest.ATGrade = 'G' OR AnsweredTest.ATGrade = 'VG')" +
+        " AND GroupDetails.GDStudentGroupId = " + req.body.groupId, function(error, result) {
+
+            req.session.statsObject.ATGradeCount = dcopy(result[0].ATGradeCount);
+        });
+    }, 300)
+
+    //Saves max points for test and avg scores
+    setTimeout(function(){
+        sql.connection.query("SELECT TMaxPoints FROM Test WHERE TestId = " + req.body.testId, function(error, result) {
+
+            req.session.statsObject.TMaxPoints = dcopy(result[0].TMaxPoints);
+        });
+        sql.connection.query("SELECT AVG(AnsweredTest.ATPoints) AS ATPointsAvg FROM AnsweredTest" +
+        " INNER JOIN GroupDetails" +
+        " ON AnsweredTest.ATUserId = GroupDetails.GDUserId" +
+        " WHERE AnsweredTest.ATestId = " + req.body.testId +
+        " AND GroupDetails.GDStudentGroupId = " + req.body.groupId, function(error, result) {
+
+            req.session.statsObject.ATPointsAvg = dcopy(result[0].ATPointsAvg);
+        });
+    }, 450)
+
+    //Saves max time for test and avg time
+    setTimeout(function(){
+        sql.connection.query("SELECT TTimeMin FROM Test WHERE TestId = " + req.body.testId, function(error, result) {
+
+            req.session.statsObject.TTimeMin = dcopy(result[0].TTimeMin);
+        });
+        sql.connection.query("SELECT AVG(AnsweredTest.ATTimeSec) AS ATTimeSecAvg FROM AnsweredTest" +
+        " INNER JOIN GroupDetails" +
+        " ON AnsweredTest.ATUserId = GroupDetails.GDUserId" +
+        " WHERE AnsweredTest.ATestId = " + + req.body.testId +
+        " AND GroupDetails.GDStudentGroupId = " + req.body.groupId, function(error, result) {
+
+            req.session.statsObject.ATTimeSecAvg = dcopy(result[0].ATTimeSecAvg);
+        });
+    }, 600)
+
+    setTimeout(function(){
+        console.log(req.session.statsObject);
+        res.render("register", req.session);
+    }, 700)
+
+
 });
 
 //Get testMenu
@@ -481,6 +568,12 @@ function updateTestScore(testId, takenTestId, points){
 function updateSessionTests(req) {
     sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
         req.session.tests = dcopy(result);
+    });
+}
+
+function updateSessionGroups(req) {
+    sql.connection.query("SELECT * FROM StudentGroup", function(error, result) {
+        req.session.group = dcopy(result);
     });
 }
 
