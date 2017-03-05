@@ -10,7 +10,8 @@ var connection = mysql.createConnection({
     host: 'localhost',
     user: 'dev',
     password: '1234',
-    database: 'TestTool'
+    database: 'TestTool',
+    dateStrings: 'date'
 })
 connection.connect();
 
@@ -54,12 +55,16 @@ exports.addTest = function(testData){
     });
 };
 
-exports.addQuestion = function(questionData){
+exports.addQuestion = function(questionData, testIdIn){
     var testId = 0;
-    connection.query("SELECT TestID FROM Test WHERE TTitle = " + mysql.escape(questionData.testTitle), function(err, result){
-        testId = dcopy(result[0].TestID);
-        addQ(questionData, testId);
-    });
+    if(testIdIn){
+        addQ(questionData, testIdIn);
+    } else {
+        connection.query("SELECT TestID FROM Test WHERE TTitle = " + mysql.escape(questionData.testTitle), function(err, result){
+            testId = dcopy(result[0].TestID);
+            addQ(questionData, testId);
+        });
+    }
 };
 
 function addQ(questionData, testId){
@@ -100,7 +105,7 @@ function addA(answerData, questionId){
 }
 
 function addQ(questionData, testId){
-    connection.query("INSERT INTO Questions (QTestId, Question, QType, QPoints, QOrder) VALUES ("
+    var c = connection.query("INSERT INTO Questions (QTestId, Question, QType, QPoints, QOrder) VALUES ("
         + mysql.escape(testId) + ", "
         + mysql.escape(questionData.title) + ", "
         + mysql.escape(questionData.qType) + ", "
@@ -184,3 +189,43 @@ exports.getAllUsers = function(){
     return 'Whaat?';
 }
 
+//Updates a test. Updates all test information, then deletes all associated questions and answers and re-adds the modified ones.
+//This way we don't need to keep track of which are still there, which are not, it just copies the Q's and A's that are
+//to remain.
+exports.updateTest = function(data, questions, answers){
+    connection.query('UPDATE Test SET '
+    + 'TTitle = ' + mysql.escape(data.testTitle) + ", "
+    + 'TStartTestDate = ' + mysql.escape(data.startDT) + ", "
+    + 'TEndTestDate = ' + mysql.escape(data.endDT) + ", "
+    + 'TTimeMin = ' + mysql.escape(data.minutes) + ", "
+    + 'TMaxPoints = ' + mysql.escape(data.maxPoints) + ", "
+    + 'TSelfCorrecting = ' + mysql.escape(data.checked) + ", "
+    + 'TResult = ' + mysql.escape(data.showResult) + ", "
+    + 'TUserId = ' + mysql.escape(data.userId)
+    + ' WHERE TestId = ' + mysql.escape(data.testId), function(error, result){
+        if(error) throw error;
+        connection.query('SELECT QuestionId FROM Questions WHERE QTestId = ' + mysql.escape(data.testId), function(err, res){
+            if(err) throw err;
+            var j = 0;
+            var k = 0;
+            for(var i = 0; i < res.length; i++){
+                connection.query('DELETE FROM Answers WHERE AQuestionId = ' + mysql.escape(res[i].QuestionId), function(err2, res2){
+                    if(err2) throw err2;
+                    connection.query('DELETE FROM Questions WHERE QuestionId = ' + mysql.escape(res[j++].QuestionId), function(err3, res3){
+                        if(err3) throw err3;
+                        if(++k == res.length){
+                                for(var ind = 0; ind < questions.length; ind++){
+                                    exports.addQuestion(questions[ind], data.testId);
+                                }
+                            setTimeout(function(){
+                                for(var ind = 0; ind < answers.length; ind++){
+                                    exports.addAnswer(answers[ind]);
+                                }
+                            }, 500);
+                        }
+                    })
+                })
+            }
+        })
+    })
+}

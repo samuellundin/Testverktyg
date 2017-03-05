@@ -147,17 +147,34 @@ app.get("/editMenu", function(req, res) {
 });
 
 //Saves questions for posted TestId in session
-app.post("/edit=:testId", function(req, res) {
-    console.log(req.params.testId);
-        res.send(req.params.testId);
+app.get("/edit=:testId", function(req, res) {
+    var test = {};
+    sql.connection.query('SELECT * FROM Test WHERE TestId = ' + req.params.testId, function(err1, res1){
+        if(err1) throw err1;
+        test = dcopy(res1[0]);
+        var questions;
+        sql.connection.query('SELECT * FROM Questions WHERE QTestId = ' + req.params.testId, function(error, result){
+            if(error) throw error;
+            questions = dcopy(result);
+            var j = 0;
+            for(var i = 0; i < questions.length; i++){
+                sql.connection.query('SELECT * FROM Answers WHERE AQuestionId = ' + questions[i].QuestionId, function(err2, res2){
+                    if(err2) throw err2;
+                    questions[j++].answers = res2;
+                    if(j == questions.length){
+                        test.questions = questions;
+                        req.session.test = test;
+                        res.render('edit', req.session);
+                    }
+                })
+            }
+        })
+    })
 });
 
-//Get edit
-app.get("/edit", function(req, res) {
-
-    setTimeout(function(){
-        res.render("edit", req.session);
-    }, 200);
+app.post('/edit', function(req, res){
+    sql.updateTest(req.body.data, req.body.questions, req.body.answers);
+    res.send('Yay');
 });
 
 //Get share

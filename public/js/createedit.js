@@ -420,15 +420,42 @@ $('#saveTest').on('click', function(){
     }
 });
 
+$('#saveChanges').on('click', function(){
+    if($("#dateStart").val()=='' || $("#date").val()=='') {
+        $("#missingInput").show();
+        console.log("Inte tillåtet!");
+    } else {
+        $("#missingInput").hide();
+        console.log("Tillåtet!");
+        var testData = {};
+        getTestData(testData);
+        getQuestionData(testData);
+        getAnswerData(testData);
+        testData.data.userId = $('input[type=hidden]').attr('class');
+        testData.data.testId = $('input[type=hidden]').attr('id');
+        $.ajax({
+            url: '/edit',
+            method: 'post',
+            data: testData,
+            success: function(){
+                console.log('Changed test successfully');
+                location.replace('/');
+            }
+        });
+    }
+});
+
 function getTestData(storeVariable){
     var data = {};
-    data.userId = $('#createTest').find('meta').attr('class');
+    data.userId = $('input[type=hidden]').attr('class');
     data.testTitle = $('#testName').val();
     data.minutes = $('#timed').is(':checked')? Number($('#time').val()) : 0;
     data.startDT = $('#dateStart').val() + " " + $('#timeStart').val() + ":00";
     data.endDT = $('#date').val() + " " + $('#timeEnd').val() + ":00";
     data.checked = $('#selfCorrecting').is(':checked') ? 1 : 0;
     data.showResult = $('.directResult').is(':checked') ? 1 : 0;
+    var testId = $('#createTest').find('meta').attr('id');
+    if(testId) data.testId = testId;
     storeVariable.data = data;
 }
 

@@ -26,20 +26,9 @@
 <script>
 
     $(document).on('click', '#editButton', function() {
+        console.log($('select option:selected').attr('class'));
         var currTestId = $('select option:selected').attr('class');
-
-        console.log("TestId är: " + currTestId);
-        var test = {};
-        test.testId = currTestId;
-
-        $.ajax({
-            url: '/edit=' + currTestId,
-            method: 'post',
-            data: test,
-            success: function(){
-                console.log('Yay');
-            }
-        });
+        location.replace('/edit=' + currTestId);
     });
 
 </script>
