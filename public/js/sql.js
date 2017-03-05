@@ -37,7 +37,7 @@ exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
        })
 };
 
-exports.addTest = function(testData){
+exports.addTest = function(testData, questions, answers){
     connection.query("INSERT INTO Test (TUserId, TTitle, TStartTestDate, TEndTestDate, TTimeMin, TMaxPoints, TSelfCorrecting, TResult) VALUES ("
     + mysql.escape(testData.userId) + ", "
     + mysql.escape(testData.testTitle) + ", "
@@ -47,11 +47,16 @@ exports.addTest = function(testData){
     + mysql.escape(testData.maxPoints) + ", "
     + mysql.escape(testData.checked) + ", "
     + mysql.escape(testData.showResult) + ")", function(err, result){
-        if(err){
-            console.log(err);
-            return false;
+        if(err) throw err;
+        testId = result.insertId;
+        for(var i = 0; i < questions.length; i++){
+            exports.addQuestion(questions[i], testId);
         }
-        return true;
+        setTimeout(function(){
+            for(var i = 0; i < answers.length; i++){
+                exports.addAnswer(answers[i], testId);
+            }
+        }, 500);
     });
 };
 
@@ -82,9 +87,9 @@ function addQ(questionData, testId){
     });
 }
 
-exports.addAnswer = function(answerData){
+exports.addAnswer = function(answerData, testId){
     var questionId = 0;
-    connection.query("SELECT QuestionId FROM Questions WHERE Question = " + mysql.escape(answerData.qTitle), function(err, result){
+    connection.query("SELECT QuestionId FROM Questions WHERE Question = " + mysql.escape(answerData.qTitle) + " AND QTestId = " + testId, function(err, result){
         questionId = dcopy(result[0].QuestionId);
         addA(answerData, questionId);
     });
@@ -219,7 +224,7 @@ exports.updateTest = function(data, questions, answers){
                                 }
                             setTimeout(function(){
                                 for(var ind = 0; ind < answers.length; ind++){
-                                    exports.addAnswer(answers[ind]);
+                                    exports.addAnswer(answers[ind], data.testId);
                                 }
                             }, 500);
                         }

@@ -9,7 +9,7 @@
         <div class="panel panel-default notthis">
             <div class="panel-heading" id="#editTest">
                 <input type="hidden" class="{{id}}" id="{{test.TestId}}">
-                <h3 class="panel-title">Redigera test</h3>
+                <h3 class="panel-title" id="paneltitle">Redigera test</h3>
             </div>
             <div class="panel-body">
                 <form>
@@ -130,7 +130,7 @@
 
         <!-- Buttons -->
         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#questionModal" id="createQuestion">Skapa Fråga</button>
-        <button type="button" class="btn btn-default pull-right" id="saveChanges">Spara ändringar</button>
+        <button type="button" class="btn btn-default pull-right" id="saveChanges">Spara</button>
     </div>
 
 </div>
@@ -146,6 +146,12 @@
 
 <script src="js/createedit.js"></script>
 <script>
+
+    if({{copy}} == true){
+        console.log('Det är sant!');
+        $('.title').text('Skapa test');
+        $('#paneltitle').text('Skapa test');
+    }
     $('input[type=checkbox]').each(function(){
         if($(this).attr('klickad') == 1){
             $(this).prop('checked', true);
@@ -170,4 +176,37 @@
     if('{{test.TTimeMin}}' != 0){
         $('#timed').prop('checked', true);
     }
+
+    $('#saveChanges').on('click', function(){
+        var url = "";
+        var title = $('#testName').val();
+        if(title == '{{test.TTitle}}'){
+            $('#testName').val(title + '1');
+        }
+        url = {{copy}} == true ? "/create" : "/edit";
+        if($("#dateStart").val()=='' || $("#date").val()=='') {
+            $("#missingInput").show();
+            console.log("Inte tillåtet!");
+        } else {
+            $("#missingInput").hide();
+            console.log("Tillåtet!");
+            var testData = {};
+            getTestData(testData);
+            getQuestionData(testData);
+            getAnswerData(testData);
+            console.log(testData);
+            if(testData.data.testTitle == '{{test.TTitle}}'){
+                testData.data.testTitle += '1';
+            }
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: testData,
+                success: function(){
+                    console.log('Changed test successfully');
+                    location.replace('/');
+                }
+            });
+        }
+    });
 </script>

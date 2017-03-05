@@ -119,6 +119,9 @@
     //Function timer start function countDown every second.
     function timer(time) {
         if(time == 0){
+            setInterval(function(){
+                elapsedTime++;
+            }, 1000);
             return;
         }
         min = time;

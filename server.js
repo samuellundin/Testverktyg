@@ -103,18 +103,22 @@ app.get('/create', function(req, res){
 
 //Post create
 app.post('/create', function(req, res){
-    sql.addTest(req.body.data);
-    for(var i = 0; i < req.body.questions.length; i++){
-        sql.addQuestion(req.body.questions[i]);
-    }
-    setTimeout(function(){
-        for(var i = 0; i < req.body.answers.length; i++){
-            sql.addAnswer(req.body.answers[i]);
-        }
-    }, 500);
+    sql.addTest(req.body.data, req.body.questions, req.body.answers);
     console.log('Created test successfully');
     res.send('Yay');
 });
+
+app.get('/copyMenu', function(req, res){
+    sql.connection.query('SELECT * FROM Test WHERE TUserId = ' + mysql.escape(req.session.id), function(error, result){
+        req.session.tests = result;
+        res.render('copyMenu', req.session);
+    })
+});
+
+app.get('/copy=:id', function(req, res){
+    req.session.copy = true;
+    res.redirect('/edit=' + req.params.id);
+})
 
 //Get logout
 app.get('/logout', function(req, res){
@@ -165,6 +169,7 @@ app.get("/edit=:testId", function(req, res) {
                         test.questions = questions;
                         req.session.test = test;
                         res.render('edit', req.session);
+                        req.session.copy = false;
                     }
                 })
             }
@@ -172,6 +177,7 @@ app.get("/edit=:testId", function(req, res) {
     })
 });
 
+//Update an edited test
 app.post('/edit', function(req, res){
     sql.updateTest(req.body.data, req.body.questions, req.body.answers);
     res.send('Yay');
@@ -211,7 +217,6 @@ app.get("/testMenu", function(req, res) {
 
 //Get test=:id
 app.get("/test=:testIdLink", function(req, res) {
-
     async.waterfall([
         function(callback){
             sql.connection.query("SELECT * FROM Test WHERE TestId = " + mysql.escape(req.params.testIdLink), function(error, result) {
@@ -244,6 +249,7 @@ app.get("/test=:testIdLink", function(req, res) {
     })
 });
 
+//Turn in an answered test
 app.post('/turnin', function(req, res){
     req.body.UAQuestions.TestId = req.body.takenTest.ATestId;
     req.body.userAnswers.TestId = req.body.takenTest.ATestId;
@@ -284,6 +290,7 @@ app.get('/group', function(req, res) {
     })
 });
 
+//Create group
 app.post('/group', function(req, res){
     sql.connection.query('INSERT INTO StudentGroup (groupName) VALUES (' + mysql.escape(req.body.title) + ')', function(error, result){
         if(error) throw error;
@@ -365,6 +372,7 @@ function checkIfSelfCorrecting(testId, takenTestId){
     });
 }
 
+//Corrects a test automatically
 function autoCorrect(testId, takenTestId){
     var points = 0;
     console.log('autocorrecting');
@@ -445,6 +453,7 @@ function autoCorrect(testId, takenTestId){
     })
 }
 
+//Updates score in AnsweredTest and decides what grade a person got
 function updateTestScore(testId, takenTestId, points){
     sql.connection.query('SELECT TMaxPoints, TResult FROM Test WHERE TestId = ' + testId, function(error, result){
         var mPoints = result[0].TMaxPoints;
@@ -479,6 +488,7 @@ function setupRole(req){
             req.session.admin = true;
             break;
     }
+    req.session.copy = false;
 }
 
 //Checks whether the session role matches the target role
