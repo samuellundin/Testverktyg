@@ -177,10 +177,10 @@
         $('#timed').prop('checked', true);
     }
 
-    {{#picURLS}}
+    {{#test.picURLS}}
         var picQID = {{this.PQuestionId}};
-        $('.panel-heading#{{this.PQuestionId}}').append('<input type="hidden" class="image" value="' + {{this.PURL}} + '">');
-    {{/picURLS}}
+        $('.panel-heading#{{this.PQuestionId}}').append('<input type="hidden" class="image" value="' + '{{this.PURL}}' + '">');
+    {{/test.picURLS}}
 
     $('#saveChanges').on('click', function(){
         var url = "";

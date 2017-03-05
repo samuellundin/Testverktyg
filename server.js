@@ -245,7 +245,11 @@ app.get("/test=:testIdLink", function(req, res) {
         callback(null)},
         function(callback){
             setTimeout(function(){
-                res.render('test', req.session);
+                sql.connection.query('SELECT p.*, q.QTestId FROM pictureURL AS p '
+                    + 'INNER JOIN Questions AS q ON p.PQuestionId = q.QuestionId WHERE QTestId = ' + req.params.testIdLink, function(err3, res3){
+                    req.session.picURLS = dcopy(res3);
+                    res.render('test', req.session);
+                });
             }, 600)
         }
 

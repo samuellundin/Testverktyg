@@ -101,7 +101,13 @@
 
         {{#picURLS}}
             var picQID = {{this.PQuestionId}};
-
+            $('.panel-title#{{this.PQuestionId}}').parent().parent().find('.panel-body').prepend(`
+                <div class="col-xs-4 col-md-3 center">
+                    <a href="#" class="thumbnail">
+                        <img src="{{PURL}}" alt="An image">
+                    </a>
+                </div>
+            `);
         {{/picURLS}}
 
         $('.container').on('click', '.panel-heading', function(e) {
