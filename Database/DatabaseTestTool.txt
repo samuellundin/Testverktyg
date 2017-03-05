@@ -108,11 +108,7 @@ QCQuestionId INT,
 CONSTRAINT QCUserIdFK FOREIGN KEY (QCUserId) REFERENCES User(UserId),
 CONSTRAINT QCQuestionIdFK FOREIGN KEY (QCQuestionId) REFERENCES Questions(QuestionId));
 
-CREATE TABLE pictureURL(
-PictureId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-PURL VARCHAR(200),
-PQuestionId INT,
-CONSTRAINT PQuestionIdFK FOREIGN KEY (PQuestionId) REFERENCES Questions(QuestionId) ON DELETE CASCADE);
+
 
 CREATE VIEW ElevStatistik AS
 (SELECT u.UserId, u.FirstName, t.TTitle AS Titel, t.ATDate AS Inlämnad, t.ATGrade AS Betyg

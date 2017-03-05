@@ -104,7 +104,7 @@
             {{#test.questions}}
 
                 <div class="panel panel-default">
-                    <div class="panel-heading clearfix">
+                    <div class="panel-heading clearfix" id="{{QuestionId}}">
                         <meta class="{{QType}}">
 
                         <div class="pull-right">
@@ -176,6 +176,11 @@
     if('{{test.TTimeMin}}' != 0){
         $('#timed').prop('checked', true);
     }
+
+    {{#picURLS}}
+        var picQID = {{this.PQuestionId}};
+        $('.panel-heading#{{this.PQuestionId}}').append('<input type="hidden" class="image" value="' + {{this.PURL}} + '">');
+    {{/picURLS}}
 
     $('#saveChanges').on('click', function(){
         var url = "";

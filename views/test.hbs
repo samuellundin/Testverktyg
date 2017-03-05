@@ -99,6 +99,10 @@
     $(function(){
         $(".sortable").sortable();
 
+        {{#picURLS}}
+            var picQID = {{this.PQuestionId}};
+
+        {{/picURLS}}
 
         $('.container').on('click', '.panel-heading', function(e) {
             $(this).next('.panel-body').slideToggle();

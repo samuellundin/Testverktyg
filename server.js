@@ -117,7 +117,7 @@ app.get('/copyMenu', function(req, res){
 app.get('/copy=:id', function(req, res){
     req.session.copy = true;
     res.redirect('/edit=' + req.params.id);
-})
+});
 
 //Get logout
 app.get('/logout', function(req, res){
@@ -156,19 +156,25 @@ app.get("/edit=:testId", function(req, res) {
         if(err1) throw err1;
         test = dcopy(res1[0]);
         var questions;
-        sql.connection.query('SELECT * FROM Questions WHERE QTestId = ' + req.params.testId, function(error, result){
+        sql.connection.query('SELECT Questions.*, pictureURL.PURL FROM Questions '
+        + 'INNER JOIN pictureURL ON pictureURL.PQuestionId = Questions.QuestionId WHERE QTestId = ' + req.params.testId, function(error, result){
             if(error) throw error;
             questions = dcopy(result);
             var j = 0;
             for(var i = 0; i < questions.length; i++){
                 sql.connection.query('SELECT * FROM Answers WHERE AQuestionId = ' + questions[i].QuestionId, function(err2, res2){
                     if(err2) throw err2;
+                    console.log('Editing');
                     questions[j++].answers = res2;
                     if(j == questions.length){
-                        test.questions = questions;
-                        req.session.test = test;
-                        res.render('edit', req.session);
-                        req.session.copy = false;
+                        sql.connection.query('SELECT p.*, q.QTestId FROM pictureURL AS p '
+                        + 'INNER JOIN Questions AS q ON p.PQuestionId = q.QuestionId WHERE QTestId = ' + req.params.testId, function(err3, res3){
+                            test.questions = questions;
+                            test.picURLS = dcopy(res3);
+                            req.session.test = test;
+                            res.render('edit', req.session);
+                            req.session.copy = false;
+                        })
                     }
                 })
             }

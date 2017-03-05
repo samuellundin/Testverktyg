@@ -116,7 +116,7 @@ function addQ(questionData, testId){
         + mysql.escape(questionData.qOrder) + ")", function(err, result){
         if(err)throw err;
         console.log(questionData.imgUrl);
-        if(questionData.imgUrl){
+        if(questionData.imgUrl != 'false'){
             connection.query('INSERT INTO pictureURL (PURL, PQuestionId) VALUES ('
                 + mysql.escape(questionData.imgUrl) + ', '
                 + mysql.escape(result.insertId) + ')', function(error, res){
