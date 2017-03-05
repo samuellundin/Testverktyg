@@ -91,14 +91,18 @@ $('#date').datepicker({
     todayHighlight: true,
     autoclose: true
 }).on('changeDate', function(ev) {
-    $('#timeEnd').val('00:00');
+    if(!$('#timeEnd').val()) {
+        $('#timeEnd').val('00:00');
+    }
 });
 $('#dateStart').datepicker({
     format: 'yyyy-mm-dd',
     todayHighlight: true,
     autoclose: true
 }).on('changeDate', function(ev) {
-    $('#timeStart').val('00:00');
+    if(!$('#timeStart').val()){
+        $('#timeStart').val('00:00');
+    }
 });
 
 $(document).on('click', '#saveQuestion', function() {
