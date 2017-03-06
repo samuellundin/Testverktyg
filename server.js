@@ -245,18 +245,11 @@ app.get("/statistics", function(req, res) {
     }, 200);
 });
 
-app.get("/statistics2", function(req, res) {
-    updateSessionTests(req);
-    updateSessionGroups(req);
-
-    setTimeout(function(){
-        res.render("statistics2", req.session);
-    }, 200);
-});
-
 //Post statistics
 app.post("/statistics", function(req, res) {
     req.session.statsObject = {};
+    req.session.statsObject.groupName = dcopy(req.body.groupName);
+    req.session.statsObject.TTitle = dcopy(req.body.tTitle);
 
     //Saves nr of group members
     sql.connection.query("SELECT COUNT(GroupDetails.GDUserId) AS GDUserIdCount FROM GroupDetails" +
@@ -268,14 +261,13 @@ app.post("/statistics", function(req, res) {
     setTimeout(function(){
         sql.connection.query("SELECT COUNT(AnsweredTest.ATUserId) AS ATUserIdCount FROM AnsweredTest" +
             " INNER JOIN GroupDetails" +
-            " ON AnsweredTest.ATUserId = GroupDetails.GDUserId "  +
+            " ON AnsweredTest.ATUserId = GroupDetails.GDUserId " +
             " WHERE AnsweredTest.ATestId = " + req.body.testId +
             " AND GroupDetails.GDStudentGroupId = " + req.body.groupId, function(error, result) {
 
             req.session.statsObject.ATUserIdCount = dcopy(result[0].ATUserIdCount);
-
         });
-    }, 150)
+    }, 100)
 
     //Saves nr of passed tests
     setTimeout(function(){
@@ -288,7 +280,7 @@ app.post("/statistics", function(req, res) {
 
             req.session.statsObject.ATGradeCount = dcopy(result[0].ATGradeCount);
         });
-    }, 300)
+    }, 200)
 
     //Saves max points for test and avg scores
     setTimeout(function(){
@@ -304,7 +296,7 @@ app.post("/statistics", function(req, res) {
 
             req.session.statsObject.ATPointsAvg = dcopy(result[0].ATPointsAvg);
         });
-    }, 450)
+    }, 300)
 
     //Saves max time for test and avg time
     setTimeout(function(){
@@ -320,12 +312,12 @@ app.post("/statistics", function(req, res) {
 
             req.session.statsObject.ATTimeSecAvg = dcopy(result[0].ATTimeSecAvg);
         });
-    }, 600)
+    }, 400)
 
     setTimeout(function(){
         console.log(req.session.statsObject);
         res.render("register", req.session);
-    }, 700)
+    }, 500)
 
 
 });

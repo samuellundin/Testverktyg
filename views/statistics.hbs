@@ -31,24 +31,88 @@
                       </select><br>
                       <button type="button" class="btn btn-primary" id="statsButton">Se statistik</button>
                   </form>
+                
+                    <div class="col-lg-4 col-lg-offset-4">
+                  <table class="table" id="info"></table>
+                    </div>
 
                   <!-- Displaying statistics -->
-                  <table class="table collapse" id="statsTable">
+                  <table class="table" id="statsTable"></table>
 
-                  </table>
               </div>
         </div>
     </div>
 </div>
 
 <script>
+
+    $("#groupSelect").prop('disabled', true);
+    $("#statsButton").prop('disabled', true);
+        {{#statsObject}}
+
+
+        $("#info").html(`
+            <tr>
+                <th><h2>Test</h2></th>
+                <th><h2>Grupp</h2></th>
+            </tr>
+            <tr>
+                <td>{{TTitle}}</td>
+                <td>{{groupName}}</td>
+            </tr>
+        `);
+
+            var min = 0;
+            var sec = {{ATTimeSecAvg}};
+            while(sec >= 60){
+                sec -= 60;
+                min++;
+            }
+
+            $("#statsTable").empty();
+            $("#statsTable").html(`
+                    <br>
+                    <tr>
+                        <th>Genomförda test <span class="label label-success">Totalt antal</span></th>
+                        <td id="totAnsweredTests">{{ATUserIdCount}}</td>
+                    </tr>
+                    <tr>
+                        <th>Godkända resultat <span class="label label-success">Totalt antal</span></th>
+                        <td id="totPassedTests">{{ATGradeCount}}</td>
+                    </tr>
+                    <tr>
+                        <th>Poäng <span class="label label-primary">Medelvärde</span></th>
+                        <td id="avgPoints">{{ATPointsAvg}} (Maxpoäng: {{TMaxPoints}})</td>
+                    </tr>
+                    <tr>
+                        <th>Tidåtgång <span class="label label-primary">Medelvärde</span></th>
+                        <td id="avgTime">`+ min +` minuter `+ sec +` sekunder</td>
+                    </tr>
+        `       );
+        {{/statsObject}}
+
+        $("#statsTable").slideDown();
+
+
+        $("select#testSelect").on("change", function() {
+            $("#groupSelect").prop('disabled', false);
+        });
+        $("select#groupSelect").on("change", function() {
+            $("#statsButton").prop('disabled', false);
+        });
+
+
     $(document).on('click', '#statsButton', function() {
         var currTestId = $('#testSelect :selected').attr('class');
         var currGroupId = $('#groupSelect :selected').attr('class');
+        var currTTitle = $('#testSelect :selected').text();
+        var currGroupName = $('#groupSelect :selected').text();
 
         var idData = {};
         idData.testId = currTestId;
+        idData.tTitle = currTTitle;
         idData.groupId = currGroupId;
+        idData.groupName = currGroupName;
 
         $.ajax({
             url: '/statistics',
@@ -56,42 +120,11 @@
             data: idData,
             success: function(){
                 console.log('Yay');
+                location.replace('statistics');
             }
         });
 
-        setTimeout(function(){
-            {{#statsObject}}
-                var min = 0;
-                var sec = {{ATTimeSecAvg}};
-                while(sec >= 60){
-                    sec -= 60;
-                    min++;
-                }
 
-                $("#statsTable").html(`
-            <br><br>
-            <tr>
-                <th>Genomförda test <span class="label label-success">Totalt antal</span></th>
-                <td id="totAnsweredTests">{{ATUserIdCount}}</td>
-            </tr>
-            <tr>
-                <th>Godkända resultat <span class="label label-success">Totalt antal</span></th>
-                <td id="totPassedTests">{{ATGradeCount}}</td>
-            </tr>
-            <tr>
-                <th>Poäng <span class="label label-primary">Medelvärde</span></th>
-                <td id="avgPoints">{{ATPointsAvg}} (Maxpoäng: {{TMaxPoints}})</td>
-            </tr>
-            <tr>
-                <th>Tidåtgång <span class="label label-primary">Medelvärde</span></th>
-                <td id="avgTime">`+ min +` minuter `+ sec +` sekunder</td>
-            </tr>
-        `);
-            {{/statsObject}}
-
-            $("#statsTable").slideDown();
-
-        }, 700)
 
 
     });
