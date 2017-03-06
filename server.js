@@ -275,18 +275,19 @@ app.post("/statistics", function(req, res) {
 
     //Saves nr of group members
     sql.connection.query("SELECT COUNT(GroupDetails.GDUserId) AS GDUserIdCount FROM GroupDetails" +
-        " WHERE GDStudentGroupId = " + req.body.groupId, function(error, result) {
+    " WHERE GDStudentGroupId = " + req.body.groupId, function(error, result) {
+        if(error) throw error;
         req.session.statsObject.GDUserIdCount = dcopy(result[0].GDUserIdCount);
     });
 
     //Saves nr of answered tests
     setTimeout(function(){
         sql.connection.query("SELECT COUNT(AnsweredTest.ATUserId) AS ATUserIdCount FROM AnsweredTest" +
-            " INNER JOIN GroupDetails" +
-            " ON AnsweredTest.ATUserId = GroupDetails.GDUserId " +
-            " WHERE AnsweredTest.ATestId = " + req.body.testId +
-            " AND GroupDetails.GDStudentGroupId = " + req.body.groupId, function(error, result) {
-
+        " INNER JOIN GroupDetails" +
+        " ON AnsweredTest.ATUserId = GroupDetails.GDUserId " +
+        " WHERE AnsweredTest.ATestId = " + req.body.testId +
+        " AND GroupDetails.GDStudentGroupId = " + req.body.groupId, function(error, result) {
+            if(error) throw error;
             req.session.statsObject.ATUserIdCount = dcopy(result[0].ATUserIdCount);
         });
     }, 100)
@@ -299,7 +300,7 @@ app.post("/statistics", function(req, res) {
         " WHERE AnsweredTest.ATestId = " + req.body.testId +
         " AND (AnsweredTest.ATGrade = 'G' OR AnsweredTest.ATGrade = 'VG')" +
         " AND GroupDetails.GDStudentGroupId = " + req.body.groupId, function(error, result) {
-
+            if(error) throw error;
             req.session.statsObject.ATGradeCount = dcopy(result[0].ATGradeCount);
         });
     }, 200)
@@ -307,7 +308,7 @@ app.post("/statistics", function(req, res) {
     //Saves max points for test and avg scores
     setTimeout(function(){
         sql.connection.query("SELECT TMaxPoints FROM Test WHERE TestId = " + req.body.testId, function(error, result) {
-
+            if(error) throw error;
             req.session.statsObject.TMaxPoints = dcopy(result[0].TMaxPoints);
         });
         sql.connection.query("SELECT AVG(AnsweredTest.ATPoints) AS ATPointsAvg FROM AnsweredTest" +
@@ -315,7 +316,7 @@ app.post("/statistics", function(req, res) {
         " ON AnsweredTest.ATUserId = GroupDetails.GDUserId" +
         " WHERE AnsweredTest.ATestId = " + req.body.testId +
         " AND GroupDetails.GDStudentGroupId = " + req.body.groupId, function(error, result) {
-
+            if(error) throw error;
             req.session.statsObject.ATPointsAvg = dcopy(result[0].ATPointsAvg);
         });
     }, 300)
@@ -323,7 +324,7 @@ app.post("/statistics", function(req, res) {
     //Saves max time for test and avg time
     setTimeout(function(){
         sql.connection.query("SELECT TTimeMin FROM Test WHERE TestId = " + req.body.testId, function(error, result) {
-
+            if(error) throw error;
             req.session.statsObject.TTimeMin = dcopy(result[0].TTimeMin);
         });
         sql.connection.query("SELECT AVG(AnsweredTest.ATTimeSec) AS ATTimeSecAvg FROM AnsweredTest" +
@@ -331,17 +332,10 @@ app.post("/statistics", function(req, res) {
         " ON AnsweredTest.ATUserId = GroupDetails.GDUserId" +
         " WHERE AnsweredTest.ATestId = " + + req.body.testId +
         " AND GroupDetails.GDStudentGroupId = " + req.body.groupId, function(error, result) {
-
+            if(error) throw error;
             req.session.statsObject.ATTimeSecAvg = dcopy(result[0].ATTimeSecAvg);
         });
     }, 400)
-
-    setTimeout(function(){
-        console.log(req.session.statsObject);
-        res.render("register", req.session);
-    }, 500)
-
-
 });
 
 //Get testMenu
