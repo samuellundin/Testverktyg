@@ -92,29 +92,49 @@
             </div>
         </div>
 
+<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="col-md-6">
+                    <img src="https://www.totalproducenordic.se/everfresh/Global/Bilder%20Frukt/Exotiskt/Ananas%20web.jpg" style="width:100%">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
 <script>
-    $(function(){
+    $(function() {
         $(".sortable").sortable();
 
         {{#picURLS}}
-            var picQID = {{this.PQuestionId}};
             $('.panel-title#{{this.PQuestionId}}').parent().parent().find('.panel-body').prepend(`
                 <div class="col-xs-4 col-md-3 center">
-                    <a href="#" class="thumbnail">
+                    <a href="#" class="thumbnail" data-toggle="modal" data-target="#imageModal">
                         <img src="{{PURL}}" alt="An image">
                     </a>
                 </div>
             `);
         {{/picURLS}}
 
-        $('.container').on('click', '.panel-heading', function(e) {
+        $('.thumbnail').on('click', function () {
+            var imageModal = $(this).find('img').attr('src');
+            console.log(imageModal);
+            $('#imageModal').find('img').attr('src', imageModal);
+
+                console.log('Lämna in');
+
+        });
+        $('.container').on('click', '.panel-heading', function (e) {
             $(this).next('.panel-body').slideToggle();
         });
 
-        $('#turnIn').on('click', function(){
+        $('#turnIn').on('click', function () {
             turnIn();
         })
     });
