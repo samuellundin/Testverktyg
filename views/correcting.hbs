@@ -24,6 +24,10 @@
         <div id="questionBox">
 
         </div>
+
+        <div id="commentBox">
+
+        </div>
         <button type="button" class="btn btn-primary">Rätta test</button>
     </div>
 </div>
@@ -58,6 +62,16 @@
         $('#userSelector').on('change', function () {
             var selectedTest = $('#testSelector').find(":selected").text();
             var selectedUser = $('#userSelector').find(":selected").text();
+            $('#commentBox').html(`
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <h3 class="panel-title">Kommentar för Test:</h3>
+                    </div>
+                    <div class="panel-body collapse">
+                        <textarea class="form-control" rows="5" style="resize: vertical; margin-bottom: 15px"></textarea>
+                    </div>
+                </div>
+            `);
             $('#questionBox').empty();
             {{#testdata}}
                 if(selectedTestId === {{testId}}){
