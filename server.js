@@ -203,6 +203,9 @@ app.get("/share", function(req, res) {
         res.render("share", req.session);
     }, 200);
 });
+app.post('/share', function (reg,res) {
+  res.send('');
+});
 
 //Get statistics
 app.get("/statistics", function(req, res) {

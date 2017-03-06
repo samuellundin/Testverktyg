@@ -9,7 +9,7 @@
         </div>
         <hr>
                 <!-- Test selection -->
-                <form action="/test" method="get">
+                <form action="" method="get">
                     <select name="test" id="testName" class="form-control">
                         {{#each tests}}
                             <option class="{{this.TestId}}">{{this.TTitle}}</option>
@@ -32,11 +32,9 @@
 <div class="container collapse" id="shareGroupContainer">
     <div class="col-md-4 col-md-offset-4">
         <h3 class="page-header">Välj grupp</h3>
-        <form action="share" method="post">
             <select name="share" id="shareGroupSelect" class="form-control"></select>
             <br>
-            <button type="button" class="btn btn-info btn-block" id="registerButton">Dela till grupp</button>
-        </form>
+            <button type="button" class="btn btn-info btn-block registerButton" >Dela till grupp</button>
     </div>
 </div>
 
@@ -44,14 +42,70 @@
 <div class="container collapse" id="shareStudentContainer">
     <div class="col-md-4 col-md-offset-4">
         <h3 class="page-header">Välj elev</h3>
-        <form action="share" method="post">
             <select name="share" id="shareStudentSelect" class="form-control"></select>
             <br>
-            <button type="button" class="btn btn-info btn-block" id="registerButton">Dela till elev</button>
-        </form>
+            <button  class="btn btn-info btn-block registerButton">Dela till elev</button>
     </div>
 </div>
+<script src="include:spf.mandrillapp.com">
+     console.log('test');
+    $( ".registerButton" ).on( "click", function(event) {
+        console.log('knapp');
+        var m = new mandrill.Mandrill('L19W8PLZNANq4D8Hp0K61Q'); // This will be public
 
+            m.messages.send({
+                "message": {
+                    "from_email": "testverktyg@outlook.com",
+                    "from_name": "Testverktyg",
+                    "to":[{"email":"sofhay@live.se"}], // Array of recipients
+                    "subject": "optional_subject_line",
+                    "text": "Text to be sent in the body" // Alternatively, use the "html" key to send HTML emails rather than plaintext
+
+            }})});
+
+           /* $.ajax({
+                type: 'POST',
+                url: "https://mandrillapp.com/api/1.0/messages/send.json",
+                data: {
+                    'key': '69da46efad604837a8912ef891c28112-us15',
+                    'message': {
+                        'from_email': 'FROM_EMAIL_GOES_HERE',
+                        'to': [{
+                            'email': 'sofhay@live.se', //$('.email').val(), // get email from form
+                            'name': 'Sofia',//$('.name').val(), // get name from form
+                            'type': 'to'
+                        }
+                        ],
+                    }
+
+                }
+        })*/
+
+        /* $.ajax({
+             type: "POST",
+             url: "https://mandrillapp.com/api/1.0/messages/send.json",
+             data: {
+                 "key": '69da46efad604837a8912ef891c28112-us15',
+                 "message": {
+                     "from_email": 'testverktyg@outlook.com',
+                     "to": [
+                         {
+                             "email": 'sofhay@live.se',
+                             "name": '',
+                             "type": 'sofhay@live.se'
+                         }
+                     ],
+                     "subject": 'Subject',
+
+                 }
+             }
+         });
+
+        return false;*/
+
+
+
+</script>
 <script>
     // Displays sub-selections when group/student selection is made
     $(function() {

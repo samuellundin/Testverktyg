@@ -21,7 +21,7 @@
     "body-parser": "^1.16.1",
     "client-sessions": "^0.7.0",
     "deepcopy": "^0.6.3",
-    "express": "^4.14.1",
+    "express": "^4.15.0",
     "express-handlebars": "^3.0.0",
     "handlebars-helper-equal": "^1.0.0",
     "jquery.terminal": "^1.0.7",
