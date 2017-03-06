@@ -44,66 +44,59 @@
         <h3 class="page-header">Välj elev</h3>
             <select name="share" id="shareStudentSelect" class="form-control"></select>
             <br>
-            <button  class="btn btn-info btn-block registerButton">Dela till elev</button>
+            <button class="btn btn-info btn-block registerButton">Dela till elev</button>
     </div>
 </div>
-<script src="include:spf.mandrillapp.com">
-     console.log('test');
-    $( ".registerButton" ).on( "click", function(event) {
-        console.log('knapp');
-        var m = new mandrill.Mandrill('L19W8PLZNANq4D8Hp0K61Q'); // This will be public
+<script>
+    $( ".registerButton").on( "click", function(event) {
+        if ($('#shareSelect').val() == 'group') {
+            var selectedGroupIndex = $('#shareGroupSelect').prop('selectedIndex') + 1;
 
-            m.messages.send({
-                "message": {
-                    "from_email": "testverktyg@outlook.com",
-                    "from_name": "Testverktyg",
-                    "to":[{"email":"sofhay@live.se"}], // Array of recipients
-                    "subject": "optional_subject_line",
-                    "text": "Text to be sent in the body" // Alternatively, use the "html" key to send HTML emails rather than plaintext
-
-            }})});
-
-           /* $.ajax({
-                type: 'POST',
-                url: "https://mandrillapp.com/api/1.0/messages/send.json",
-                data: {
-                    'key': '69da46efad604837a8912ef891c28112-us15',
-                    'message': {
-                        'from_email': 'FROM_EMAIL_GOES_HERE',
-                        'to': [{
-                            'email': 'sofhay@live.se', //$('.email').val(), // get email from form
-                            'name': 'Sofia',//$('.name').val(), // get name from form
-                            'type': 'to'
-                        }
-                        ],
-                    }
-
+            var studentIds = [];
+            var names = [];
+            var emails = [];
+            {{#groupdetails}}
+                if('{{this.GDStudentGroupId}}' == selectedGroupIndex){
+                    studentIds.push('{{this.UserId}}');
+                    names.push('{{this.FirstName}}');
+                    emails.push('{{this.Mail}}');
                 }
-        })*/
-
-        /* $.ajax({
-             type: "POST",
-             url: "https://mandrillapp.com/api/1.0/messages/send.json",
-             data: {
-                 "key": '69da46efad604837a8912ef891c28112-us15',
-                 "message": {
-                     "from_email": 'testverktyg@outlook.com',
-                     "to": [
-                         {
-                             "email": 'sofhay@live.se',
-                             "name": '',
-                             "type": 'sofhay@live.se'
-                         }
-                     ],
-                     "subject": 'Subject',
-
-                 }
-             }
-         });
-
-        return false;*/
-
-
+            {{/groupdetails}}
+            console.log(studentIds + names + emails);
+            $.ajax({
+                type: 'POST',
+                url: "/share",
+                data: {
+                    'id' : studentIds,
+                    'namn': names,
+                    'mail': emails
+                },
+                success: function(data){
+                    console.log('success!');
+                }
+            });
+        } else if($('#shareSelect').val() == 'student'){
+            {{#students}}
+                if('{{FirstName}}' == $('#shareStudentSelect').val()) {
+                    var studentId = '{{this.UserId}}';
+                    var email = '{{this.Mail}}';
+                }
+            {{/students}}
+            console.log('id: '+studentId +', namn: '+$('#shareStudentSelect').val() +', mail: '+email);
+            $.ajax({
+                type: 'POST',
+                url: "/share",
+                data: {
+                    'id' : studentId,
+                    'namn': $('#shareStudentSelect').val(),
+                    'mail': email
+                },
+                success: function(data){
+                    console.log('success!');
+                }
+            });
+        }
+    });
 
 </script>
 <script>

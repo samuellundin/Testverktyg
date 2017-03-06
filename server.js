@@ -227,12 +227,34 @@ app.get("/share", function(req, res) {
        if(error) throw error;
        req.session.students = dcopy(result);
     });
+    sql.connection.query(`
+    SELECT GD.GroupDetailsId, GD.GDStudentGroupId, SG.GroupName, U.UserId, U.FirstName, U.Mail
+    FROM GroupDetails AS GD
+    INNER JOIN User AS U ON GD.GDUserId = U.UserId
+    INNER JOIN StudentGroup AS SG ON GD.GDStudentGroupId = SG.StudentGroupId`, function(error, result) {
+        if(error) throw error;
+        req.session.groupdetails = dcopy(result);
+    });
     setTimeout(function(){
         res.render("share", req.session);
     }, 200);
 });
-app.post('/share', function (reg,res) {
-  res.send('');
+app.post('/share', function (req, res) {
+
+    app.mailer.send('email', {
+        layout: false,
+        to: req.body.mail, // REQUIRED. This can be a comma delimited string just like a normal email to field.
+        subject: 'Nytt test att göra!', // REQUIRED.
+        otherProperty: 'Other Property' // All additional properties are also passed to the template as local variables.
+    }, function (err) {
+        if (err) {
+            // handle error
+            console.log(err);
+            res.send('There was an error sending the email');
+            return;
+        }
+        res.send('Email Sent');
+    });
 });
 
 //Get statistics
