@@ -328,10 +328,10 @@ app.post("/statistics", function(req, res) {
             req.session.statsObject.TTimeMin = dcopy(result[0].TTimeMin);
         });
         sql.connection.query("SELECT AVG(AnsweredTest.ATTimeSec) AS ATTimeSecAvg FROM AnsweredTest" +
-            " INNER JOIN GroupDetails" +
-            " ON AnsweredTest.ATUserId = GroupDetails.GDUserId" +
-            " WHERE AnsweredTest.ATestId = " + + req.body.testId +
-            " AND GroupDetails.GDStudentGroupId = " + req.body.groupId, function(error, result) {
+        " INNER JOIN GroupDetails" +
+        " ON AnsweredTest.ATUserId = GroupDetails.GDUserId" +
+        " WHERE AnsweredTest.ATestId = " + + req.body.testId +
+        " AND GroupDetails.GDStudentGroupId = " + req.body.groupId, function(error, result) {
             if(error) throw error;
             req.session.statsObject.ATTimeSecAvg = dcopy(result[0].ATTimeSecAvg);
         });
@@ -339,7 +339,7 @@ app.post("/statistics", function(req, res) {
 
     setTimeout(function(){
         res.render("statistics", req.session);
-    }, 600)
+    }, 450)
 });
 
 //Get testMenu
