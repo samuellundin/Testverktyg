@@ -22,9 +22,7 @@
 </div>
 
 <script>
-    // Making text field (teacher comments) read-only
-
-    // Displays results of selected test when clicking button
+    //Displays results of selected test when clicking button
     $(function() {
         $("select#testName").on("change", function() {
             $("#statsTable").slideDown(5000);
@@ -41,31 +39,30 @@
                 }
                 $("#statsTable").html(`
                     <br><br>
-                                <tr>
-                    <th>Poäng:</th>
-                    <td>{{ATPoints}}/{{TMaxPoints}}</td>
-                </tr>
-                <tr>
-                    <th>Tidsåtgång:</th>
-                    <td>`+ min +`min `+ sec +`sek</td>
-                </tr>
-                <tr>
-                    <th>Betyg:</th>
-                    <td>{{ATGrade}} (` + percentage + `%)</td>
-                </tr>
-                <tr>
-                    <th colspan="2"><br>
-                        Lärarens kommentarer:
-                        <div class="form-group">
-                            <textarea class="form-control" id="textArea" rows="10">Bra jobbat!</textarea>
-                        </div>
-                    </th>
-                </tr>
+                    <tr>
+                        <th>Poäng:</th>
+                        <td>{{ATPoints}}/{{TMaxPoints}}</td>
+                    </tr>
+                    <tr>
+                        <th>Tidsåtgång:</th>
+                        <td>`+ min +`min `+ sec +`sek</td>
+                    </tr>
+                    <tr>
+                        <th>Betyg:</th>
+                        <td>{{ATGrade}} (` + percentage + `%)</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2"><br>
+                            Lärarens kommentarer:
+                            <div class="form-group">
+                                <textarea class="form-control" id="textArea" rows="10">Bra jobbat!</textarea>
+                            </div>
+                        </th>
+                    </tr>
                 `);
-
-            $("#textArea").prop("disabled", true);
+                // Making text field (teacher comments) read-only
+                $("#textArea").prop("disabled", true);
             }
-
             {{/tests}}
         });
     });
