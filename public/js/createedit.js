@@ -479,7 +479,9 @@ function getAnswerData(storeVariable){
         if($(this).hasClass('notthis')){
             return true;
         }
-        var questionTitle = $(this).find('h3').text().split('\(')[0];
+        var title = $(this).find('h3').text();
+        var questionTitle = title.split('\(')[0];
+        var type = title.split('\(')[1].split('\)')[0];
         $(this).find('li').each(function(index){
             var correctAnswer;
             if($(this).find('input:checkbox').is(':checked')){
@@ -488,10 +490,14 @@ function getAnswerData(storeVariable){
                 correctAnswer = 0;
             }
             answerData.qTitle = questionTitle;
+            answerData.qType = type;
             answerData.title = $(this).text().substring(0, $(this).text().indexOf('Rätt svar:'));
             answerData.order = index;
             answerData.score = correctAnswer;
             answerData.corrected = 0;
+            if(type == 'Rangordningsfråga' || type == 'Öppen fråga'){
+                answerData.score = 1;
+            }
             answersArray.push(answerData);
             answerData = new Object();
         });

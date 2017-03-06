@@ -113,13 +113,13 @@
         $(".sortable").sortable();
 
         {{#picURLS}}
-            $('.panel-title#{{this.PQuestionId}}').parent().parent().find('.panel-body').prepend(`
-                <div class="col-xs-4 col-md-3 center">
-                    <a href="#" class="thumbnail" data-toggle="modal" data-target="#imageModal">
-                        <img src="{{PURL}}" alt="An image">
-                    </a>
-                </div>
-            `);
+        $('h3[id={{this.PQuestionId}}]').parent().parent().find('.panel-body').prepend(`
+            <div class="col-xs-4 col-md-3 center">
+                <a href="#" class="thumbnail" data-toggle="modal" data-target="#imageModal">
+                    <img src="{{PURL}}" alt="An image">
+                </a>
+            </div>
+        `);
         {{/picURLS}}
 
         $('.thumbnail').on('click', function () {

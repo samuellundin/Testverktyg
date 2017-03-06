@@ -345,7 +345,7 @@ app.get("/test=:testIdLink", function(req, res) {
                 req.session.questions = dcopy(result2);
                 for(var j = 0; j < result2.length; j++){
                     var k = 0;
-                    sql.connection.query("SELECT * FROM Answers WHERE AQuestionId = " + mysql.escape(req.session.questions[j].QuestionId), function(error3, result3) {
+                    sql.connection.query("SELECT * FROM Answers WHERE AQuestionId = " + mysql.escape(req.session.questions[j].QuestionId) + " ORDER BY Rand()", function(error3, result3) {
                         if(error3) throw error3;
                         req.session.questions[k].answers = dcopy(result3);
                         k++;
@@ -358,6 +358,7 @@ app.get("/test=:testIdLink", function(req, res) {
                 sql.connection.query('SELECT p.*, q.QTestId FROM pictureURL AS p '
                     + 'INNER JOIN Questions AS q ON p.PQuestionId = q.QuestionId WHERE QTestId = ' + req.params.testIdLink, function(err3, res3){
                     req.session.picURLS = dcopy(res3);
+                    console.log(res3);
                     res.render('test', req.session);
                 });
             }, 600)
@@ -442,37 +443,46 @@ app.get('/correcting', function(req, res) {
         req.session.tests = dcopy(tests);
     });
     // Get userdata for combobox
-    sql.connection.query('SELECT User.FirstName, AnsweredTest.ATestId FROM User INNER JOIN AnsweredTest ON AnsweredTest.ATUserID=User.UserID', function(err, result) {
+    sql.connection.query('SELECT User.FirstName, AnsweredTest.ATestId, AnsweredTest.AnsweredTestId FROM User INNER JOIN AnsweredTest ON AnsweredTest.ATUserID=User.UserID', function(err, result) {
         var user;
         var users = [];
 
         for(var i = 0; i < result.length; i++){
-            user = {userid: result[i].ATestId, username: result[i].FirstName}
+            user = {userid: result[i].ATestId, username: result[i].FirstName, atId: result[i].AnsweredTestId}
             users.push(user);
         }
         req.session.users = dcopy(users);
     });
 
     sql.connection.query(`
-        SELECT T.TestId, Q.QOrder, Q.Question, Q.QType, Q.QPoints, A.AText, A.APoints FROM Test AS T
+        SELECT T.TestId, Q.QuestionId, Q.QOrder, Q.Question, Q.QType, Q.QPoints, A.AText, A.APoints FROM Test AS T
         INNER JOIN Questions AS Q ON T.TestId = Q.QTestId
         INNER JOIN Answers AS A ON Q.QuestionId = A.AQuestionId`, function(err, result) {
 
+        var testDataWrapper = {};
         var testdata = [];
 
-        for(var i = 0; i < result.length; i++) {
-            testdata.push({
-                testId: result[i].TestId,
-                questionOrder: result[i].QOrder,
-                questionText: result[i].Question,
-                questionType: result[i].QType,
-                questionPoints: result[i].QPoints,
-                answerText: result[i].AText,
-                answerCorrect: result[i].APoints
-            });
-        }
 
-        req.session.testdata = testdata;
+            sql.connection.query('SELECT * FROM QuestionAnswers', function(error2, result2){
+                for(var i = 0; i < result.length; i++) {
+                testdata.push({
+                    testId: result[i].TestId,
+                    questionId: result[i].QuestionId,
+                    questionOrder: result[i].QOrder,
+                    questionText: result[i].Question,
+                    questionType: result[i].QType,
+                    questionPoints: result[i].QPoints,
+                    answerText: result[i].AText,
+                    answerCorrect: result[i].APoints,
+                    userAnswers: dcopy(result2)
+                    });
+                }
+                console.log(testdata[0]);
+                req.session.testdata = testdata;
+
+            })
+
+
     });
     setTimeout(function () {
         res.render('correcting', req.session);

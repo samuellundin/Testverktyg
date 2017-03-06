@@ -30,7 +30,7 @@
 
 <script>
     $(function() {
-        $('.commentButton').on('click', function() {
+        $('body').on('click', '.commentButton', function() {
             $(this).parent().find('textarea').toggle();
         });
         $(document).on('click', '.panel-heading', function(e) {
@@ -50,7 +50,7 @@
             if(selectedTestId){
                 {{#users}}
                     if('{{userid}}' == selectedTestId){
-                        $('#userSelector').append('<option>{{username}}</option>');
+                        $('#userSelector').append('<option class="{{atId}}">{{username}}</option>');
                     }
                 {{/users}}
             }
@@ -65,15 +65,12 @@
                         $('#questionBox').append(`
                             <div class="panel panel-default">
                                 <div class="panel-heading clearfix">
-                                    <h3 class="panel-title">{{this.questionText}} ({{this.questionType}})<span class="pull-right">Poäng: <input type="text" size="1"> / {{this.questionPoints}}</span></h3>
+                                    <h3 class="panel-title">{{this.questionText}} ({{this.questionType}})<span class="pull-right">Poäng: <input type="text" size="1" value="{{this.questionPoints}}"> / {{this.questionPoints}}</span></h3>
                                 </div>
-                                <div class="panel-body collapse">
+                                <div class="panel-body">
                                     <div class="col-md-6">
                                         <h4 class="title">Svar:</h4>
                                         <ul class="list-group useranswers">
-                                            <li class="list-group-item">1</li>
-                                            <li class="list-group-item">2</li>
-                                            <li class="list-group-item">3</li>
                                         </ul>
                                     </div>
                                     <div class="col-md-6">
@@ -90,6 +87,23 @@
                             </div>
                         `);
                     }
+
+                    var testId = $('#userSelector').find(":selected").attr('class');
+                    var questionId = {{questionId}} || 0;
+                    var type = '{{questionType}}';
+                    {{#this.userAnswers}}
+                        if({{AnsweredTestId}} == testId){
+                            console.log();
+                        if({{AQuestionId}} == questionId && $('#{{UserAnswerId}}').attr('id') == undefined){
+                            if(type == 'Öppen fråga'){
+                                $('.useranswers').eq({{questionOrder}} - 1).append('<li class="list-group-item" id="{{UserAnswerId}}">{{UAText}}</li>');
+
+                            } else {
+                                $('.useranswers').eq({{questionOrder}} - 1).append('<li class="list-group-item" id="{{UserAnswerId}}">{{AText}}</li>');
+                            }
+                        }
+                    }
+                    {{/this.userAnswers}}
 
                     if('{{answerCorrect}}' == 1){
                         $('.correctanswers').eq({{questionOrder}} - 1).append('<li class="list-group-item">{{answerText}}</li>');

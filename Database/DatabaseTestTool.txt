@@ -74,7 +74,7 @@ CREATE TABLE UserAnswer(
 		UAQuestionId INT,
 		UAAnswersId INT,
 		UAOrder INT(1) NOT NULL,
-		UAText VARCHAR(500),
+		UAText VARCHAR(5000),
 		CONSTRAINT UAQuestionIdFK FOREIGN KEY (UAQuestionId) REFERENCES AnsweredQuestion(AnsweredQuestionId),
 		CONSTRAINT UAAnswersIdFK FOREIGN KEY (UAAnswersId) REFERENCES Answers(AnswersId)
 		);
@@ -108,7 +108,11 @@ QCQuestionId INT,
 CONSTRAINT QCUserIdFK FOREIGN KEY (QCUserId) REFERENCES User(UserId),
 CONSTRAINT QCQuestionIdFK FOREIGN KEY (QCQuestionId) REFERENCES Questions(QuestionId));
 
-
+CREATE TABLE pictureURL(
+PictureId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+PURL VARCHAR(500),
+PQuestionId INT,
+CONSTRAINT PQuestionIdFK FOREIGN KEY (PQuestionId) REFERENCES Questions(QuestionId) ON DELETE CASCADE);
 
 CREATE VIEW ElevStatistik AS
 (SELECT u.UserId, u.FirstName, t.TTitle AS Titel, t.ATDate AS Inlämnad, t.ATGrade AS Betyg
