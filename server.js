@@ -162,7 +162,8 @@ app.get('/api/users', function(req, res){
 
 //Get results
 app.get("/results", function(req, res) {
-    sql.connection.query("SELECT * FROM Results WHERE ATCorrected = 1 AND ATUserId = " + req.session.id, function(error, result) {
+    sql.connection.query("SELECT Results.*, TestComment.TestComment FROM Results LEFT OUTER JOIN TestComment ON Results.AnsweredTestId = TestComment.TCATestId "
+        + ' WHERE ATCorrected = 1 AND ATUserId = ' + req.session.id, function(error, result) {
         req.session.tests = dcopy(result);
         res.render("results", req.session);
     });
@@ -185,9 +186,10 @@ app.get("/edit=:testId", function(req, res) {
         test = dcopy(res1[0]);
         var questions;
         sql.connection.query('SELECT Questions.*, pictureURL.PURL FROM Questions '
-        + 'INNER JOIN pictureURL ON pictureURL.PQuestionId = Questions.QuestionId WHERE QTestId = ' + req.params.testId, function(error, result){
+        + 'LEFT OUTER JOIN pictureURL ON pictureURL.PQuestionId = Questions.QuestionId WHERE QTestId = ' + req.params.testId, function(error, result){
             if(error) throw error;
             questions = dcopy(result);
+            console.log(questions);
             var j = 0;
             for(var i = 0; i < questions.length; i++){
                 sql.connection.query('SELECT * FROM Answers WHERE AQuestionId = ' + questions[i].QuestionId, function(err2, res2){

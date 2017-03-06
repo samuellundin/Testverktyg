@@ -66,7 +66,7 @@ CREATE TABLE AnsweredQuestion(
 		AQAnsweredTestId INT,
 		AQPoints INT(10) NOT NULL,
 		CONSTRAINT AQQuestionIdFK FOREIGN KEY (AQQuestionId) REFERENCES Questions(QuestionId),
-		CONSTRAINT AQAnsweredTestIdFK FOREIGN KEY (AQAnsweredTestId) REFERENCES AnsweredTest(AnsweredTestId)
+		CONSTRAINT AQAnsweredTestIdFK FOREIGN KEY (AQAnsweredTestId) REFERENCES AnsweredTest(AnsweredTestId) ON DELETE CASCADE
 		);
 
 CREATE TABLE UserAnswer(
@@ -75,7 +75,7 @@ CREATE TABLE UserAnswer(
 		UAAnswersId INT,
 		UAOrder INT(1) NOT NULL,
 		UAText VARCHAR(5000),
-		CONSTRAINT UAQuestionIdFK FOREIGN KEY (UAQuestionId) REFERENCES AnsweredQuestion(AnsweredQuestionId),
+		CONSTRAINT UAQuestionIdFK FOREIGN KEY (UAQuestionId) REFERENCES AnsweredQuestion(AnsweredQuestionId) ON DELETE CASCADE,
 		CONSTRAINT UAAnswersIdFK FOREIGN KEY (UAAnswersId) REFERENCES Answers(AnswersId)
 		);
 
@@ -94,7 +94,7 @@ CREATE TABLE GroupDetails(
 
 CREATE TABLE TestComment(
 TestCommentId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-TestComment VARCHAR(60),
+TestComment VARCHAR(600),
 TCUserId INT,
 TCATestId INT,
 CONSTRAINT TCUserIdFK FOREIGN KEY (TCUserId) REFERENCES User(UserId),

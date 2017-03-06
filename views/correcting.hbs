@@ -28,7 +28,7 @@
         <div id="commentBox">
 
         </div>
-        <button type="button" id="correctBtn" class="btn btn-primary">Rätta test</button>
+        <button type="submit" id="correctBtn" class="btn btn-primary">Rätta test</button>
     </div>
 </div>
 
@@ -141,6 +141,7 @@
             data: testData,
             success: function(){
                 console.log('Created test successfully');
+                location.reload();
             }
         });
     });
