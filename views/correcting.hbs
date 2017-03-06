@@ -94,15 +94,18 @@
                     {{#this.userAnswers}}
                         if({{AnsweredTestId}} == testId){
                             console.log();
-                        if({{AQuestionId}} == questionId && $('#{{UserAnswerId}}').attr('id') == undefined){
-                            if(type == 'Öppen fråga'){
-                                $('.useranswers').eq({{questionOrder}} - 1).append('<li class="list-group-item" id="{{UserAnswerId}}">{{UAText}}</li>');
+                            if({{AQuestionId}} == questionId && $('#{{UserAnswerId}}').attr('id') == undefined){
+                                $('h3.panel-title').eq({{questionOrder}} - 1).attr('name', '{{UAQuestionId}}');
 
-                            } else {
-                                $('.useranswers').eq({{questionOrder}} - 1).append('<li class="list-group-item" id="{{UserAnswerId}}">{{AText}}</li>');
+                                if(type == 'Öppen fråga'){
+                                    $('.useranswers').eq({{questionOrder}} - 1).append('<li class="list-group-item" id="{{UserAnswerId}}">{{UAText}}</li>');
+
+                                } else {
+                                    $('.useranswers').eq({{questionOrder}} - 1).append('<li class="list-group-item" id="{{UserAnswerId}}">{{AText}}</li>');
+                                }
                             }
                         }
-                    }
+
                     {{/this.userAnswers}}
 
                     if('{{answerCorrect}}' == 1){
@@ -113,4 +116,6 @@
             {{/testdata}}
         });
     });
+
+    
 </script>
