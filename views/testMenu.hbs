@@ -18,7 +18,7 @@
 </div>
 
 <script>
-    // Takes student to the selected test when clicking button
+    //Takes student to the selected test
     $(function() {
         $("#startTestButton").on("click", function(e) {
             location.replace('/test=' + $('#testName').find(":selected").attr('class'));
