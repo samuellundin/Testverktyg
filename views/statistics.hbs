@@ -15,7 +15,7 @@
               <div class="panel-body">
 
                   <!-- Test selection -->
-                  <h4>Välj test för att se statistik</h4><br>
+                  <br>
                   <form action="/test" method="get">
                       <select name="test" id="testSelect" class="form-control">
                           <option hidden id="defaultTestOption" value="hopp">Välj prov</option>
@@ -56,18 +56,14 @@
             $("#statsTable").html(`
                     <br>
                     <tr class="active">
-                        <th></th>
-                        <td></td>
-                    </tr>
-                    <tr>
                         <th>Valt test</th>
                         <td>{{TTitle}}</td>
                     </tr>
-                    <tr>
+                    <tr class="active">
                         <th>Vald grupp</th>
                         <td>{{groupName}}</td>
                     </tr>
-                    <tr class="active">
+                    <tr>
                         <th></th>
                         <td></td>
                     </tr>
@@ -87,11 +83,7 @@
                         <th>Tidåtgång <span class="label label-primary">Medelvärde</span></th>
                         <td>`+ min +` minuter `+ sec +` sekunder</td>
                     </tr>
-                    <tr class="active">
-                        <th></th>
-                        <td></td>
-                    </tr>
-        `       );
+            `);
         {{/statsObject}}
 
         $("#statsTable").slideDown();
