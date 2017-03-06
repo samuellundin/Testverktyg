@@ -12,6 +12,7 @@ var key = 'dsfdsfdsfds3432432sdfdsf';
 var encryptor = require('simple-encryptor')(key);
 const dcopy = require('deepcopy');
 const async = require('async');
+const mailer = require('express-mailer');
 
 //Configure the app to look for static files (javascript, css) in the /public folder
 app.use(express.static(path.join(__dirname, '/public')));
@@ -56,12 +57,39 @@ app.use(function(req, res, next){
 //Configure the app to listen on port 3000
 app.listen(3000);
 
+mailer.extend(app, {
+    from: 'info@testverktyg.com',
+    host: 'smtp.gmail.com', // hostname
+    secureConnection: true, // use SSL
+    port: 465, // port for secure SMTP
+    transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts
+    auth: {
+        user: 'testverktyg1@gmail.com',
+        pass: 'verktyg1234'
+    }
+});
 
 //APP REQUESTS/END POINTS
 //Get Index
 app.get('/', function(req, res, next){
         res.render('index', req.session);
         delete req.session.err;
+});
+
+app.get('/testMail', function (req, res, next) {
+    app.mailer.send('email', {
+        to: 'markus3832@gmail.com', // REQUIRED. This can be a comma delimited string just like a normal email to field.
+        subject: 'Test Email', // REQUIRED.
+        otherProperty: 'Other Property' // All additional properties are also passed to the template as local variables.
+    }, function (err) {
+        if (err) {
+            // handle error
+            console.log(err);
+            res.send('There was an error sending the email');
+            return;
+        }
+        res.send('Email Sent');
+    });
 });
 
 //Get Login
