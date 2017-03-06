@@ -509,6 +509,18 @@ app.get('/correcting', function(req, res) {
     }, 500);
 });
 
+app.post('/correct', function(req, res){
+    updateTestScore(req.body.TestId, req.body.TakenTestId, req.body.points, true);
+    if(req.body.comments){
+        sql.addComments(req.body.comments);
+    }
+
+    if(req.body.testComment){
+        sql.addTestComment(req.body.testComment);
+    }
+    res.send('party');
+});
+
 //HELPER FUNCTIONS
 
 //Check if it is self correcting, if it is, send it for autocorrect
@@ -603,7 +615,7 @@ function autoCorrect(testId, takenTestId){
 }
 
 //Updates score in AnsweredTest and decides what grade a person got
-function updateTestScore(testId, takenTestId, points){
+function updateTestScore(testId, takenTestId, points, showResult){
     sql.connection.query('SELECT TMaxPoints, TResult FROM Test WHERE TestId = ' + testId, function(error, result){
         var mPoints = result[0].TMaxPoints;
         var percentage = (points/mPoints) * 100;
@@ -613,7 +625,8 @@ function updateTestScore(testId, takenTestId, points){
         } else if (percentage > 60){
             grade = 'G';
         }
-        sql.connection.query('UPDATE AnsweredTest SET ATPoints = ' + points + ", ATGrade = " + mysql.escape(grade) + ", ATCorrected = TRUE, ATShowResult = "+ result[0].TResult +" WHERE AnsweredTestId = " + takenTestId, function(err, res){if (err) throw err;});
+        console.log(takenTestId);
+        var c = sql.connection.query('UPDATE AnsweredTest SET ATPoints = ' + points + ", ATGrade = " + mysql.escape(grade) + ", ATCorrected = TRUE, ATShowResult = "+ (showResult || result[0].TResult) +" WHERE AnsweredTestId = " + takenTestId, function(err, res){if (err) throw err; console.log(res)});
     });
 }
 

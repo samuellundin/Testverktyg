@@ -8,7 +8,7 @@
                 <select class="form-control" id="testSelector" style="margin-top: 24px; margin-bottom: 0">
                     <option hidden>Välj test</option>
                     {{#each tests}}
-                        <option>{{testname}}</option>
+                        <option class="{{testid}}">{{testname}}</option>
                     {{/each}}
                 </select>
             </div>
@@ -28,7 +28,7 @@
         <div id="commentBox">
 
         </div>
-        <button type="button" class="btn btn-primary">Rätta test</button>
+        <button type="button" id="correctBtn" class="btn btn-primary">Rätta test</button>
     </div>
 </div>
 
@@ -63,12 +63,12 @@
             var selectedTest = $('#testSelector').find(":selected").text();
             var selectedUser = $('#userSelector').find(":selected").text();
             $('#commentBox').html(`
-                <div class="panel panel-default">
+                <div class="panel panel-default testkommentar">
                     <div class="panel-heading clearfix">
                         <h3 class="panel-title">Kommentar för Test:</h3>
                     </div>
                     <div class="panel-body collapse">
-                        <textarea class="form-control" rows="5" style="resize: vertical; margin-bottom: 15px"></textarea>
+                        <textarea class="form-control testComment" rows="5" style="resize: vertical; margin-bottom: 15px"></textarea>
                     </div>
                 </div>
             `);
@@ -79,7 +79,7 @@
                         $('#questionBox').append(`
                             <div class="panel panel-default">
                                 <div class="panel-heading clearfix">
-                                    <h3 class="panel-title">{{this.questionText}} ({{this.questionType}})<span class="pull-right">Poäng: <input type="text" size="1" value="{{this.questionPoints}}"> / {{this.questionPoints}}</span></h3>
+                                    <h3 class="panel-title">{{this.questionText}} ({{this.questionType}})<span class="pull-right">Poäng: <input type="text" class="points" size="1" value="{{this.questionPoints}}"> / {{this.questionPoints}}</span></h3>
                                 </div>
                                 <div class="panel-body">
                                     <div class="col-md-6">
@@ -94,7 +94,7 @@
                                         </ul>
                                     </div>
                                     <div class="col-md-12">
-                                        <textarea class="form-control collapse" rows="5" style="resize: vertical; margin-bottom: 15px"></textarea>
+                                        <textarea class="form-control collapse qcomment" rows="5" style="resize: vertical; margin-bottom: 15px"></textarea>
                                         <button type="button" class="btn btn-default commentButton">Kommentera fråga</button>
                                     </div>
                                 </div>
@@ -108,8 +108,8 @@
                     {{#this.userAnswers}}
                         if({{AnsweredTestId}} == testId){
                             if({{AQuestionId}} == questionId && $('#{{UserAnswerId}}').attr('id') == undefined){
-                                $('h3.panel-title').eq({{questionOrder}} - 1).attr('name', '{{UAQuestionId}}');
-
+                                $('.points').eq({{questionOrder}} - 1).attr('name', '{{UAQuestionId}}');
+                                $('.qcomment').eq({{questionOrder}} - 1).attr('name', '{{UAQuestionId}}');
                                 if(type == 'Öppen fråga'){
                                     $('.useranswers').eq({{questionOrder}} - 1).append('<li class="list-group-item" id="{{UserAnswerId}}">{{UAText}}</li>');
 
@@ -130,5 +130,49 @@
         });
     });
 
+    $('#correctBtn').on('click', function(){
+        var testData = {};
+        collectInfo(testData);
+        createComments(testData);
+        console.log(testData);
+        $.ajax({
+            url: '/correct',
+            method: 'post',
+            data: testData,
+            success: function(){
+                console.log('Created test successfully');
+            }
+        });
+    });
+
+    function collectInfo(data){
+        data.TestId = $('#testSelector').find(":selected").attr('class');
+        data.TakenTestId = $('#userSelector').find(":selected").attr('class');
+        data.points = 0;
+        $('.points').each(function(){
+            data.points += Number($(this).val());
+        });
+    }
+
+    function createComments(data){
+        data.comments = [];
+        $('.qcomment').each(function(){
+            if($(this).val()){
+                var comment = {
+                    questionId: $(this).attr('name'),
+                    text: $(this).val(),
+                    teacher: {{id}}
+                }
+                data.comments.push(comment);
+            }
+        })
+        if($('.testComment').val()){
+            data.testComment = {
+                text: $('.testComment').val(),
+                teacher: {{id}},
+                test: $('#userSelector').find(":selected").attr('class')
+            }
+        }
+    }
     
 </script>

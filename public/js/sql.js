@@ -237,3 +237,25 @@ exports.updateTest = function(data, questions, answers){
         })
     })
 }
+
+exports.addComments = function(QComments){
+    for(var i = 0; i < QComments.length; i++){
+        connection.query('INSERT INTO QuestionComment (QuestionComment, QCUserId, QCQuestionId) VALUES ('
+        + mysql.escape(QComments[i].text) + ", "
+        + mysql.escape(QComments[i].teacher) + ", "
+        + mysql.escape(QComments[i].questionId) + ")", function(err, res){
+            if(err) throw err;
+        })
+    }
+}
+
+exports.addTestComment = function(TComment){
+    console.log(TComment);
+    connection.query('INSERT INTO TestComment (TestComment, TCUserId, TCATestId) VALUES ('
+    + mysql.escape(TComment.text) + ", "
+    + mysql.escape(TComment.teacher) + ", "
+    + mysql.escape(TComment.test) + ")", function(err, res){
+        if(err) throw err;
+        console.log(res);
+    });
+}
