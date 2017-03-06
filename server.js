@@ -463,7 +463,7 @@ app.get('/correcting', function(req, res) {
         req.session.tests = dcopy(tests);
     });
     // Get userdata for combobox
-    sql.connection.query('SELECT User.FirstName, AnsweredTest.ATestId, AnsweredTest.AnsweredTestId FROM User INNER JOIN AnsweredTest ON AnsweredTest.ATUserID=User.UserID', function(err, result) {
+    sql.connection.query('SELECT User.FirstName, AnsweredTest.ATestId, AnsweredTest.AnsweredTestId FROM User INNER JOIN AnsweredTest ON AnsweredTest.ATUserID=User.UserID WHERE AnsweredTest.ATCorrected = 0', function(err, result) {
         var user;
         var users = [];
 

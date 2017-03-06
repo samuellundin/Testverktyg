@@ -107,7 +107,6 @@
                     var type = '{{questionType}}';
                     {{#this.userAnswers}}
                         if({{AnsweredTestId}} == testId){
-                            console.log();
                             if({{AQuestionId}} == questionId && $('#{{UserAnswerId}}').attr('id') == undefined){
                                 $('h3.panel-title').eq({{questionOrder}} - 1).attr('name', '{{UAQuestionId}}');
 
