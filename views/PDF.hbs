@@ -1,5 +1,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
-<link rel="stylesheet" type="text/css" href="../public/style/PDF.css">
+
 
 
 <div class="container">
@@ -32,15 +32,16 @@
 
     </div>
 </div>
-<div  id="PDF" >
 
-    <table style="width:80%">
+<div  id="PDF"  >
+    <table  style="text-align: center;" id="PDFtest">
         <thead>
+
         <th>head1</th><th>head2</th>
         </thead>
         <tbody>
         <tr>
-            <td>cell1</td>
+           <td>cell1</td>
             <td>cell2</td>
         </tr>
         <tr>
@@ -97,6 +98,7 @@
             top: 50,
             left: 60,
             width: 545
+
         };
         pdf.fromHTML(
                 source // HTML string or DOM elem ref.
@@ -114,7 +116,8 @@
         )
     })
 
-    
+
+
 
 </script>
 
