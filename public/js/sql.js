@@ -38,7 +38,7 @@ exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
 };
 
 exports.addTest = function(testData, questions, answers){
-    connection.query("INSERT INTO Test (TUserId, TTitle, TStartTestDate, TEndTestDate, TTimeMin, TMaxPoints, TSelfCorrecting, TResult) VALUES ("
+    connection.query("INSERT INTO Test (TUserId, TTitle, TStartTestDate, TEndTestDate, TTimeMin, TMaxPoints, TSelfCorrecting, TDisplayResult) VALUES ("
     + mysql.escape(testData.userId) + ", "
     + mysql.escape(testData.testTitle) + ", "
     + mysql.escape(testData.startDT) + ", "
@@ -208,7 +208,7 @@ exports.updateTest = function(data, questions, answers){
     + 'TTimeMin = ' + mysql.escape(data.minutes) + ", "
     + 'TMaxPoints = ' + mysql.escape(data.maxPoints) + ", "
     + 'TSelfCorrecting = ' + mysql.escape(data.checked) + ", "
-    + 'TResult = ' + mysql.escape(data.showResult) + ", "
+    + 'TDisplayResult = ' + mysql.escape(data.showResult) + ", "
     + 'TUserId = ' + mysql.escape(data.userId)
     + ' WHERE TestId = ' + mysql.escape(data.testId), function(error, result){
         if(error) throw error;

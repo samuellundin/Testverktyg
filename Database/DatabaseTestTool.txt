@@ -22,7 +22,7 @@ CREATE TABLE Test(
 		TTimeMin INT(10) NOT NULL,
 		TMaxPoints INT(10) NOT NULL,
 		TSelfCorrecting TINYINT(1) DEFAULT 0,
-		TResult TINYINT(1) DEFAULT 0,
+		TDisplayResult TINYINT(1) DEFAULT 0,
 		CONSTRAINT TUserIdFK FOREIGN KEY (TUserId) REFERENCES User(UserId)
 		);
 

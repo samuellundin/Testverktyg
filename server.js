@@ -661,7 +661,7 @@ function autoCorrect(testId, takenTestId){
 
 //Updates score in AnsweredTest and decides what grade a person got
 function updateTestScore(testId, takenTestId, points, showResult){
-    sql.connection.query('SELECT TMaxPoints, TResult FROM Test WHERE TestId = ' + testId, function(error, result){
+    sql.connection.query('SELECT TMaxPoints, TDisplayResult FROM Test WHERE TestId = ' + testId, function(error, result){
         var mPoints = result[0].TMaxPoints;
         var percentage = (points/mPoints) * 100;
         var grade = 'U';
@@ -671,7 +671,7 @@ function updateTestScore(testId, takenTestId, points, showResult){
             grade = 'G';
         }
         console.log(takenTestId);
-        var c = sql.connection.query('UPDATE AnsweredTest SET ATPoints = ' + points + ", ATGrade = " + mysql.escape(grade) + ", ATCorrected = TRUE, ATShowResult = "+ (showResult || result[0].TResult) +" WHERE AnsweredTestId = " + takenTestId, function(err, res){if (err) throw err; console.log(res)});
+        var c = sql.connection.query('UPDATE AnsweredTest SET ATPoints = ' + points + ", ATGrade = " + mysql.escape(grade) + ", ATCorrected = TRUE, ATShowResult = "+ (showResult || result[0].TDisplayResult) +" WHERE AnsweredTestId = " + takenTestId, function(err, res){if (err) throw err; console.log(res)});
     });
 }
 
