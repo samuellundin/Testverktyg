@@ -44,7 +44,8 @@
         <h3 class="page-header">Välj elev</h3>
             <select name="share" id="shareStudentSelect" class="form-control"></select>
             <br>
-            <button class="btn btn-info btn-block registerButton">Dela till elev</button>
+            <button id="shareStudent" class="btn btn-info btn-block registerButton">Dela till elev</button>
+          <div id = "shareS" class=""> </div>
     </div>
 </div>
 <script>
@@ -138,5 +139,9 @@
                 <option>{{FirstName}}</option>
             {{/students}}
         `)
+        $( "#shareStudent").on( "click", function(event) {
+        document.getElementById('shareS').textContent = 'Testet har delats';
+        document.getElementById('shareS').className = 'alert alert-success';});
+
     });
 </script>
