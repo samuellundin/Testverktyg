@@ -730,6 +730,7 @@ function getAnsweredTest(data, testId, userId){
     sql.connection.query('SELECT * FROM PDFtest WHERE TestId = ' + mysql.escape(testId) + ' AND UserId = ' + mysql.escape(userId), function(err, res){
         if(err) throw err;
         test = dcopy(res[0]);
+        test.ATDate = test.ATDate.slice(0, -3);
         var question = {};
         var questions = [];
         sql.connection.query('SELECT * FROM Questions WHERE QTestId = ' + mysql.escape(testId), function(error, result){
