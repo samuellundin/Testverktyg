@@ -153,9 +153,9 @@ FROM AnsweredTest AS at
 INNER JOIN Test AS t
 ON t.TestId = at.ATestId);
 
-INSERT INTO User (FirstName, LastName, Mail, Password, Role) VALUES ('Gurkan', 'Gurksson', 'gurkan4life@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
-('Bönan', 'Bönsson', 'bönor@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
-('Nöten', 'Nötsson', 'nötter@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
-('Bruttan', 'Bruttsson', 'bruttis@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
-('Gösta', 'Göstasson', 'gösta@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'teacher'),
-('Admin', 'Adminsson', 'admin@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'admin');
+INSERT INTO User (FirstName, LastName, Mail, Password, Role) VALUES ('Gurkan', 'Gurksson', 'Gurkan4life@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
+('Bönan', 'Bönsson', 'Bönor@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
+('Nöten', 'Nötsson', 'Nötter@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
+('Bruttan', 'Bruttsson', 'Bruttis@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'student'),
+('Gösta', 'Göstasson', 'Gösta@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'teacher'),
+('Admin', 'Adminsson', 'Admin@hotmail.com', '4004be2fae027f09f3fcb9fdad48385c46bd06d5279ca2dd8ddc8b6b9e0b63f9012e706407eef09310017e6d9c5ecc45HSr8TfbVUER9grn5HYU6+g==', 'admin');
