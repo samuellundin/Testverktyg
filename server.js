@@ -88,9 +88,9 @@ app.get('/login', function(req, res, next){
 app.post('/login', function(req, res){
     sql.connection.query("SELECT * FROM User WHERE Mail = '" + req.body.email +"'", function(err, result){
         if(err || result[0] == null){
-            req.session.err = 'No such mail registered';
+            req.session.err = 'Fel epost eller lösenord';
+            delayRedirect(res, 200);
             return;
-
         }
         if(encryptor.decrypt(result[0].Password) == req.body.password){
             req.session.fName = result[0].FirstName;
@@ -100,7 +100,7 @@ app.post('/login', function(req, res){
             setupRole(req);
             delayRedirect(res, 200);
         } else {
-            req.session.err = 'Wrong password';
+            req.session.err = 'Fel epost eller lösenord';
             delayRedirect(res, 200);
         }
     });
@@ -234,7 +234,9 @@ app.post('/share', function (req, res) {
         layout: false,
         to: req.body.mail, // REQUIRED. This can be a comma delimited string just like a normal email to field.
         subject: 'Nytt test att göra!', // REQUIRED.
-        otherProperty: 'Other Property' // All additional properties are also passed to the template as local variables.
+        name: req.body.namn,
+        testName: req.body.test,
+        testDate: req.body.endDate.slice(0, -3) // All additional properties are also passed to the template as local variables.
     }, function (err) {
         if (err) {
             // handle error
@@ -400,7 +402,7 @@ app.get("/register", function(req, res) {
 //Post register
 app.post("/register", function(req, res) {
     var encrypted = encryptor.encrypt(req.body.password);
-    sql.addUser(req.body.fName, req.body.lName, req.body.mail, encrypted, req.body.role);
+    sql.addUser(req.body.fName[0].toUpperCase() + req.body.fName.slice(1), req.body.lName[0].toUpperCase() + req.body.lName.slice(1), req.body.mail, encrypted, req.body.role);
     res.redirect("/");
 });
 
@@ -675,7 +677,7 @@ function updateTestScore(testId, takenTestId, points, showResult){
 
 //Updates session with tests from database
 function updateSessionTests(req) {
-    sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
+    sql.connection.query("SELECT TTitle,TestId,TEndTestDate FROM Test", function(error, result) {
         req.session.tests = dcopy(result);
     });
 }

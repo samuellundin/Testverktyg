@@ -1,3 +1,13 @@
+$("#time").prop('disabled', true);
+
+$("#timed").change(function() {
+    if(this.checked) {
+        $("#time").prop('disabled', false);
+    } else if(!this.checked) {
+            $("#time").prop('disabled', true);
+    }
+});
+
 $("#saveTest").click(function (event) {
     if ($('#testName').val() == '') {
 
