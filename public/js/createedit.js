@@ -90,11 +90,19 @@ $('#date').datepicker({
     format: 'yyyy-mm-dd',
     todayHighlight: true,
     autoclose: true
+}).on('change', function() {
+    if(!$('#timeEnd').val()) {
+        $('#timeEnd').val('00:00');
+    }
 });
 $('#dateStart').datepicker({
     format: 'yyyy-mm-dd',
     todayHighlight: true,
     autoclose: true
+}).on('change', function() {
+    if(!$('#timeStart').val()) {
+        $('#timeStart').val('00:00');
+    }
 });
 
 $(document).on('click', '#saveQuestion', function() {

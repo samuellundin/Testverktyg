@@ -79,22 +79,6 @@ app.get('/', function(req, res, next){
         delete req.session.err;
 });
 
-app.get('/testMail', function (req, res, next) {
-    app.mailer.send('email', {
-        to: 'markus3832@gmail.com', // REQUIRED. This can be a comma delimited string just like a normal email to field.
-        subject: 'Test Email', // REQUIRED.
-        otherProperty: 'Other Property' // All additional properties are also passed to the template as local variables.
-    }, function (err) {
-        if (err) {
-            // handle error
-            console.log(err);
-            res.send('There was an error sending the email');
-            return;
-        }
-        res.send('Email Sent');
-    });
-});
-
 //Get Login
 app.get('/login', function(req, res, next){
     res.render('login');
@@ -509,6 +493,7 @@ app.get('/testPDF', function(req, res){
 });
 
 
+
 //Get correcting
 app.get('/correcting', function(req, res) {
 
@@ -560,10 +545,7 @@ app.get('/correcting', function(req, res) {
                 }
                 console.log(testdata[0]);
                 req.session.testdata = testdata;
-
             })
-
-
     });
     setTimeout(function () {
         res.render('correcting', req.session);
