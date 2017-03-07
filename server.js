@@ -717,22 +717,37 @@ function delayRedirect(res, delay){
 function getAnsweredTest(data, testId, userId){
     var test = {};
     sql.connection.query('SELECT * FROM PDFtest WHERE TestId = ' + mysql.escape(testId) + ' AND UserId = ' + mysql.escape(userId), function(err, res){
-        test = res[0];
+        test = dcopy(res[0]);
         var question = {};
         var questions = [];
         sql.connection.query('SELECT * FROM Questions WHERE QTestId = ' + mysql.escape(testId), function(error, result){
             var k = 0;
             for(var i = 0; i < result.length; i++){
                 question = dcopy(result[k]);
-                sql.connection.query('SELECT * FROM AnsweredQuestion WHERE AQuestionId = ' + question[k].QuestionId + ' AND AQAnsweredTestId = ' + test.AnsweredTestId, function(err2, res2){
-                    question.answeredQuestion = res2[0];
+                sql.connection.query('SELECT * FROM AnsweredQuestion WHERE AQuestionId = ' + question.QuestionId + ' AND AQAnsweredTestId = ' + test.AnsweredTestId, function(err2, res2){
+                    question.answeredQuestion = dcopy(res2[0]);
+                    sql.connection.query('SELECT * FROM QuestionComment WHERE QCQuestionId = ' + question.QuestionId + " AND QCUserId = " + userId, function(err3, res3){
+                        if(res3.length != 0){
+                            question.comment = dcopy(res3[0]);
+                        }
+                        sql.connection.query('SELECT * FROM Answers WHERE AQuestionId = ' + mysql.escape(result[k].QuestionId), function(error2, result2){
+                            question.answers = dcopy(result2);
+                            sql.connection.query('SELECT * FROM UserAnswers WHERE UAQuestionId = ' + mysql.escape(question.answeredQuestion.AnsweredQuestionId), function(err4, res4){
+                                question.userAnswers = dcopy(res4);
+                                questions.push(question);
+                                if(++k == result.length){
+                                    data.test = test;
+                                }
+                            })
+                        })
+                    })
                 });
-                /*sql.connection.query('SELECT * FROM QuestionComment WHERE ')*/
-                sql.connection.query('SELECT * FROM Answers WHERE AQuestionId = ' + mysql.escape(result[k].QuestionId), function(error2, result2){
-                    question[k].answers = dcopy(result2);
-                    sql.connection.query('SELECT * FROM UserAnswers WHERE UAQuestionId = ' + mysql.escape())
-                })
             }
+            sql.connection.query('SELECT * FROM TestComment WHERE TCATestId = ' + mysql.escape(test.AnsweredTestId), function(error3, result3){
+                if(result3.length != 0){
+                    test.testComment = dcopy(result3[0]);
+                }
+            })
         })
     })
 }
