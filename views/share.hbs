@@ -48,7 +48,14 @@
     </div>
 </div>
 <script>
+    var selectedTestEndDate;
+
     $( ".registerButton").on( "click", function(event) {
+        {{#tests}}
+            if('{{this.TTitle}}' == $('#testName').val()){
+                selectedTestEndDate = '{{this.TEndTestDate}}';
+            }
+        {{/tests}}
         if ($('#shareSelect').val() == 'group') {
             var selectedGroupIndex = $('#shareGroupSelect').prop('selectedIndex') + 1;
 
@@ -69,7 +76,9 @@
                 data: {
                     'id' : studentIds,
                     'namn': names,
-                    'mail': emails
+                    'mail': emails,
+                    'test': $('#testName').val(),
+                    'endDate': selectedTestEndDate
                 },
                 success: function(data){
                     console.log('success!');
@@ -89,7 +98,9 @@
                 data: {
                     'id' : studentId,
                     'namn': $('#shareStudentSelect').val(),
-                    'mail': email
+                    'mail': email,
+                    'test': $('#testName').val(),
+                    'endDate': selectedTestEndDate
                 },
                 success: function(data){
                     console.log('success!');
