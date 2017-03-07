@@ -30,7 +30,7 @@
             if('{{TTitle}}' == $('select#testName').val()){
                 var percentage = ({{ATPoints}}/{{TMaxPoints}});
                 percentage *= 100;
-                percentage = Math.round(percentage * 1000) / 1000;
+                percentage = Math.round((percentage * 1000) / 1000);
                 var min = 0;
                 var sec = {{ATTimeSec}};
                 while(sec > 60){

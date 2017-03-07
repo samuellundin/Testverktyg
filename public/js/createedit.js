@@ -1,10 +1,9 @@
 $("#time").prop('disabled', true);
-
 $("#timed").change(function() {
     if(this.checked) {
         $("#time").prop('disabled', false);
     } else if(!this.checked) {
-            $("#time").prop('disabled', true);
+        $("#time").prop('disabled', true);
     }
 });
 
@@ -198,7 +197,6 @@ $(document).on('click', '.btn-edit', function() {
                             <div class="form-group" id="questionEdit">
                                 <input type="text" class="form-control questionTitle" placeholder="Fråga?" value="`+ titleQuestion +`">
                             </div>
-
                             <div class="row form-group">
                                 <div class="col-lg-6 form-group">
                                     <select class="form-control" id="typeSelectEdit">
