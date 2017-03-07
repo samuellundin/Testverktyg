@@ -232,6 +232,7 @@ app.post('/share', function (req, res) {
         layout: false,
         to: req.body.mail, // REQUIRED. This can be a comma delimited string just like a normal email to field.
         subject: 'Nytt test att göra!', // REQUIRED.
+        name: req.body.namn,
         testName: req.body.test,
         testDate: req.body.endDate.slice(0, -3) // All additional properties are also passed to the template as local variables.
     }, function (err) {

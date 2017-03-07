@@ -97,9 +97,9 @@
                 url: "/share",
                 data: {
                     'id' : studentId,
-                    'namn': $('#shareStudentSelect').val(),
+                    'namn': $('#shareStudentSelect').val()[0].toUpperCase() + $('#shareStudentSelect').val().slice(1),
                     'mail': email,
-                    'test': $('#testName').val(),
+                    'test': $('#testName').val()[0].toUpperCase() + $('#testName').val().slice(1),
                     'endDate': selectedTestEndDate
                 },
                 success: function(data){
