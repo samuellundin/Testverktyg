@@ -4,7 +4,10 @@ var exports = module.exports = {};
 exports.pdfTemplate = `
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-     <h1>{{test.TTitle}}</h1>
+     <div class="container">
+        <h1 class="title">{{test.TTitle}}</h1>
+     </div>
+     
      <h2>{{test.FirstName}} {{test.LastName}}</h2>
      <p>{{test.ATDate}}</p>
      {{#test.questions}}
