@@ -13,22 +13,22 @@ exports.pdfTemplate = `
             </div>
             <div class="col-xs-6">
                 <div class="row"><h1 class="title pull-right">{{test.TTitle}}</h1></div>
-                <div class="row"><h2 class="title pull-right">Poäng: 10/10</h2></div>
-                <div class="row"><h3 class="title pull-right">Betyg: VG</h3></div>
+                <div class="row"><h2 class="title pull-right">Poäng: {{test.ATPoints}}/{{test.TMaxPoints}}</h2></div>
+                <div class="row"><h3 class="title pull-right">Betyg: {{test.ATGrade}}</h3></div>
             </div>
         </div>
         <hr>
         {{#test.questions}}
             <div class="panel panel-default">
                 <div class="panel-heading"">
-                    <h3 class="panel-title">{{Question}}</h3>
+                    <h3 class="panel-title">{{Question}}<p class="pull-right">{{this.answeredQuestion.AQPoints}}/{{this.QPoints}}</p></h3>
                 </div>
                 <div class="panel-body">
                     <div class="col-xs-6">
                         <h4 class="title">Svar:</h4>
                         <ul class="list-group useranswers">
                             {{#this.userAnswers}}
-                                <li class="list-group-item">{{AText}}</li>
+                                <li class="list-group-item">{{AText}}{{UAText}}</li>
                             {{/this.userAnswers}}
                         </ul>
                     </div>
@@ -40,10 +40,24 @@ exports.pdfTemplate = `
                             {{/this.answers}}
                         </ul>
                     </div>
-                    {{#if this.questioncomment}}
-                    {{/if}}
                 </div>
+                    {{#if this.comment}}
+                        <div class="panel-footer">
+                            <div class="panel-title">Kommentar: </div>
+                            {{this.comment.QuestionComment}}
+                        </div>
+                    {{/if}}
             </div>
         {{/test.questions}}
+        {{#if test.testComment}}
+        <div class="panel panel-default">
+                <div class="panel-heading"">
+                    <h3 class="panel-title">Lärarens kommentar</h3>
+                </div>
+                <div class="panel-body">
+                    {{test.testComment.TestComment}}   
+                </div>
+            </div>
+        {{/if}}
      </div>
-     `;
+     <style>body{font-size: 175%}.panel-title{font-size:150%}.container{margin: 20px 40px}</style>`;

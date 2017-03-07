@@ -122,7 +122,7 @@ CREATE TABLE TestAccess(
        CONSTRAINT TAUserIdFK FOREIGN KEY (TAUserId) REFERENCES User(UserId));
 
 CREATE VIEW PDFTest AS
-(SELECT t.TestId, u.UserId, at.AnsweredTestId, t.TTitle, u.FirstName, u.LastName, at.ATTimeSec, t.TMaxPoints, at.ATPoints, at.ATDate
+(SELECT t.TestId, u.UserId, at.AnsweredTestId, t.TTitle, u.FirstName, u.LastName, at.ATTimeSec, t.TMaxPoints, at.ATGrade, at.ATPoints, at.ATDate
 FROM Test AS t INNER JOIN AnsweredTest AS at ON at.ATestId = t.TestId
 INNER JOIN User AS u ON u.UserId = at.ATUserId);
 

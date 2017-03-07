@@ -150,8 +150,10 @@
         data.TestId = $('#testSelector').find(":selected").attr('class');
         data.TakenTestId = $('#userSelector').find(":selected").attr('class');
         data.points = 0;
+        data.updatePoints = [];
         $('.points').each(function(){
             data.points += Number($(this).val());
+            data.updatePoints.push({points: Number($(this).val()), AQId: Number($(this).attr('name'))});
         });
     }
 

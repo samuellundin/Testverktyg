@@ -475,7 +475,7 @@ app.post('/createpdf', function(req, res){
     getAnsweredTest(data, req.body.testid, req.body.userid);
 
     setTimeout(function(){
-
+        console.log(data.test.questions);
         let document = {
             template: pdfTemplate.pdfTemplate,
             context: data,
@@ -571,6 +571,12 @@ app.post('/correct', function(req, res){
 
     if(req.body.testComment){
         sql.addTestComment(req.body.testComment);
+    }
+
+    for(var i = 0; i < req.body.updatePoints.length; i++){
+        sql.connection.query('UPDATE AnsweredQuestion SET AQPoints = ' + mysql.escape(req.body.updatePoints[i].points) + ' WHERE AnsweredQuestionId = ' + mysql.escape(req.body.updatePoints[i].AQId), function(err, res){
+            if(err) throw err;
+        })
     }
     res.send('party');
 });
@@ -752,12 +758,12 @@ function getAnsweredTest(data, testId, userId){
         sql.connection.query('SELECT * FROM AnsweredQuestion WHERE AQQuestionId = ' + mysql.escape(question.QuestionId) + ' AND AQAnsweredTestId = ' + mysql.escape(test.AnsweredTestId), function(err2, res2){
             if(err2) throw err2;
             question.answeredQuestion = dcopy(res2[0]);
-            sql.connection.query('SELECT * FROM QuestionComment WHERE QCQuestionId = ' + mysql.escape(question.QuestionId) + " AND QCUserId = " + mysql.escape(userId), function(err3, res3){
+            sql.connection.query('SELECT * FROM QuestionComment WHERE QCQuestionId = ' + mysql.escape(question.answeredQuestion.AnsweredQuestionId), function(err3, res3){
                 if(err3) throw err3;
                 if(res3.length != 0){
                     question.comment = dcopy(res3[0]);
                 }
-                sql.connection.query('SELECT * FROM Answers WHERE AQuestionId = ' + mysql.escape(question.QuestionId), function(error2, result2){
+                sql.connection.query('SELECT * FROM Answers WHERE AQuestionId = ' + mysql.escape(question.QuestionId) + ' AND APoints = 1', function(error2, result2){
                     if(error2) throw error2;
                     question.answers = dcopy(result2);
                     sql.connection.query('SELECT UserAnswer.*, Answers.AText FROM UserAnswer INNER JOIN Answers ON Answers.AnswersId = UserAnswer.UAAnswersId WHERE UAQuestionId = ' + mysql.escape(question.answeredQuestion.AnsweredQuestionId), function(err4, res4){
