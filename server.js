@@ -450,6 +450,36 @@ app.post('/group', function(req, res){
     res.send('Yay');
 });
 
+
+app.get('/PDF', function (req, res) {
+
+    // Get testdata for Combobox
+    sql.connection.query('SELECT * FROM Test', function(err, result) {
+        var test;
+        var tests = [];
+
+        for(var i = 0; i < result.length; i++){
+            test = {testid: result[i].TestId, testname: result[i].TTitle}
+            tests.push(test);
+            req.session.tests = dcopy(tests);
+        }
+
+            res.render('pdf',req.session);
+    });
+    // Get userdata for combobox
+    sql.connection.query('SELECT User.FirstName, AnsweredTest.ATestId FROM User INNER JOIN AnsweredTest ON AnsweredTest.ATUserID=User.UserID', function(err, result) {
+        var user;
+        var users = [];
+
+        for(var i = 0; i < result.length; i++){
+            user = {userid: result[i].ATestId, username: result[i].FirstName}
+            users.push(user);
+        }
+        req.session.users = dcopy(users);
+    });
+})
+
+
 //Get correcting
 app.get('/correcting', function(req, res) {
 

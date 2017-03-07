@@ -1,0 +1,120 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../public/style/PDF.css">
+
+
+<div class="container">
+    <div class="col-lg-10 col-lg-offset-1">
+        <div class="row">
+            <div class="col-md-4">
+                <h1 class="title">Skapa PDF</h1>
+            </div>
+            <div class="col-md-4">
+                <select class="form-control" id="testSelector" style="margin-top: 24px; margin-bottom: 0">
+                    <option hidden>Välj test</option>
+                    {{#each tests}}
+                        <option>{{testname}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-control" id="userSelector" style="margin-top: 24px; margin-bottom: 0">
+                    <option hidden>Välj elev</option>
+                </select>
+            </div>
+        </div>
+
+
+        <hr/>
+        <div id="questionBox">
+
+        </div>
+        <button type="button" class="btn btn-primary" id="createPDF">skapa PDF</button>
+
+    </div>
+</div>
+<div  id="PDF" >
+
+    <table style="width:80%">
+        <thead>
+        <th>head1</th><th>head2</th>
+        </thead>
+        <tbody>
+        <tr>
+            <td>cell1</td>
+            <td>cell2</td>
+        </tr>
+        <tr>
+            <td>cell3</td>
+            <td>cell4</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+    <script>
+
+    document.getElementById("PDF").style.display = "none";
+    $(function() {
+        $('.commentButton').on('click', function() {
+            $(this).parent().find('textarea').toggle();
+        });
+        $(document).on('click', '.panel-heading', function(e) {
+            if(!$(event.target).is('input')) {
+                $(this).next('.panel-body').slideToggle();
+            }
+        });
+        var selectedTestId;
+        $('#testSelector').on('change', function() {
+            var selected = $(this).find(":selected").text();
+            $('#userSelector').html('<option hidden>Välj elev</option>')
+          ;
+            {{#tests}}
+                if('{{testname}}' == selected){
+                    selectedTestId = {{testid}};
+                }
+            {{/tests}}
+            if(selectedTestId){
+                {{#users}}
+                    if('{{userid}}' == selectedTestId){
+
+                        $('#userSelector').append('<option>{{username}}</option>');
+                    }
+                {{/users}}
+            }
+        });
+
+    });
+    $('#createPDF').on('click', function() {
+        var pdf = new jsPDF('p', 'pt', 'letter');
+        source = $('#PDF')[0];
+        specialElementHandlers = {
+            '#bypassme': function(element, renderer){
+                return true
+            }
+        }
+        margins = {
+            top: 50,
+            left: 60,
+            width: 545
+        };
+        pdf.fromHTML(
+                source // HTML string or DOM elem ref.
+                , margins.left // x coord
+                , margins.top // y coord
+                , {
+                    'width': margins.width // max width of content on PDF
+                    , 'elementHandlers': specialElementHandlers
+                },
+                function (dispose) {
+                    // dispose: object with X, Y of the last line add to the PDF
+                    //          this allow the insertion of new lines after html
+                    pdf.save('html2pdf.pdf');
+                }
+        )
+    })
+
+    
+
+</script>
+
