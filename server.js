@@ -86,7 +86,7 @@ app.get('/login', function(req, res, next){
 
 //Post login
 app.post('/login', function(req, res){
-    sql.connection.query("SELECT * FROM User WHERE Mail = '" + req.body.email +"'", function(err, result){
+    sql.connection.query("SELECT * FROM User WHERE Mail = '" + req.body.email.toLowerCase() +"'", function(err, result){
         if(err || result[0] == null){
             req.session.err = 'Fel epost eller lösenord';
             delayRedirect(res, 200);
@@ -402,7 +402,7 @@ app.get("/register", function(req, res) {
 //Post register
 app.post("/register", function(req, res) {
     var encrypted = encryptor.encrypt(req.body.password);
-    sql.addUser(req.body.fName[0].toUpperCase() + req.body.fName.slice(1), req.body.lName[0].toUpperCase() + req.body.lName.slice(1), req.body.mail, encrypted, req.body.role);
+    sql.addUser(req.body.fName[0].toUpperCase() + req.body.fName.slice(1), req.body.lName[0].toUpperCase() + req.body.lName.slice(1), req.body.mail.toLowerCase(), encrypted, req.body.role);
     res.redirect("/");
 });
 
