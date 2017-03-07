@@ -470,16 +470,14 @@ app.get('/createpdf', function(req, res){
 })
 
 app.post('/createpdf', function(req, res){
-    console.log('But I am here!');
     var data = {};
     getAnsweredTest(data, req.body.testid, req.body.userid);
 
     setTimeout(function(){
-        console.log(data.test.questions);
         let document = {
             template: pdfTemplate.pdfTemplate,
             context: data,
-            path: __dirname + '/result.pdf'
+            path: __dirname + '/public/pdf/' + data.test.FirstName + data.test.LastName + data.test.TTitle +'.pdf'
         }
 
         pdf.create(document)
@@ -496,11 +494,16 @@ app.post('/createpdf', function(req, res){
 
 app.get('/downloadPDF', function(req, res){
     setTimeout(function(){
-        res.download(__dirname + '/result.pdf');
-        setTimeout(function(){
-            fs.unlink(__dirname + '/result.pdf');
-        }, 5000);
-    }, 5000);
+        fs.readdir(__dirname + '/public/pdf/', (err, files) => {
+            files.forEach(file => {
+                res.download('./public/pdf/' + file);
+                setTimeout(function(){
+                    console.log(file);
+                    fs.unlink('./public/pdf/' + file, function(){});
+                }, 3000)
+            });
+        }, function(){})
+    }, 3000);
 })
 
 
@@ -773,7 +776,6 @@ function getAnsweredTest(data, testId, userId){
                         if(++k == result.length){
                             test.questions = questions;
                             data.test = test;
-
                         }
                     })
                 })
