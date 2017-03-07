@@ -440,8 +440,7 @@ app.post('/group', function(req, res){
 });
 
 
-app.get('/PDF', function (req, res) {
-
+app.get('/createpdf', function(req, res){
     // Get testdata for Combobox
     sql.connection.query('SELECT * FROM Test', function(err, result) {
         var test;
@@ -450,49 +449,59 @@ app.get('/PDF', function (req, res) {
         for(var i = 0; i < result.length; i++){
             test = {testid: result[i].TestId, testname: result[i].TTitle}
             tests.push(test);
-            req.session.tests = dcopy(tests);
         }
-
-            res.render('pdf',req.session);
+        req.session.tests = dcopy(tests);
     });
     // Get userdata for combobox
-    sql.connection.query('SELECT User.FirstName, AnsweredTest.ATestId FROM User INNER JOIN AnsweredTest ON AnsweredTest.ATUserID=User.UserID', function(err, result) {
+    sql.connection.query('SELECT User.FirstName, User.UserId, AnsweredTest.ATestId, AnsweredTest.AnsweredTestId FROM User INNER JOIN AnsweredTest ON AnsweredTest.ATUserID=User.UserID WHERE AnsweredTest.ATCorrected = 1', function(err, result) {
         var user;
         var users = [];
 
         for(var i = 0; i < result.length; i++){
-            user = {userid: result[i].ATestId, username: result[i].FirstName}
+            user = {userid: result[i].ATestId, username: result[i].FirstName, atId: result[i].UserId}
             users.push(user);
         }
+        console.log(result);
         req.session.users = dcopy(users);
+        setTimeout(function(){
+            res.render('pdf', req.session);
+        }, 500);
     });
 })
 
-app.get('/testPDF', function(req, res){
+app.post('/createpdf', function(req, res){
+    console.log('But I am here!');
+    var data = {};
+    getAnsweredTest(data, req.body.testid, req.body.userid);
 
-    var localPath = '/public/pdf/test.pdf';
+    setTimeout(function(){
 
-    let document = {
-        template: pdfTemplate.pdfTemplate,
-        context: {
-            TTitle: 'Beyoncé vs Riri'
-        },
-        path: "." + localPath
-    }
+        let document = {
+            template: pdfTemplate.pdfTemplate,
+            context: data,
+            path: __dirname + '/result.pdf'
+        }
 
-    pdf.create(document)
-        .then(result => {
-            console.log(result);
-            var file = __dirname + localPath;
-            res.download(file);
-            setTimeout(function(){
-                fs.unlink(file);
-                }, 3000);
-        })
-        .catch(error => {
-            console.error(error)
-        })
+        pdf.create(document)
+            .then(result => {
+                console.log(result);
+            })
+            .catch(error => {
+                console.error(error)
+            })
+        res.send('Here I am!');
+    }, 500);
+
 });
+
+app.get('/downloadPDF', function(req, res){
+    setTimeout(function(){
+        res.download(__dirname + '/result.pdf');
+        setTimeout(function(){
+            fs.unlink(__dirname + '/result.pdf');
+        }, 5000);
+    }, 5000);
+})
 
 
 
@@ -719,37 +728,49 @@ function delayRedirect(res, delay){
 function getAnsweredTest(data, testId, userId){
     var test = {};
     sql.connection.query('SELECT * FROM PDFtest WHERE TestId = ' + mysql.escape(testId) + ' AND UserId = ' + mysql.escape(userId), function(err, res){
+        if(err) throw err;
         test = dcopy(res[0]);
         var question = {};
         var questions = [];
         sql.connection.query('SELECT * FROM Questions WHERE QTestId = ' + mysql.escape(testId), function(error, result){
-            var k = 0;
+            if(error) throw error;
             for(var i = 0; i < result.length; i++){
-                question = dcopy(result[k]);
-                sql.connection.query('SELECT * FROM AnsweredQuestion WHERE AQuestionId = ' + question.QuestionId + ' AND AQAnsweredTestId = ' + test.AnsweredTestId, function(err2, res2){
-                    question.answeredQuestion = dcopy(res2[0]);
-                    sql.connection.query('SELECT * FROM QuestionComment WHERE QCQuestionId = ' + question.QuestionId + " AND QCUserId = " + userId, function(err3, res3){
-                        if(res3.length != 0){
-                            question.comment = dcopy(res3[0]);
-                        }
-                        sql.connection.query('SELECT * FROM Answers WHERE AQuestionId = ' + mysql.escape(result[k].QuestionId), function(error2, result2){
-                            question.answers = dcopy(result2);
-                            sql.connection.query('SELECT * FROM UserAnswers WHERE UAQuestionId = ' + mysql.escape(question.answeredQuestion.AnsweredQuestionId), function(err4, res4){
-                                question.userAnswers = dcopy(res4);
-                                questions.push(question);
-                                if(++k == result.length){
-                                    data.test = test;
-                                }
-                            })
-                        })
-                    })
-                });
+                addStuff(result, i, question, questions, test, data);
             }
             sql.connection.query('SELECT * FROM TestComment WHERE TCATestId = ' + mysql.escape(test.AnsweredTestId), function(error3, result3){
+                if(error3) throw error3;
                 if(result3.length != 0){
                     test.testComment = dcopy(result3[0]);
                 }
             })
         })
     })
+
+    function addStuff(result, k, question, questions, test, data){
+        question = dcopy(result[k]);
+        sql.connection.query('SELECT * FROM AnsweredQuestion WHERE AQQuestionId = ' + mysql.escape(question.QuestionId) + ' AND AQAnsweredTestId = ' + mysql.escape(test.AnsweredTestId), function(err2, res2){
+            if(err2) throw err2;
+            question.answeredQuestion = dcopy(res2[0]);
+            sql.connection.query('SELECT * FROM QuestionComment WHERE QCQuestionId = ' + mysql.escape(question.QuestionId) + " AND QCUserId = " + mysql.escape(userId), function(err3, res3){
+                if(err3) throw err3;
+                if(res3.length != 0){
+                    question.comment = dcopy(res3[0]);
+                }
+                sql.connection.query('SELECT * FROM Answers WHERE AQuestionId = ' + mysql.escape(question.QuestionId), function(error2, result2){
+                    if(error2) throw error2;
+                    question.answers = dcopy(result2);
+                    sql.connection.query('SELECT UserAnswer.*, Answers.AText FROM UserAnswer INNER JOIN Answers ON Answers.AnswersId = UserAnswer.UAAnswersId WHERE UAQuestionId = ' + mysql.escape(question.answeredQuestion.AnsweredQuestionId), function(err4, res4){
+                        if(err4) throw err4;
+                        question.userAnswers = dcopy(res4);
+                        questions.push(question);
+                        if(++k == result.length){
+                            test.questions = questions;
+                            data.test = test;
+
+                        }
+                    })
+                })
+            })
+        });
+    }
 }
