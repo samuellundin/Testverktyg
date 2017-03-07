@@ -13,6 +13,7 @@ var encryptor = require('simple-encryptor')(key);
 const dcopy = require('deepcopy');
 const async = require('async');
 const mailer = require('express-mailer');
+const pdf = require('handlebars-pdf');
 
 //Configure the app to look for static files (javascript, css) in the /public folder
 app.use(express.static(path.join(__dirname, '/public')));
