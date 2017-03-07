@@ -1,4 +1,5 @@
 //Import all modules
+const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const exphbs = require('express-handlebars');
@@ -14,6 +15,7 @@ const dcopy = require('deepcopy');
 const async = require('async');
 const mailer = require('express-mailer');
 const pdf = require('handlebars-pdf');
+const pdfTemplate = require('./public/js/pdf-template.js');
 
 //Configure the app to look for static files (javascript, css) in the /public folder
 app.use(express.static(path.join(__dirname, '/public')));
@@ -480,6 +482,32 @@ app.get('/PDF', function (req, res) {
     });
 })
 
+app.get('/testPDF', function(req, res){
+
+    var localPath = '/public/pdf/test.pdf';
+
+    let document = {
+        template: pdfTemplate.pdfTemplate,
+        context: {
+            TTitle: 'Beyoncé vs Riri'
+        },
+        path: "." + localPath
+    }
+
+    pdf.create(document)
+        .then(result => {
+            console.log(result);
+            var file = __dirname + localPath;
+            res.download(file);
+            setTimeout(function(){
+                fs.unlink(file);
+                }, 3000);
+        })
+        .catch(error => {
+            console.error(error)
+        })
+});
+
 
 //Get correcting
 app.get('/correcting', function(req, res) {
@@ -702,4 +730,27 @@ function delayRedirect(res, delay){
     setTimeout(function(){
         res.sendStatus(200);
     }, delay);
+}
+
+function getAnsweredTest(data, testId, userId){
+    var test = {};
+    sql.connection.query('SELECT * FROM PDFtest WHERE TestId = ' + mysql.escape(testId) + ' AND UserId = ' + mysql.escape(userId), function(err, res){
+        test = res[0];
+        var question = {};
+        var questions = [];
+        sql.connection.query('SELECT * FROM Questions WHERE QTestId = ' + mysql.escape(testId), function(error, result){
+            var k = 0;
+            for(var i = 0; i < result.length; i++){
+                question = dcopy(result[k]);
+                sql.connection.query('SELECT * FROM AnsweredQuestion WHERE AQuestionId = ' + question[k].QuestionId + ' AND AQAnsweredTestId = ' + test.AnsweredTestId, function(err2, res2){
+                    question.answeredQuestion = res2[0];
+                });
+                /*sql.connection.query('SELECT * FROM QuestionComment WHERE ')*/
+                sql.connection.query('SELECT * FROM Answers WHERE AQuestionId = ' + mysql.escape(result[k].QuestionId), function(error2, result2){
+                    question[k].answers = dcopy(result2);
+                    sql.connection.query('SELECT * FROM UserAnswers WHERE UAQuestionId = ' + mysql.escape())
+                })
+            }
+        })
+    })
 }
