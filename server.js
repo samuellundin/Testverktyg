@@ -400,7 +400,7 @@ app.get("/register", function(req, res) {
 //Post register
 app.post("/register", function(req, res) {
     var encrypted = encryptor.encrypt(req.body.password);
-    sql.addUser(req.body.fName, req.body.lName, req.body.mail, encrypted, req.body.role);
+    sql.addUser(req.body.fName[0].toUpperCase() + req.body.fName.slice(1), req.body.lName[0].toUpperCase() + req.body.lName.slice(1), req.body.mail, encrypted, req.body.role);
     res.redirect("/");
 });
 
