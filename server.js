@@ -232,7 +232,8 @@ app.post('/share', function (req, res) {
         layout: false,
         to: req.body.mail, // REQUIRED. This can be a comma delimited string just like a normal email to field.
         subject: 'Nytt test att göra!', // REQUIRED.
-        otherProperty: 'Other Property' // All additional properties are also passed to the template as local variables.
+        testName: req.body.test,
+        testDate: req.body.endDate.slice(0, -3) // All additional properties are also passed to the template as local variables.
     }, function (err) {
         if (err) {
             // handle error
@@ -647,7 +648,7 @@ function updateTestScore(testId, takenTestId, points, showResult){
 
 //Updates session with tests from database
 function updateSessionTests(req) {
-    sql.connection.query("SELECT TTitle,TestId FROM Test", function(error, result) {
+    sql.connection.query("SELECT TTitle,TestId,TEndTestDate FROM Test", function(error, result) {
         req.session.tests = dcopy(result);
     });
 }
