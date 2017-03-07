@@ -86,9 +86,9 @@ app.get('/login', function(req, res, next){
 app.post('/login', function(req, res){
     sql.connection.query("SELECT * FROM User WHERE Mail = '" + req.body.email +"'", function(err, result){
         if(err || result[0] == null){
-            req.session.err = 'No such mail registered';
+            req.session.err = 'Fel epost eller lösenord';
+            delayRedirect(res, 200);
             return;
-
         }
         if(encryptor.decrypt(result[0].Password) == req.body.password){
             req.session.fName = result[0].FirstName;
@@ -98,7 +98,7 @@ app.post('/login', function(req, res){
             setupRole(req);
             delayRedirect(res, 200);
         } else {
-            req.session.err = 'Wrong password';
+            req.session.err = 'Fel epost eller lösenord';
             delayRedirect(res, 200);
         }
     });
