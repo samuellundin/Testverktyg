@@ -121,7 +121,10 @@ CREATE TABLE TestAccess(
        CONSTRAINT TATestIdFK FOREIGN KEY (TATestId) REFERENCES Test(TestId),
        CONSTRAINT TAUserIdFK FOREIGN KEY (TAUserId) REFERENCES User(UserId));
 
-
+CREATE VIEW PDFTest AS
+(SELECT t.TestId, u.UserId, at.AnsweredTestId, t.TTitle, u.FirstName, u.LastName, at.ATTimeSec, t.TMaxPoints, at.ATPoints, at.ATDate
+FROM Test AS t INNER JOIN AnsweredTest AS at ON at.ATestId = t.TestId
+INNER JOIN User AS u ON u.UserId = at.ATUserId);
 
 CREATE VIEW ElevStatistik AS
 (SELECT u.UserId, u.FirstName, t.TTitle AS Titel, t.ATDate AS Inlämnad, t.ATGrade AS Betyg
