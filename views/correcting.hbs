@@ -82,6 +82,8 @@
                 </div>
             `);
             $('#questionBox').empty();
+            
+            // Appends each question with answers
             {{#testdata}}
                 if(selectedTestId === {{testId}}){
                     if('{{this.questionText}}' != question){
