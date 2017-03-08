@@ -199,7 +199,7 @@ $(document).on('click', '.btn-edit', function() {
                             </div>
                             <div class="row form-group">
                                 <div class="col-lg-6 form-group">
-                                    <select class="form-control" id="typeSelectEdit">
+                                    <select class="form-control" name="popSelect" id="typeSelectEdit" data-toggle="popover" data-placement="left" data-content="Content" data-html="true">
                                         <option hidden>Välj Typ</option>
                                         <option value="fler" id="qTypeMulti">Flervalsfråga</option>
                                         <option value="alternativ" id="qTypeAlt">Alternativfråga</option>
@@ -334,7 +334,7 @@ function resetQuestionBox(){
 
                 <div class="row form-group">
                     <div class="col-lg-6 form-group">
-                        <select class="form-control" id="typeSelect" data-toggle="popover" data-placement="left" data-content="Content" data-html="true">
+                        <select class="form-control" name="popSelect" id="typeSelect" data-toggle="popover" data-placement="left" data-content="Content" data-html="true">
                             <option hidden>Välj Typ</option>
                             <option id="qTypeMulti">Flervalsfråga</option>
                             <option id="qTypeAlt">Alternativfråga</option>
@@ -386,10 +386,11 @@ function resetQuestionBox(){
                 </div>
                 </div>
                 </div>`);
-    $("#typeSelect").popover({ trigger: "hover" });
-    $("#typeSelect").attr("data-content", `<b>Alternativfråga:</b> Studenten kan endast kryssa i ett svar.<br>
+
+    $("[name='popSelect']").popover({ trigger: "hover" });
+    $("[name='popSelect']").attr("data-content", `<b>Alternativfråga:</b> Studenten kan endast kryssa i ett svar.<br>
         <b>Flervalsfråga:</b> Studenten kan kryssa i flera svar.<br>
-        <b>Rangordningsfråga:</b> Studenten sorterar svaren uppifrån och ned.<br>
+        <b>Rangordningsfråga:</b> Studenten sorterar svaren uppifrån och ned.<br>OBS! Du kan ändra rangordningen efter att du sparat frågan.<br>
         <b>Öppen fråga:</b> Studenten skriver ett eget svar.`);
 }
 
