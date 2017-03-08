@@ -18,7 +18,8 @@
                     <label class="control-label">Namn på test:</label>
                     <div id = "controlTestName" class=""> </div>
                     <div id = "errorTestName" class="">
-                        <input type="text" class="form-control" placeholder="Testnamn" id="testName"></div>
+                        <input type="text" class="form-control" placeholder="Testnamn" id="testName">
+                    </div>
 
                     <!-- Time Limit -->
                     <label class="control-label">Tidsbegränsning:</label>
@@ -31,7 +32,7 @@
                         <input type="text" class="form-control" placeholder="Minuter" id="time">
                     </div></div>
 
-                    <!-- Datepicker -->
+                    <!-- Date- and timepicker Start -->
                     <div class="row">
                         <div class="col-lg-6">
                             <label class="control-label" for="date">Startdatum:</label>
@@ -55,7 +56,7 @@
                         </div>
                     </div>
 
-                    <!-- Datepicker -->
+                    <!-- Date- and timepicker End -->
                     <div class="row">
                         <div class="col-lg-6">
                             <label class="control-label" for="date">Slutdatum:</label>
@@ -79,7 +80,7 @@
                         </div>
                     </div>
 
-                    <!-- Checkbox -->
+                    <!-- Checkboxes Selfcorrecting -->
                     <div class="checkbox">
                         <label><input type="checkbox" value="" id="selfCorrecting">Självrättande</label>
                     </div>
@@ -93,14 +94,16 @@
             </div>
         </div>
 
-        <!-- Modal -->
+        <!-- Create question Modal -->
         <div id="questionModal" class="modal fade" role="dialog">
 
         </div>
+        <!-- Edit question Modal -->
         <div id="editModal" class="modal fade" role="dialog">
 
         </div>
 
+        <!-- Container for added questions -->
         <div id="questionBox">
 
         </div>
