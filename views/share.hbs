@@ -56,10 +56,12 @@
 </div>
 <script>
     var selectedTestEndDate;
+    var currentTest;
 
     $( ".registerButton").on( "click", function(event) {
         {{#tests}}
             if('{{this.TTitle}}' == $('#testName').val()){
+                currentTest = {{this.TestId}};
                 selectedTestEndDate = '{{this.TEndTestDate}}';
             }
         {{/tests}}
@@ -85,7 +87,8 @@
                     'namn': names,
                     'mail': emails,
                     'test': $('#testName').val(),
-                    'endDate': selectedTestEndDate
+                    'endDate': selectedTestEndDate,
+                    'testId': currentTest
                 },
                 success: function(data){
                     console.log('success!');
@@ -107,7 +110,8 @@
                     'namn': $('#shareStudentSelect').val(),
                     'mail': email,
                     'test': $('#testName').val(),
-                    'endDate': selectedTestEndDate
+                    'endDate': selectedTestEndDate,
+                    'testId': currentTest
                 },
                 success: function(data){
                     console.log('success!');
