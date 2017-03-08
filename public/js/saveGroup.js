@@ -6,11 +6,9 @@
 $(function(){
     $("#createGroup").click(function (event) {
         event.preventDefault();
-
+        //Control that the user write input
         var name = $('#testName').val();
-        console.log(name);
         if(name == '') {
-
             document.getElementById('missingTitle').className = 'alert alert-danger';
             document.getElementById('missingTitle').textContent = 'Ange namn på gruppen';
             document.getElementById('inputError').className = 'form-group  has-error' ;

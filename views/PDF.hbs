@@ -30,6 +30,7 @@
 </div>
 
     <script>
+        //Display the students who has written the test
     $(function() {
         var selectedTestId;
         $('#testSelector').on('change', function() {
@@ -50,7 +51,7 @@
                 {{/users}}
             }
         });
-
+        //Function creates PDF
         $('#createPDF').on('click', function(){
            $.ajax({
                url: '/createpdf',

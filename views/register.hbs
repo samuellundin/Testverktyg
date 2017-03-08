@@ -48,10 +48,9 @@
 
  <!-- Script controls that the user enters all the values when registering new user. -->
 <script>
+    //Function controls that the user enter value
     $("#registerButton").click(function (event) {
         var mail = $('#email').val();
-
-
 
         if ($('#firstname').val() == '') {
             event.preventDefault();
@@ -81,6 +80,7 @@
         }
 
     });
+    //Function controls that user enter a email
     function validateEmail(mail) {
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(mail);
