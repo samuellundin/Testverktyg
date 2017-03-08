@@ -55,7 +55,7 @@ exports.pdfTemplate = `
                     <h3 class="panel-title">Lärarens kommentar</h3>
                 </div>
                 <div class="panel-body">
-                    {{test.testComment.TestComment}}   
+                    {{test.testComment.TestComment}}
                 </div>
             </div>
         {{/if}}

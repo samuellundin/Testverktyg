@@ -2,10 +2,14 @@
  * Created by Sofia on 2017-02-22.
  */
 
+//The object exposed to other files that import this file
 var exports = module.exports = {};
-//Connection to database
+
+//Require mysql module and deep copy
 var mysql = require('mysql');
 var dcopy = require('deepcopy');
+
+//Connection to database
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'dev',
@@ -15,7 +19,9 @@ var connection = mysql.createConnection({
 })
 connection.connect();
 
+//Expose the connection to be used from outside this file
 exports.connection = connection;
+
 //Function add user to database
 exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
 
@@ -27,6 +33,7 @@ exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
         password:upassword,
         role: urole
     };
+
     //Save user in database
    var query = connection.query('INSERT INTO User set ?', newUser, function(err,resilt){
        if(err){
@@ -37,6 +44,7 @@ exports.addUser = function (ufirstName, ulastName, umail, upassword, urole) {
        })
 };
 
+//Adds all testdata into the database
 exports.addTest = function(testData, questions, answers){
     connection.query("INSERT INTO Test (TUserId, TTitle, TStartTestDate, TEndTestDate, TTimeMin, TMaxPoints, TSelfCorrecting, TDisplayResult) VALUES ("
     + mysql.escape(testData.userId) + ", "
@@ -49,9 +57,11 @@ exports.addTest = function(testData, questions, answers){
     + mysql.escape(testData.showResult) + ")", function(err, result){
         if(err) throw err;
         testId = result.insertId;
+        //Call add question for all questions
         for(var i = 0; i < questions.length; i++){
             exports.addQuestion(questions[i], testId);
         }
+        //Add all answers
         setTimeout(function(){
             for(var i = 0; i < answers.length; i++){
                 exports.addAnswer(answers[i], testId);
@@ -60,6 +70,7 @@ exports.addTest = function(testData, questions, answers){
     });
 };
 
+//Adds a question into the database
 exports.addQuestion = function(questionData, testIdIn){
     var testId = 0;
     if(testIdIn){
@@ -72,19 +83,7 @@ exports.addQuestion = function(questionData, testIdIn){
     }
 };
 
-function addQ(questionData, testId){
-    console.log('Lägger till en fråga');
-    connection.query("INSERT INTO Questions (QTestId, Question, QType, QPoints, QOrder) VALUES ("
-        + mysql.escape(testId) + ", "
-        + mysql.escape(questionData.title) + ", "
-        + mysql.escape(questionData.type) + ", "
-        + mysql.escape(questionData.score) + ", "
-        + mysql.escape(questionData.qOrder) + ")", function(err, result){
-        if(err) throw err;
-        return true;
-    });
-}
-
+//Add an answer
 exports.addAnswer = function(answerData, testId){
     var questionId = 0;
     connection.query("SELECT QuestionId FROM Questions WHERE Question = " + mysql.escape(answerData.qTitle) + " AND QTestId = " + testId, function(err, result){
@@ -93,6 +92,7 @@ exports.addAnswer = function(answerData, testId){
     });
 };
 
+//Add answer data
 function addA(answerData, questionId){
     connection.query("INSERT INTO Answers (AQuestionId, AText, APoints, AOrder) VALUES ("
         + mysql.escape(questionId) + ", "
@@ -107,6 +107,7 @@ function addA(answerData, questionId){
     });
 }
 
+//Adds question data (this function is split into two because of asynchronization)
 function addQ(questionData, testId){
     var c = connection.query("INSERT INTO Questions (QTestId, Question, QType, QPoints, QOrder) VALUES ("
         + mysql.escape(testId) + ", "
@@ -127,6 +128,7 @@ function addQ(questionData, testId){
     });
 }
 
+//Adds a taken test into the database
 exports.addUserAnsweredTest = function(data){
     connection.query("INSERT INTO AnsweredTest (ATestId, ATDate, ATCorrected, ATPoints, ATGrade, ATTimeSec, ATUserId) VALUES ("
         + mysql.escape(data.ATestId) + ", "
@@ -144,6 +146,7 @@ exports.addUserAnsweredTest = function(data){
     });
 };
 
+//Adds a user answered question into the database
 exports.addUserQuestions = function(data){
     connection.query("SELECT AnsweredTestId FROM AnsweredTest WHERE ATestId =" + mysql.escape(data.TestId) + ' AND ATUserId = ' + mysql.escape(data.UserId), function(error, result){
         var TestId = dcopy(result[0].AnsweredTestId);
@@ -159,6 +162,7 @@ exports.addUserQuestions = function(data){
     return true;
 };
 
+//Adds a user answer into the database
 exports.addUserAnswers = function(data, next){
     connection.query("SELECT AnsweredTestId FROM AnsweredTest WHERE ATestId =" + mysql.escape(data.TestId) + ' AND ATUserId = ' + mysql.escape(data.UserId), function(error, result){
         var testId = dcopy(result[0].AnsweredTestId);
@@ -173,6 +177,7 @@ exports.addUserAnswers = function(data, next){
     });
 };
 
+//Adds a user answer into the database
 function userAnswer(data, AQId, k, lastCall, next, testId, takenTestId){
                 connection.query('INSERT INTO UserAnswer (UAQuestionId, UAAnswersId, UAOrder, UAText) VALUES ('
                     + mysql.escape(AQId) + ", "
@@ -188,6 +193,7 @@ function userAnswer(data, AQId, k, lastCall, next, testId, takenTestId){
 
 }
 
+//Retrieves all user information from the database
 exports.getAllUsers = function(){
     var resultat = "";
     connection.query('SELECT * FROM User', function(err, result){
@@ -238,6 +244,7 @@ exports.updateTest = function(data, questions, answers){
     })
 }
 
+//Add a question comment
 exports.addComments = function(QComments){
     for(var i = 0; i < QComments.length; i++){
         connection.query('INSERT INTO QuestionComment (QuestionComment, QCUserId, QCQuestionId) VALUES ('
@@ -249,6 +256,7 @@ exports.addComments = function(QComments){
     }
 }
 
+//Add a test comment
 exports.addTestComment = function(TComment){
     console.log(TComment);
     connection.query('INSERT INTO TestComment (TestComment, TCUserId, TCATestId) VALUES ('

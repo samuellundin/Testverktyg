@@ -169,19 +169,30 @@ app.post("/_studentIndex", function(req, res) {
 app.get("/results", function(req, res) {
     sql.connection.query("SELECT Results.*, TestComment.TestComment FROM Results LEFT OUTER JOIN TestComment ON Results.AnsweredTestId = TestComment.TCATestId "
         + ' WHERE ATCorrected = 1 AND ATUserId = ' + req.session.id + ' AND ATShowResult = 1', function(error, result) {
+        console.log(result);
         req.session.tests = dcopy(result);
         res.render("results", req.session);
     });
 });
 
+//Lets a student see his test and all the correct answers
+app.get('/testResult=:testId', function(req, res){
+    var data = {};
+    getAnsweredTest(data, req.params.testId, req.session.id);
+    req.session.testResult = data;
+    setTimeout(function(){
+        res.render('correctedTest', req.session);
+    }, 500);
+
+})
+
 //Get editMenu
 //Choose the test that you want to edit
 app.get("/editMenu", function(req, res) {
-    updateSessionTests(req);
-
-    setTimeout(function(){
-        res.render("editMenu", req.session);
-    }, 200);
+    sql.connection.query('SELECT * FROM Test WHERE TUserId = ' + mysql.escape(req.session.id), function(error, result){
+        req.session.tests = result;
+        res.render('editMenu', req.session);
+    })
 });
 
 //Gets all information for the test with id :testId and renders the edit-page with that information.
@@ -255,6 +266,13 @@ app.get("/share", function(req, res) {
 //Post share
 //Sends a mail to everybody you shared the test with
 app.post('/share', function (req, res) {
+
+    for(var i = 0; i < req.body.id.length; i++) {
+        sql.connection.query('INSERT INTO TestAccess (TAUserId, TATestId) VALUES (' +
+            mysql.escape(req.body.id[i]) + ',' + mysql.escape(req.body.testId) + ')', function(error){
+            if(error) throw error;
+        });
+    }
 
     app.mailer.send('email', {
         layout: false,
@@ -362,7 +380,11 @@ app.post("/statistics", function(req, res) {
 //Get testMenu
 //The menu where you choose what test you want to do
 app.get("/testMenu", function(req, res) {
-    sql.connection.query("SELECT * FROM Test WHERE Test.TestId NOT IN (SELECT AnsweredTest.ATestId FROM AnsweredTest WHERE AnsweredTest.ATUserId = " + req.session.id + ")", function(error, result) {
+    sql.connection.query("SELECT * FROM Test " +
+    "INNER JOIN TestAccess ON Test.TestId = TestAccess.TATestID " +
+    "WHERE (TestAccess.TAUserId = " + req.session.id + ")" +
+    "AND (Test.TestId NOT IN (SELECT AnsweredTest.ATestId FROM AnsweredTest " +
+    "WHERE AnsweredTest.ATUserId = " + req.session.id + "))", function(error, result) {
         var tests = [];
         //Loop through all tests not answered by you, and check if this date is within the start and end dates for the test
         //if it is then push that testinfo on to the array sent to the client
@@ -439,11 +461,47 @@ app.get("/register", function(req, res) {
     res.render("register", req.session);
 });
 
+//Get reg
+app.get('/reg', function(req, res) {
+    res.render('reg', req.session);
+});
+
+//Post reg
+app.post('/reg', function(req, res){
+    sql.connection.query('INSERT INTO Registration (REmail, RRole) VALUES (' + mysql.escape(req.body.mail) + ", " + mysql.escape(req.body.role) + ")", function(error, result){
+        if(error) throw error;
+        app.mailer.send('emailInvitation', {
+            layout: false,
+            to: req.body.mail, // REQUIRED. This can be a comma delimited string just like a normal email to field.
+            subject: 'Du har blivit inbjuden till Newtons Testverktyg', // REQUIRED.
+            role: req.body.role,
+        }, function (err) {
+            if (err) {
+                // handle error
+                console.log(err);
+                res.send('There was an error sending the email');
+                return;
+            }
+        });
+        res.redirect('/reg');
+    });
+})
+
 //Post register
 //Registers a person to the database
 app.post("/register", function(req, res) {
     var encrypted = encryptor.encrypt(req.body.password);
-    sql.addUser(req.body.fName[0].toUpperCase() + req.body.fName.slice(1), req.body.lName[0].toUpperCase() + req.body.lName.slice(1), req.body.mail.toLowerCase(), encrypted, req.body.role);
+    if(!req.session.admin){
+        sql.connection.query('SELECT * FROM Registration WHERE REmail = ' + mysql.escape(req.body.mail), function(error, result){
+            if(result.length != 0){
+                sql.addUser(req.body.fName[0].toUpperCase() + req.body.fName.slice(1), req.body.lName[0].toUpperCase() + req.body.lName.slice(1), req.body.mail.toLowerCase(), encrypted, result[0].RRole);
+            } else {
+                req.session.err = 'Sorry, you have not been invited to register for this website';
+            }
+        })
+    } else {
+        sql.addUser(req.body.fName[0].toUpperCase() + req.body.fName.slice(1), req.body.lName[0].toUpperCase() + req.body.lName.slice(1), req.body.mail.toLowerCase(), encrypted, req.body.role);
+    }
     res.redirect("/");
 });
 
@@ -553,7 +611,7 @@ app.get('/downloadPDF', function(req, res){
 app.get('/correcting', function(req, res) {
 
     // Get testdata for Combobox
-    sql.connection.query('SELECT * FROM Test', function(err, result) {
+    sql.connection.query('SELECT * FROM Test WHERE TUserId = ' + req.session.id, function(err, result) {
         var test;
         var tests = [];
 
@@ -691,11 +749,13 @@ function autoCorrect(testId, takenTestId){
                         break;
                     case 'Rangordningsfråga':
                         var ri = k;
-                        sql.connection.query('SELECT UAOrder, AOrder FROM QuestionAnswers WHERE AQuestionId = ' + result[ri].QuestionId, function(err2, res2){
+                        sql.connection.query('SELECT UAOrder, AOrder FROM QuestionAnswers WHERE AQuestionId = ' + result[ri].QuestionId + ' AND AnsweredTestId = ' + takenTestId, function(err2, res2){
                             if(err2) throw err2;
                             var correct = true;
+                            console.log(res2);
                             for(var ind = 0; ind < res2.length; ind++){
                                 if(res2[ind].AOrder != res2[ind].UAOrder){
+                                    console.log(res2[ind].AOrder + " " + res2[ind].UAOrder);
                                     correct = false;
                                     break;
                                 }
@@ -809,7 +869,7 @@ function getAnsweredTest(data, testId, userId){
         })
     })
 
-    //Adds all things associated with a specific question for a specifik test
+    //Adds all things associated with a specific question for a specific test
     function addStuff(result, k, question, questions, test, data){
         question = dcopy(result[k]);
         //Get all answeredquestions for this question

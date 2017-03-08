@@ -148,7 +148,7 @@
         }
         min = time;
         countDown(); //Call function countDown to show starttime before count down.
-        setInterval(countDown, 1000);
+        var myVar = setInterval(countDown, 1000);
     }
 
     //Function countDown display time in HTML
@@ -162,6 +162,7 @@
 
         if (sec < 1 && min < 1) {
             clearInterval(myVar);
+            turnIn();
         }
         if (sec < 1) {
             min--;

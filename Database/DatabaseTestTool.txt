@@ -104,7 +104,7 @@ QuestionComment VARCHAR (60),
 QCUserId INT,
 QCQuestionId INT,
 CONSTRAINT QCUserIdFK FOREIGN KEY (QCUserId) REFERENCES User(UserId),
-CONSTRAINT QCQuestionIdFK FOREIGN KEY (QCQuestionId) REFERENCES Questions(QuestionId));
+CONSTRAINT QCQuestionIdFK FOREIGN KEY (QCQuestionId) REFERENCES AnsweredQuestion(AnsweredQuestionId));
 
 CREATE TABLE pictureURL(
 PictureId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -115,9 +115,15 @@ CONSTRAINT PQuestionIdFK FOREIGN KEY (PQuestionId) REFERENCES Questions(Question
 CREATE TABLE TestAccess(
        TestAccessId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
        TAUserId INT,
-      TATestId INT,
+       TATestId INT,
        CONSTRAINT TATestIdFK FOREIGN KEY (TATestId) REFERENCES Test(TestId),
        CONSTRAINT TAUserIdFK FOREIGN KEY (TAUserId) REFERENCES User(UserId));
+
+CREATE TABLE Registration(
+    RegistrationId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    REmail VARCHAR(100),
+    RRole VARCHAR(30)
+    );
 
 CREATE VIEW PDFTest AS
 (SELECT t.TestId, u.UserId, at.AnsweredTestId, t.TTitle, u.FirstName, u.LastName, at.ATTimeSec, t.TMaxPoints, at.ATGrade, at.ATPoints, at.ATDate
