@@ -334,7 +334,7 @@ function resetQuestionBox(){
 
                 <div class="row form-group">
                     <div class="col-lg-6 form-group">
-                        <select class="form-control" id="typeSelect" data-toggle="popover" data-placement="left" data-content="Content">
+                        <select class="form-control" id="typeSelect" data-toggle="popover" data-placement="left" data-content="Content" data-html="true">
                             <option hidden>Välj Typ</option>
                             <option id="qTypeMulti">Flervalsfråga</option>
                             <option id="qTypeAlt">Alternativfråga</option>
@@ -387,6 +387,10 @@ function resetQuestionBox(){
                 </div>
                 </div>`);
     $("#typeSelect").popover({ trigger: "hover" });
+    $("#typeSelect").attr("data-content", `<b>Alternativfråga:</b> Studenten kan endast kryssa i ett svar.<br>
+        <b>Flervalsfråga:</b> Studenten kan kryssa i flera svar.<br>
+        <b>Rangordningsfråga:</b> Studenten sorterar svaren uppifrån och ned.<br>
+        <b>Öppen fråga:</b> Studenten skriver ett eget svar.`);
 }
 
 

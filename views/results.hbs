@@ -12,13 +12,6 @@
                     <option class="{{this.TestId}}">{{this.TTitle}}</option>
                 {{/each}}
             </select>
-
-            <select id="pop" class="form-control" title="Frågetyper" data-toggle="popover" data-trigger="hover" data-html="true" data-content="">
-                <option hidden>Välj prov</option>
-                <option class="">Hej</option>
-                <option class="">Hej</option>
-            </select>
-
             <br>
         </form>
 
@@ -29,13 +22,6 @@
 </div>
 
 <script>
-    $(document).ready(function(){
-        $('[data-toggle="popover"]').popover();
-        $("#pop").attr("data-content", `<b>Alternativfråga:</b> Studenten kan endast kryssa i ett svar.<br>
-        <b>Flervalsfråga:</b> Studenten kan kryssa i flera svar.<br>
-        <b>Rangordningsfråga:</b> Studenten sorterar svaren uppifrån och ned.<br>
-        <b>Öppen fråga:</b> Studenten skriver ett eget svar.`);
-    });
     //Displays results of selected test when clicking button
     $(function() {
         $("select#testName").on("change", function() {
