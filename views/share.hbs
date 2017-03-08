@@ -45,7 +45,13 @@
             <select name="share" id="shareStudentSelect" class="form-control"></select>
             <br>
             <button id="shareStudent" class="btn btn-info btn-block registerButton">Dela till elev</button>
-          <div id = "shareS" class=""> </div>
+    </div>
+</div>
+
+<!-- Info -->
+<div class="container">
+    <div class="col-md-4 col-md-offset-4">
+        <div id="shareS" class=""> </div>
     </div>
 </div>
 <script>
@@ -139,9 +145,14 @@
                 <option>{{FirstName}}</option>
             {{/students}}
         `)
-        $( "#shareStudent").on( "click", function(event) {
-        document.getElementById('shareS').textContent = 'Testet har delats';
-        document.getElementById('shareS').className = 'alert alert-success';});
-
+        $( ".registerButton").on( "click", function(event) {
+            document.getElementById('shareS').textContent = 'Testet har delats';
+            document.getElementById('shareS').className = 'alert alert-success';
+        });
+        // Reset info box
+        $('select').on('change', function() {
+            $( "#shareS").empty();
+            document.getElementById('shareS').className = '';
+        });
     });
 </script>
