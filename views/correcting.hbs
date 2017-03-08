@@ -4,6 +4,7 @@
             <div class="col-md-4">
                 <h1 class="title">Rätta test</h1>
             </div>
+            <!-- Selector for tests -->
             <div class="col-md-4">
                 <select class="form-control" id="testSelector" style="margin-top: 24px; margin-bottom: 0">
                     <option hidden>Välj test</option>
@@ -12,37 +13,44 @@
                     {{/each}}
                 </select>
             </div>
+            <!-- Selector for students -->
             <div class="col-md-4">
                 <select class="form-control" id="userSelector" style="margin-top: 24px; margin-bottom: 0">
                     <option hidden>Välj elev</option>
                 </select>
             </div>
         </div>
-
-
         <hr/>
+
+        <!-- Container for questions -->
         <div id="questionBox">
-
         </div>
 
+        <!-- Container for testcomment -->
         <div id="commentBox">
-
         </div>
+
+        <!-- Correct Button -->
         <button type="submit" id="correctBtn" class="btn btn-primary">Rätta test</button>
     </div>
 </div>
 
 <script>
     $(function() {
+        // Event for commentbutton to show/hide comment textarea
         $('body').on('click', '.commentButton', function() {
             $(this).parent().find('textarea').toggle();
         });
+        // Event for panel-heading to show/hide panel-body
         $(document).on('click', '.panel-heading', function(e) {
             if(!$(event.target).is('input')) {
                 $(this).next('.panel-body').slideToggle();
             }
         });
+
+
         var selectedTestId;
+        // Event for test selector to show students that made the selected test
         $('#testSelector').on('change', function() {
             var selected = $(this).find(":selected").text();
             $('#userSelector').html('<option hidden>Välj elev</option>')
@@ -59,6 +67,7 @@
                 {{/users}}
             }
         });
+        // Event for userselector to show the answers for the selected student
         $('#userSelector').on('change', function () {
             var selectedTest = $('#testSelector').find(":selected").text();
             var selectedUser = $('#userSelector').find(":selected").text();
@@ -130,6 +139,7 @@
         });
     });
 
+    // Event for correctBtn to post the corrected test
     $('#correctBtn').on('click', function(){
         var testData = {};
         collectInfo(testData);
@@ -146,6 +156,7 @@
         });
     });
 
+    // Function to collect data for the test
     function collectInfo(data){
         data.TestId = $('#testSelector').find(":selected").attr('class');
         data.TakenTestId = $('#userSelector').find(":selected").attr('class');
@@ -157,6 +168,7 @@
         });
     }
 
+    // Function the create comments for the questions
     function createComments(data){
         data.comments = [];
         $('.qcomment').each(function(){
