@@ -341,9 +341,11 @@ app.get("/testMenu", function(req, res) {
             var now = new Date();
             var open = new Date(result[i].TStartTestDate);
             var close = new Date(result[i].TEndTestDate);
-            console.log(now, open, close);
+            if( open < now < close ){
+                tests.push(result[i]);
+            }
         }
-        req.session.tests = dcopy(result);
+        req.session.tests = dcopy(tests);
         res.render("testMenu", req.session);
     });
 });
