@@ -150,7 +150,7 @@ app.get('/api/users', function(req, res){
 //Get results
 app.get("/results", function(req, res) {
     sql.connection.query("SELECT Results.*, TestComment.TestComment FROM Results LEFT OUTER JOIN TestComment ON Results.AnsweredTestId = TestComment.TCATestId "
-        + ' WHERE ATCorrected = 1 AND ATUserId = ' + req.session.id, function(error, result) {
+        + ' WHERE ATCorrected = 1 AND ATUserId = ' + req.session.id + ' AND ATShowResult = 1', function(error, result) {
         req.session.tests = dcopy(result);
         res.render("results", req.session);
     });
@@ -336,6 +336,13 @@ app.post("/statistics", function(req, res) {
 //Get testMenu
 app.get("/testMenu", function(req, res) {
     sql.connection.query("SELECT * FROM Test WHERE Test.TestId NOT IN (SELECT AnsweredTest.ATestId FROM AnsweredTest WHERE AnsweredTest.ATUserId = " + req.session.id + ")", function(error, result) {
+        var tests = [];
+        for(var i = 0; i < result.length; i++){
+            var now = new Date();
+            var open = new Date(result[i].TStartTestDate);
+            var close = new Date(result[i].TEndTestDate);
+            console.log(now, open, close);
+        }
         req.session.tests = dcopy(result);
         res.render("testMenu", req.session);
     });

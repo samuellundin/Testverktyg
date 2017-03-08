@@ -1,5 +1,3 @@
-
-
 DROP  DATABASE TestTool;
 CREATE DATABASE TestTool;
 USE TestTool;
@@ -151,7 +149,7 @@ INNER JOIN AnsweredTest AS t ON t.AnsweredTestId = aq.AQAnsweredTestId);
 
 CREATE VIEW Results AS
 (SELECT at.ATTimeSec, at.ATGrade, at.ATPoints, t.TMaxPoints, t.TestId,
-at.AnsweredTestId, at.ATUserId, at.ATCorrected, t.TTitle
+at.AnsweredTestId, at.ATUserId, at.ATCorrected, at.ATShowResult, t.TTitle
 FROM AnsweredTest AS at
 INNER JOIN Test AS t
 ON t.TestId = at.ATestId);
