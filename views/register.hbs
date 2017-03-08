@@ -34,11 +34,13 @@
                             <input type="password" name="password" class="form-control" id="password" placeholder="Lösenord"required/></div>
 
                         <!-- Role -->
-                        <select name="role" class="form-control" style="margin: 15px 0">
-                            <option value="admin">Admin</option>
-                            <option value="teacher">Lärare</option>
-                            <option value="student">Elev</option>
-                        </select>
+                        {{#if admin}}
+                            <select name="role" class="form-control" style="margin: 15px 0">
+                                <option value="admin">Admin</option>
+                                <option value="teacher">Lärare</option>
+                                <option value="student">Elev</option>
+                            </select>
+                        {{/if}}
 
                         <!-- Register Button -->
                         <button type="submit" class="btn btn-primary btn-lg btn-block login-button" id="registerButton">Registrera</button>

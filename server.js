@@ -463,7 +463,7 @@ app.post('/reg', function(req, res){
             layout: false,
             to: req.body.mail, // REQUIRED. This can be a comma delimited string just like a normal email to field.
             subject: 'Du har blivit inbjuden till Newtons Testverktyg', // REQUIRED.
-            role: req.body.role
+            role: req.body.role,
         }, function (err) {
             if (err) {
                 // handle error
@@ -480,14 +480,18 @@ app.post('/reg', function(req, res){
 //Registers a person to the database
 app.post("/register", function(req, res) {
     var encrypted = encryptor.encrypt(req.body.password);
-    sql.connection.query('SELECT * FROM Registration WHERE REmail = ' + mysql.escape(req.body.mail), function(error, result){
-        if(result.length != 0){
-            sql.addUser(req.body.fName[0].toUpperCase() + req.body.fName.slice(1), req.body.lName[0].toUpperCase() + req.body.lName.slice(1), req.body.mail.toLowerCase(), encrypted, result[0].RRole);
-        } else {
-            req.session.err = 'Sorry, you have not been invited to register for this website';
-        }
-        res.redirect("/");
-    })
+    if(!req.session.admin){
+        sql.connection.query('SELECT * FROM Registration WHERE REmail = ' + mysql.escape(req.body.mail), function(error, result){
+            if(result.length != 0){
+                sql.addUser(req.body.fName[0].toUpperCase() + req.body.fName.slice(1), req.body.lName[0].toUpperCase() + req.body.lName.slice(1), req.body.mail.toLowerCase(), encrypted, result[0].RRole);
+            } else {
+                req.session.err = 'Sorry, you have not been invited to register for this website';
+            }
+        })
+    } else {
+        sql.addUser(req.body.fName[0].toUpperCase() + req.body.fName.slice(1), req.body.lName[0].toUpperCase() + req.body.lName.slice(1), req.body.mail.toLowerCase(), encrypted, req.body.role);
+    }
+    res.redirect("/");
 });
 
 //Get group
