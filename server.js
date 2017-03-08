@@ -446,12 +446,44 @@ app.get("/register", function(req, res) {
     res.render("register", req.session);
 });
 
+//Get reg
+app.get('/reg', function(req, res) {
+    res.render('reg', req.session);
+});
+
+//Post reg
+app.post('/reg', function(req, res){
+    sql.connection.query('INSERT INTO Registration (REmail, RRole) VALUES (' + mysql.escape(req.body.mail) + ", " + mysql.escape(req.body.role) + ")", function(error, result){
+        if(error) throw error;
+        app.mailer.send('emailInvitation', {
+            layout: false,
+            to: req.body.mail, // REQUIRED. This can be a comma delimited string just like a normal email to field.
+            subject: 'Du har blivit inbjuden till Newtons Testverktyg', // REQUIRED.
+            role: req.body.role
+        }, function (err) {
+            if (err) {
+                // handle error
+                console.log(err);
+                res.send('There was an error sending the email');
+                return;
+            }
+        });
+        res.redirect('/reg');
+    });
+})
+
 //Post register
 //Registers a person to the database
 app.post("/register", function(req, res) {
     var encrypted = encryptor.encrypt(req.body.password);
-    sql.addUser(req.body.fName[0].toUpperCase() + req.body.fName.slice(1), req.body.lName[0].toUpperCase() + req.body.lName.slice(1), req.body.mail.toLowerCase(), encrypted, req.body.role);
-    res.redirect("/");
+    sql.connection.query('SELECT * FROM Registration WHERE REmail = ' + mysql.escape(req.body.mail), function(error, result){
+        if(result.length != 0){
+            sql.addUser(req.body.fName[0].toUpperCase() + req.body.fName.slice(1), req.body.lName[0].toUpperCase() + req.body.lName.slice(1), req.body.mail.toLowerCase(), encrypted, result[0].RRole);
+        } else {
+            req.session.err = 'Sorry, you have not been invited to register for this website';
+        }
+        res.redirect("/");
+    })
 });
 
 //Get group
