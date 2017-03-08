@@ -1,3 +1,4 @@
+<!-- Index page when logged in as student -->
 
 <!-- Jumbotron -->
 <div class="jumbotron">
@@ -9,7 +10,7 @@
         {{/if}}
         <p>Välkommen till testverktyget! Genom menyn ovan kan nå tillgängliga
         test samt se resultat för redan rättade test.</p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Resultat »</a></p>
+        <p><a class="btn btn-primary btn-lg" id="resultsButton" href="#" role="button">Resultat »</a></p>
     </div>
 </div>
 
@@ -22,3 +23,9 @@
         </p>
     </div>
 </footer>
+
+<script>
+    $("#resultsButton").on("click", function(e) {
+    location.replace('/results');
+    });
+</script>

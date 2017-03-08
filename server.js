@@ -159,6 +159,11 @@ app.get('/api/users', function(req, res){
     });
 });
 
+app.post("/_studentIndex", function(req, res) {
+    console.log("hej");
+    res.render("results", req.session);
+});
+
 //Get results
 //Gets results for all tests that are corrected and can be viewed for the logged in person
 app.get("/results", function(req, res) {
