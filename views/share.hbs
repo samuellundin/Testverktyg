@@ -8,23 +8,21 @@
             </div>
         </div>
         <hr>
-                <!-- Test selection -->
-                <form action="" method="get">
-                    <select name="test" id="testName" class="form-control">
-                        {{#each tests}}
-                            <option class="{{this.TestId}}">{{this.TTitle}}</option>
-                        {{/each}}
-                    </select>
-                </form>
 
+        <!-- Test selection -->
+        <select name="test" id="testName" class="form-control">
+            {{#each tests}}
+                <option class="{{this.TestId}}">{{this.TTitle}}</option>
+            {{/each}}
+        </select>
 
-            <!-- Group/student selection -->
-            <select name="share" id="shareSelect" class="form-control">
-                <option value="">Dela till grupp/elev</option>
-                <option value="group" id="group">Dela till grupp</option>
-                <option value="student" id="student">Dela till elev</option>
-            </select>
-        </form>
+        <!-- Group/student selection -->
+        <select name="share" id="shareSelect" class="form-control">
+            <option value="">Dela till grupp/elev</option>
+            <option value="group" id="group">Dela till grupp</option>
+            <option value="student" id="student">Dela till elev</option>
+        </select>
+
     </div>
 </div>
 
@@ -32,9 +30,9 @@
 <div class="container collapse" id="shareGroupContainer">
     <div class="col-md-4 col-md-offset-4">
         <h3 class="page-header">Välj grupp</h3>
-            <select name="share" id="shareGroupSelect" class="form-control"></select>
-            <br>
-            <button type="button" class="btn btn-info btn-block registerButton" >Dela till grupp</button>
+        <select name="share" id="shareGroupSelect" class="form-control"></select>
+        <br>
+        <button type="button" class="btn btn-info btn-block registerButton" >Dela till grupp</button>
     </div>
 </div>
 
@@ -42,10 +40,10 @@
 <div class="container collapse" id="shareStudentContainer">
     <div class="col-md-4 col-md-offset-4">
         <h3 class="page-header">Välj elev</h3>
-            <select name="share" id="shareStudentSelect" class="form-control"></select>
-            <br>
-            <button id="shareStudent" class="btn btn-info btn-block registerButton">Dela till elev</button>
-          <div id = "shareS" class=""> </div>
+        <select name="share" id="shareStudentSelect" class="form-control"></select>
+        <br>
+        <button id="shareStudent" class="btn btn-info btn-block registerButton">Dela till elev</button>
+        <div id = "shareS" class=""> </div>
     </div>
 </div>
 <script>
@@ -72,8 +70,7 @@
                     emails.push('{{this.Mail}}');
                 }
             {{/groupdetails}}
-            console.log(studentIds + names + emails);
-            console.log("SELECTED TEST ÄR: " + selectedTest);
+
             $.ajax({
                 type: 'POST',
                 url: "/share",
@@ -85,9 +82,6 @@
                     'test': $('#testName').val(),
                     'endDate': selectedTestEndDate
                 },
-                success: function(data){
-                    console.log('success!');
-                }
             });
         } else if($('#shareSelect').val() == 'student'){
             {{#students}}
@@ -96,7 +90,7 @@
                     var email = '{{this.Mail}}';
                 }
             {{/students}}
-            console.log('id: '+studentId +', namn: '+$('#shareStudentSelect').val() +', mail: '+email);
+
             $.ajax({
                 type: 'POST',
                 url: "/share",
@@ -108,9 +102,6 @@
                     'test': $('#testName').val(),
                     'endDate': selectedTestEndDate
                 },
-                success: function(data){
-                    console.log('success!');
-                }
             });
         }
     });
