@@ -1,3 +1,5 @@
+<!-- Page showing the test for student -->
+
 <div class="col-md-3 pull-right text-center">
     <h2 id="timer"></h2>
 </div>
@@ -6,91 +8,89 @@
         <div class="">
             <h2>{{test.TTitle}}</h2>
         </div>
-        <div id="content2">
+        <div id="content2"></div>
 
-        </div>
-
-                {{#questions}}
-            <script>
-                    if('{{QType}}' == 'Alternativfråga'){
-                        $('#content2').append(`
-                            <!-- Radio button -->
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <meta class="alternativ">
-                                    <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
-                                </div>
-                                <div class="panel-body">
-                                    {{#answers}}
-                                        <div class="radio">
-                                            <label><input type="radio" name="{{AQuestionId}}" id="{{AnswersId}}">{{AText}}</label>
-                                        </div>
-                                    {{/answers}}
-                                </div>
-                            </div>
-                        `);
-                    }
-
-                    if('{{QType}}' == 'Rangordningsfråga'){
-                        $('#content2').append(`
-                        <!-- Sortera -->
-                        <div class="panel panel-default">
-                            <div class="panel-heading" data-toggle="collapse" data-target="#panel-body">
-                                <meta class="rang">
-                                <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
-                            </div>
-                            <div class="panel-body" id="panel-body">
-                                <ul class="list-group sortable" id="sortable">
-                                    {{#answers}}
-                                        <li class="list-group-item" id="{{AnswersId}}">{{AText}}</li>
-                                    {{/answers}}
-                                </ul>
-                            </div>
+        {{#questions}}
+        <script>
+            //If statements below loads and renders all test questions and answers
+            if('{{QType}}' == 'Alternativfråga'){
+                $('#content2').append(`
+                    <!-- Radio button -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <meta class="alternativ">
+                            <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
                         </div>
-                    `);}
-
-                    if('{{QType}}' == 'Flervalsfråga'){
-                        $('#content2').append(`
-                        <!-- Checkbox -->
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <meta class="flerval">
-                                <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
-                            </div>
-                            <div class="panel-body">
-                                {{#answers}}
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" value="" id="{{AnswersId}}">{{AText}}</label>
-                                    </div>
-                                {{/answers}}
-                            </div>
-                        </div>
-                    `);}
-
-                    if('{{QType}}' == 'Öppen fråga'){
-                        $('#content2').append(`
-                        <!-- Textarea -->
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <meta class="oppna">
-                                <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="form-group">
-                                    <label>Svar:</label>
-                                    {{#answers}}
-                                        <textarea class="form-control" rows="5" id="{{AnswersId}}"></textarea>
-                                    {{/answers}}
+                        <div class="panel-body">
+                            {{#answers}}
+                                <div class="radio">
+                                    <label><input type="radio" name="{{AQuestionId}}" id="{{AnswersId}}">{{AText}}</label>
                                 </div>
-                            </div>
+                            {{/answers}}
                         </div>
-                    `);}
-                 </script>
-                {{/questions}}
+                    </div>
+                `);
+            }
 
-                <button type="button" class='btn btn-primary pull-right' id="turnIn">Lämna In</button>
-            </div>
-        </div>
+            if('{{QType}}' == 'Rangordningsfråga'){
+                $('#content2').append(`
+                <!-- Sortera -->
+                <div class="panel panel-default">
+                    <div class="panel-heading" data-toggle="collapse" data-target="#panel-body">
+                        <meta class="rang">
+                        <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
+                    </div>
+                    <div class="panel-body" id="panel-body">
+                        <ul class="list-group sortable" id="sortable">
+                            {{#answers}}
+                                <li class="list-group-item" id="{{AnswersId}}">{{AText}}</li>
+                            {{/answers}}
+                        </ul>
+                    </div>
+                </div>
+            `);}
+
+            if('{{QType}}' == 'Flervalsfråga'){
+                $('#content2').append(`
+                <!-- Checkbox -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <meta class="flerval">
+                        <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
+                    </div>
+                    <div class="panel-body">
+                        {{#answers}}
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" id="{{AnswersId}}">{{AText}}</label>
+                            </div>
+                        {{/answers}}
+                    </div>
+                </div>
+            `);}
+
+            if('{{QType}}' == 'Öppen fråga'){
+                $('#content2').append(`
+                <!-- Textarea -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <meta class="oppna">
+                        <h3 class="panel-title" id="{{QuestionId}}">{{Question}}<span class="pull-right">Poäng: {{QPoints}}</span></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label>Svar:</label>
+                            {{#answers}}
+                                <textarea class="form-control" rows="5" id="{{AnswersId}}"></textarea>
+                            {{/answers}}
+                        </div>
+                    </div>
+                </div>
+            `);}
+        </script>
+        {{/questions}}
+        <button type="button" class='btn btn-primary pull-right' id="turnIn">Lämna In</button>
+    </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -98,15 +98,12 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="">
-                    <img src="https://www.totalproducenordic.se/everfresh/Global/Bilder%20Frukt/Exotiskt/Ananas%20web.jpg" style="width:100%">
+                    <img src="" style="width:100%">
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
-
 
 <script>
     $(function() {
@@ -124,12 +121,9 @@
 
         $('.thumbnail').on('click', function () {
             var imageModal = $(this).find('img').attr('src');
-            console.log(imageModal);
             $('#imageModal').find('img').attr('src', imageModal);
-
-                console.log('Lämna in');
-
         });
+
         $('.container').on('click', '.panel-heading', function (e) {
             $(this).next('.panel-body').slideToggle();
         });
@@ -138,8 +132,6 @@
             turnIn();
         })
     });
-
-
 
     var sec = 0;
     var min;
@@ -155,7 +147,7 @@
             return;
         }
         min = time;
-        countDown(); //Call function countDown too show starttime before count down.
+        countDown(); //Call function countDown to show starttime before count down.
         setInterval(countDown, 1000);
     }
 
@@ -179,12 +171,12 @@
         elapsedTime++;
     }
 
+    //Saves all test data through post
     function turnIn(){
         var data = {};
         createTakenTest(data);
         createAnsweredQuestions(data);
         createAnswers(data);
-        console.log(data);
         $.ajax({
             url: '/turnin',
             method: 'post',
@@ -195,6 +187,7 @@
         })
     }
 
+    //Saves data for taken test and binds to user so that user can not take same test again
     function createTakenTest(data){
         var takenTest = {};
         takenTest.ATestId = {{test.TestId}};
@@ -207,6 +200,7 @@
         data.takenTest = takenTest;
     }
 
+    //Saves question data
     function createAnsweredQuestions(data){
         var UAQuestions = [];
         $('.panel-default').each(function(i){
@@ -220,6 +214,7 @@
         data.UAQuestions = UAQuestions;
     }
 
+    //Saves answers data
     function createAnswers(data){
         var userAnswers = [];
         var userAnswer;
@@ -265,8 +260,6 @@
                     break;
             }
         })
-
         data.userAnswers = userAnswers;
     }
-
 </script>
