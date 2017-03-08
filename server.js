@@ -1,21 +1,22 @@
 //Import all modules
-const fs = require('fs');
-const path = require('path');
-const express = require('express');
-const exphbs = require('express-handlebars');
-const bodyparser = require('body-parser');
+const fs = require('fs');                                       //File system
+const path = require('path');                                   //Path to find local paths on the server
+const express = require('express');                             //Express
+const exphbs = require('express-handlebars');                   //Handlebars template engine for express
+const bodyparser = require('body-parser');                      //Parse URL bodies
+const mysql = require('mysql');                                 //Use MySQL
+const session = require('client-sessions');                     //Use sessions with cookies
+const sql = require('./public/js/sql.js');                      //Our own library with some SQL code
+const dcopy = require('deepcopy');                              //Deep copy objects properly
+const async = require('async');                                 //Makes async programming easier
+const mailer = require('express-mailer');                       //Send emails
+const pdf = require('handlebars-pdf');                          //Generate PDFs
+const pdfTemplate = require('./public/js/pdf-template.js');     //The template we made for the PDFs
+const key = 'dsfdsfdsfds3432432sdfdsf';                         //The key with which we encrypt passwords
+const encryptor = require('simple-encryptor')(key);             //The encryptor
+
+//Create the express app
 const app = express();
-const mysql = require('mysql');
-const uuid = require('uuid/v1');
-const session = require('client-sessions');
-const sql = require('./public/js/sql.js');
-var key = 'dsfdsfdsfds3432432sdfdsf';
-var encryptor = require('simple-encryptor')(key);
-const dcopy = require('deepcopy');
-const async = require('async');
-const mailer = require('express-mailer');
-const pdf = require('handlebars-pdf');
-const pdfTemplate = require('./public/js/pdf-template.js');
 
 //Configure the app to look for static files (javascript, css) in the /public folder
 app.use(express.static(path.join(__dirname, '/public')));
@@ -44,6 +45,7 @@ app.use(session({
     activeDuration: 15 * 60 * 1000
 }));
 
+//Configure the app to only let you visit these pages if you are not logged in
 app.use(function(req, res, next){
     if(!req.session.id
         && (req.url != '/'
@@ -60,6 +62,7 @@ app.use(function(req, res, next){
 //Configure the app to listen on port 3000
 app.listen(3000);
 
+//Set up the mail module to send data through this connection and with these login details
 mailer.extend(app, {
     from: 'info@testverktyg.com',
     host: 'smtp.gmail.com', // hostname
@@ -73,6 +76,7 @@ mailer.extend(app, {
 });
 
 //APP REQUESTS/END POINTS
+//----------------------------------------------------------------------------------------------------------------------------------
 //Get Index
 app.get('/', function(req, res, next){
         res.render('index', req.session);
@@ -85,6 +89,8 @@ app.get('/login', function(req, res, next){
 });
 
 //Post login
+//This function takes the entered details and tries to fetch the matching data from the database
+//if it is found then the credentials are compared.
 app.post('/login', function(req, res){
     sql.connection.query("SELECT * FROM User WHERE Mail = '" + req.body.email.toLowerCase() +"'", function(err, result){
         if(err || result[0] == null){
@@ -92,6 +98,7 @@ app.post('/login', function(req, res){
             delayRedirect(res, 200);
             return;
         }
+        //If email exists and passwords match, set the session-cookie information
         if(encryptor.decrypt(result[0].Password) == req.body.password){
             req.session.fName = result[0].FirstName;
             req.session.email = result[0].Mail;
@@ -117,11 +124,14 @@ app.get('/create', function(req, res){
 });
 
 //Post create
+//Adds a test, sends the information to a function in the sql.js-file
 app.post('/create', function(req, res){
     sql.addTest(req.body.data, req.body.questions, req.body.answers);
     res.send('Yay');
 });
 
+//Get copyMenu
+//A menu where you get to choose what test to copy from
 app.get('/copyMenu', function(req, res){
     sql.connection.query('SELECT * FROM Test WHERE TUserId = ' + mysql.escape(req.session.id), function(error, result){
         req.session.tests = result;
@@ -129,6 +139,7 @@ app.get('/copyMenu', function(req, res){
     })
 });
 
+//Go to the "create"(edit)-page for a certain test that you copied
 app.get('/copy=:id', function(req, res){
     req.session.copy = true;
     res.redirect('/edit=' + req.params.id);
@@ -141,6 +152,7 @@ app.get('/logout', function(req, res){
 });
 
 //Get API users
+//Shows you all users in your database
 app.get('/api/users', function(req, res){
     sql.connection.query('SELECT * FROM User', function(err, result){
         res.send(result);
@@ -148,6 +160,7 @@ app.get('/api/users', function(req, res){
 });
 
 //Get results
+//Gets results for all tests that are corrected and can be viewed for the logged in person
 app.get("/results", function(req, res) {
     sql.connection.query("SELECT Results.*, TestComment.TestComment FROM Results LEFT OUTER JOIN TestComment ON Results.AnsweredTestId = TestComment.TCATestId "
         + ' WHERE ATCorrected = 1 AND ATUserId = ' + req.session.id + ' AND ATShowResult = 1', function(error, result) {
@@ -157,6 +170,7 @@ app.get("/results", function(req, res) {
 });
 
 //Get editMenu
+//Choose the test that you want to edit
 app.get("/editMenu", function(req, res) {
     updateSessionTests(req);
 
@@ -165,25 +179,28 @@ app.get("/editMenu", function(req, res) {
     }, 200);
 });
 
-//Saves questions for posted TestId in session
+//Gets all information for the test with id :testId and renders the edit-page with that information.
 app.get("/edit=:testId", function(req, res) {
     var test = {};
+    //Select the test-information
     sql.connection.query('SELECT * FROM Test WHERE TestId = ' + req.params.testId, function(err1, res1){
         if(err1) throw err1;
         test = dcopy(res1[0]);
         var questions;
+        //Select all the questions associated with that test
         sql.connection.query('SELECT Questions.*, pictureURL.PURL FROM Questions '
         + 'LEFT OUTER JOIN pictureURL ON pictureURL.PQuestionId = Questions.QuestionId WHERE QTestId = ' + req.params.testId, function(error, result){
             if(error) throw error;
             questions = dcopy(result);
-            console.log(questions);
             var j = 0;
             for(var i = 0; i < questions.length; i++){
+                //For every question, get the associated answers
                 sql.connection.query('SELECT * FROM Answers WHERE AQuestionId = ' + questions[i].QuestionId, function(err2, res2){
                     if(err2) throw err2;
-                    console.log('Editing');
                     questions[j++].answers = res2;
                     if(j == questions.length){
+                        //When the loop has finished finish off by putting the Test-object together with all results
+                        //and putting it in our session-cookie.
                         sql.connection.query('SELECT p.*, q.QTestId FROM pictureURL AS p '
                         + 'INNER JOIN Questions AS q ON p.PQuestionId = q.QuestionId WHERE QTestId = ' + req.params.testId, function(err3, res3){
                             test.questions = questions;
@@ -206,6 +223,7 @@ app.post('/edit', function(req, res){
 });
 
 //Get share
+//Displays the page where you share a test with a student or a group
 app.get("/share", function(req, res) {
     updateSessionTests(req);
     sql.connection.query("SELECT * FROM StudentGroup", function(error, result){
@@ -228,6 +246,9 @@ app.get("/share", function(req, res) {
         res.render("share", req.session);
     }, 200);
 });
+
+//Post share
+//Sends a mail to everybody you shared the test with
 app.post('/share', function (req, res) {
 
     app.mailer.send('email', {
@@ -334,9 +355,12 @@ app.post("/statistics", function(req, res) {
 });
 
 //Get testMenu
+//The menu where you choose what test you want to do
 app.get("/testMenu", function(req, res) {
     sql.connection.query("SELECT * FROM Test WHERE Test.TestId NOT IN (SELECT AnsweredTest.ATestId FROM AnsweredTest WHERE AnsweredTest.ATUserId = " + req.session.id + ")", function(error, result) {
         var tests = [];
+        //Loop through all tests not answered by you, and check if this date is within the start and end dates for the test
+        //if it is then push that testinfo on to the array sent to the client
         for(var i = 0; i < result.length; i++){
             var now = new Date();
             var open = new Date(result[i].TStartTestDate);
@@ -351,6 +375,7 @@ app.get("/testMenu", function(req, res) {
 });
 
 //Get test=:id
+//Select all information from a specific test and send it to the client
 app.get("/test=:testIdLink", function(req, res) {
     async.waterfall([
         function(callback){
@@ -375,10 +400,10 @@ app.get("/test=:testIdLink", function(req, res) {
         callback(null)},
         function(callback){
             setTimeout(function(){
+                //When the test is fully loaded, get the picture URLs and then render the page
                 sql.connection.query('SELECT p.*, q.QTestId FROM pictureURL AS p '
                     + 'INNER JOIN Questions AS q ON p.PQuestionId = q.QuestionId WHERE QTestId = ' + req.params.testIdLink, function(err3, res3){
                     req.session.picURLS = dcopy(res3);
-                    console.log(res3);
                     res.render('test', req.session);
                 });
             }, 600)
@@ -390,6 +415,7 @@ app.get("/test=:testIdLink", function(req, res) {
 });
 
 //Turn in an answered test
+//'Turn in' a test that you've answered. Sends the information to the SQL library to be added to the database.
 app.post('/turnin', function(req, res){
     req.body.UAQuestions.TestId = req.body.takenTest.ATestId;
     req.body.userAnswers.TestId = req.body.takenTest.ATestId;
@@ -409,6 +435,7 @@ app.get("/register", function(req, res) {
 });
 
 //Post register
+//Registers a person to the database
 app.post("/register", function(req, res) {
     var encrypted = encryptor.encrypt(req.body.password);
     sql.addUser(req.body.fName[0].toUpperCase() + req.body.fName.slice(1), req.body.lName[0].toUpperCase() + req.body.lName.slice(1), req.body.mail.toLowerCase(), encrypted, req.body.role);
@@ -448,7 +475,7 @@ app.post('/group', function(req, res){
     res.send('Yay');
 });
 
-
+//Takes you to the page where you select what test and what user to generate a PDF for
 app.get('/createpdf', function(req, res){
     // Get testdata for Combobox
     sql.connection.query('SELECT * FROM Test', function(err, result) {
@@ -470,7 +497,6 @@ app.get('/createpdf', function(req, res){
             user = {userid: result[i].ATestId, username: result[i].FirstName, atId: result[i].UserId}
             users.push(user);
         }
-        console.log(result);
         req.session.users = dcopy(users);
         setTimeout(function(){
             res.render('pdf', req.session);
@@ -478,6 +504,7 @@ app.get('/createpdf', function(req, res){
     });
 })
 
+//Generate the actual PDF
 app.post('/createpdf', function(req, res){
     var data = {};
     getAnsweredTest(data, req.body.testid, req.body.userid);
@@ -490,9 +517,7 @@ app.post('/createpdf', function(req, res){
         }
 
         pdf.create(document)
-            .then(result => {
-                console.log(result);
-            })
+            .then(result => {})
             .catch(error => {
                 console.error(error)
             })
@@ -501,13 +526,14 @@ app.post('/createpdf', function(req, res){
 
 });
 
+//Download the PDF. Couldn't use the download-function in a post-method end point, therefore we had to create
+//this get-end point.
 app.get('/downloadPDF', function(req, res){
     setTimeout(function(){
         fs.readdir(__dirname + '/public/pdf/', (err, files) => {
             files.forEach(file => {
                 res.download('./public/pdf/' + file);
                 setTimeout(function(){
-                    console.log(file);
                     fs.unlink('./public/pdf/' + file, function(){});
                 }, 3000)
             });
@@ -518,6 +544,7 @@ app.get('/downloadPDF', function(req, res){
 
 
 //Get correcting
+//Gets all data and renders the page for manually correcting a test
 app.get('/correcting', function(req, res) {
 
     // Get testdata for Combobox
@@ -566,7 +593,6 @@ app.get('/correcting', function(req, res) {
                     userAnswers: dcopy(result2)
                     });
                 }
-                console.log(testdata[0]);
                 req.session.testdata = testdata;
             })
     });
@@ -575,6 +601,7 @@ app.get('/correcting', function(req, res) {
     }, 500);
 });
 
+//Updates an AnsweredTest with the given points and adds comments from the teacher
 app.post('/correct', function(req, res){
     updateTestScore(req.body.TestId, req.body.TakenTestId, req.body.points, true);
     if(req.body.comments){
@@ -593,9 +620,12 @@ app.post('/correct', function(req, res){
     res.send('party');
 });
 
-//HELPER FUNCTIONS
 
-//Check if it is self correcting, if it is, send it for autocorrect
+
+
+//HELPER FUNCTIONS
+//----------------------------------------------------------------------------------------------------------------------------------
+//Check if the test is self correcting, if it is then send it for autocorrect
 function checkIfSelfCorrecting(testId, takenTestId){
     sql.connection.query('SELECT Test.TSelfCorrecting FROM Test WHERE TestID = ' + testId, function(error, result){
         if(error) throw error;
@@ -608,14 +638,16 @@ function checkIfSelfCorrecting(testId, takenTestId){
 //Corrects a test automatically
 function autoCorrect(testId, takenTestId){
     var points = 0;
-    console.log('autocorrecting');
+    //Get all questions for the specified testId
     sql.connection.query('SELECT * FROM Questions WHERE QTestId = ' + testId, function(error, result){
         if (error) throw error;
         var k = 0;
         for(var i = 0; i < result.length; i++){
             var resultArray = [];
+            //For every question, get the answered question associated with it
             sql.connection.query('SELECT * FROM QuestionAnswers WHERE AnsweredTestId = ' + takenTestId + ' AND AQuestionId = ' + result[i].QuestionId, function(err, res){
                 resultArray.push(dcopy(res));
+                //Correct the questions differently depending on what type of question it is
                 switch(result[k].QType){
                     case 'Flervalsfråga':
                         var correct = true;
@@ -670,12 +702,14 @@ function autoCorrect(testId, takenTestId){
                             }
                         });
                         break;
+                    //An open question should never be able to happen in auto correct, this means something is wrong.
                     case 'Öppen fråga':
                         console.log("Something's wrong. This shouldn't be able to happen. Can't auto correct an open question.");
-                        break;
+                        return;
                 }
                 k++;
                 if(k==result.length){
+                    //Wait a bit for everything to finish, then update with the corrected results
                     setTimeout(function(){
                         updateTestScore(testId, takenTestId, points);
                     }, 1000);
@@ -697,8 +731,7 @@ function updateTestScore(testId, takenTestId, points, showResult){
         } else if (percentage > 60){
             grade = 'G';
         }
-        console.log(takenTestId);
-        var c = sql.connection.query('UPDATE AnsweredTest SET ATPoints = ' + points + ", ATGrade = " + mysql.escape(grade) + ", ATCorrected = TRUE, ATShowResult = "+ (showResult || result[0].TDisplayResult) +" WHERE AnsweredTestId = " + takenTestId, function(err, res){if (err) throw err; console.log(res)});
+        sql.connection.query('UPDATE AnsweredTest SET ATPoints = ' + points + ", ATGrade = " + mysql.escape(grade) + ", ATCorrected = TRUE, ATShowResult = "+ (showResult || result[0].TDisplayResult) +" WHERE AnsweredTestId = " + takenTestId, function(err, res){if (err) throw err;});
     });
 }
 
@@ -709,6 +742,7 @@ function updateSessionTests(req) {
     });
 }
 
+//Updates session with groups
 function updateSessionGroups(req) {
     sql.connection.query("SELECT * FROM StudentGroup", function(error, result) {
         req.session.group = dcopy(result);
@@ -736,26 +770,31 @@ function checkAccess(req, targRole) {
     return req.session.role === targRole;
 }
 
-//Delays a redirect. This is to give time to other functions to finish before loading in the page
+//Delays a redirect. This is to give time for other functions to finish before loading in the page
 function delayRedirect(res, delay){
     setTimeout(function(){
         res.sendStatus(200);
     }, delay);
 }
 
+//Gets all information needed to put together a PDF. This means almost all data available relating to an answered test.
 function getAnsweredTest(data, testId, userId){
     var test = {};
+    //Get information from the view PDFtest, which is stuff from the Test, AnsweredTest and User tables.
     sql.connection.query('SELECT * FROM PDFtest WHERE TestId = ' + mysql.escape(testId) + ' AND UserId = ' + mysql.escape(userId), function(err, res){
         if(err) throw err;
         test = dcopy(res[0]);
         test.ATDate = test.ATDate.slice(0, -3);
         var question = {};
         var questions = [];
+        //Get all questions for this testId
         sql.connection.query('SELECT * FROM Questions WHERE QTestId = ' + mysql.escape(testId), function(error, result){
             if(error) throw error;
+            //For every question, add the associated answered questions and user answers
             for(var i = 0; i < result.length; i++){
                 addStuff(result, i, question, questions, test, data);
             }
+            //Get the testcomment associated with this test. If there is one then add it to the dataobject sent to the client
             sql.connection.query('SELECT * FROM TestComment WHERE TCATestId = ' + mysql.escape(test.AnsweredTestId), function(error3, result3){
                 if(error3) throw error3;
                 if(result3.length != 0){
@@ -765,23 +804,29 @@ function getAnsweredTest(data, testId, userId){
         })
     })
 
+    //Adds all things associated with a specific question for a specifik test
     function addStuff(result, k, question, questions, test, data){
         question = dcopy(result[k]);
+        //Get all answeredquestions for this question
         sql.connection.query('SELECT * FROM AnsweredQuestion WHERE AQQuestionId = ' + mysql.escape(question.QuestionId) + ' AND AQAnsweredTestId = ' + mysql.escape(test.AnsweredTestId), function(err2, res2){
             if(err2) throw err2;
             question.answeredQuestion = dcopy(res2[0]);
+            //Get the comment associated with this question, if there is one
             sql.connection.query('SELECT * FROM QuestionComment WHERE QCQuestionId = ' + mysql.escape(question.answeredQuestion.AnsweredQuestionId), function(err3, res3){
                 if(err3) throw err3;
                 if(res3.length != 0){
                     question.comment = dcopy(res3[0]);
                 }
+                //Get all answer alternatives that are correct for the specified question
                 sql.connection.query('SELECT * FROM Answers WHERE AQuestionId = ' + mysql.escape(question.QuestionId) + ' AND APoints = 1', function(error2, result2){
                     if(error2) throw error2;
                     question.answers = dcopy(result2);
+                    //Get all answers that the user has entered associated with this question
                     sql.connection.query('SELECT UserAnswer.*, Answers.AText FROM UserAnswer INNER JOIN Answers ON Answers.AnswersId = UserAnswer.UAAnswersId WHERE UAQuestionId = ' + mysql.escape(question.answeredQuestion.AnsweredQuestionId), function(err4, res4){
                         if(err4) throw err4;
                         question.userAnswers = dcopy(res4);
                         questions.push(question);
+                        //If we just did he last question, then put together the object
                         if(++k == result.length){
                             test.questions = questions;
                             data.test = test;
