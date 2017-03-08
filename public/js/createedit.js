@@ -1,3 +1,4 @@
+// Time checkbox
 $("#time").prop('disabled', true);
 $("#timed").change(function() {
     if(this.checked) {
@@ -7,6 +8,7 @@ $("#timed").change(function() {
     }
 });
 
+// Save test button event to get data
 $("#saveTest").click(function (event) {
     if ($('#testName').val() == '') {
 
@@ -51,7 +53,7 @@ $("#saveTest").click(function (event) {
     }
 });
 
-
+// Timepicker module
 YUI().use(
     'aui-timepicker',
     function(Y) {
@@ -93,6 +95,7 @@ $('#questionModal').on('click', '#addButton', function () {
             </div>`)
 });
 
+// Event to remove answers
 $(document).on('click', 'button.removeButton', function (events) {
     $(this).parents('div').eq(0).remove();
 });
@@ -119,7 +122,7 @@ $('#dateStart').datepicker({
     }
 });
 
-
+// Event for saveQuestion button
 $(document).on('click', '#saveQuestion', function() {
     var i = "";
     $('#questionModal .answer input:text').each(function() {
@@ -410,6 +413,7 @@ function resetQuestionBox(){
 
 
 $(function() {
+    // Event when questiontype selector is changed
     $(document).on("change", "#typeSelect", function() {
         if($("#qTypeOpen").is(":selected")){
             $("#answersBox").html(`<div class="input-group answer">
@@ -442,10 +446,12 @@ $(function() {
     });
 });
 
+// Show directResult if selfCorrecting is checked
 $('#selfCorrecting').on('change', function(){
     $('#directResult').toggleClass('hidden');
 });
 
+// Event on saveTest button to save test
 $('#saveTest').on('click', function(){
     if($("#dateStart").val()=='' || $("#date").val()=='') {
         $("#missingInput").show();
@@ -469,8 +475,7 @@ $('#saveTest').on('click', function(){
     }
 });
 
-
-
+// Function to get data for created test
 function getTestData(storeVariable){
     var data = {};
     data.userId = $('input[type=hidden]').attr('class');
@@ -485,6 +490,7 @@ function getTestData(storeVariable){
     storeVariable.data = data;
 }
 
+// Function to get data for each question for created test
 function getQuestionData(storeVariable){
     var questionData = new Object();
     var questionsArray = [];
@@ -507,6 +513,7 @@ function getQuestionData(storeVariable){
     storeVariable.questions = questionsArray;
 }
 
+// Function to get answers for each question on created test
 function getAnswerData(storeVariable){
     var answerData = new Object();
     var answersArray = [];
