@@ -33,7 +33,7 @@ exports.pdfTemplate = `
                         </ul>
                     </div>
                     <div class="col-xs-6">
-                        <h4 class="title">Rätt svar:</h4>
+                        <h4 class="title" name="{{this.QType}}">Rätt svar:</h4>
                         <ul class="list-group answers">
                             {{#this.answers}}
                                 <li class="list-group-item">{{AText}}</li>
@@ -60,4 +60,6 @@ exports.pdfTemplate = `
             </div>
         {{/if}}
      </div>
-     <style>body{font-size: 175%}.panel-title{font-size:150%}.container{margin: 20px 40px}</style>`;
+     <style>body{font-size: 175%}.panel-title{font-size:150%}.container{margin: 20px 40px}</style>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+     <script>$('h4[name="Öppen fråga"]').parent().remove()</script>`;
