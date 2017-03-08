@@ -334,7 +334,7 @@ function resetQuestionBox(){
 
                 <div class="row form-group">
                     <div class="col-lg-6 form-group">
-                        <select class="form-control" id="typeSelect">
+                        <select class="form-control" id="typeSelect" data-toggle="popover" data-placement="left" data-content="Content">
                             <option hidden>Välj Typ</option>
                             <option id="qTypeMulti">Flervalsfråga</option>
                             <option id="qTypeAlt">Alternativfråga</option>
@@ -386,8 +386,8 @@ function resetQuestionBox(){
                 </div>
                 </div>
                 </div>`);
+    $("#typeSelect").popover({ trigger: "hover" });
 }
-
 
 
 $(function() {
