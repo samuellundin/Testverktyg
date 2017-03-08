@@ -256,10 +256,12 @@ app.get("/share", function(req, res) {
 //Sends a mail to everybody you shared the test with
 app.post('/share', function (req, res) {
 
-    sql.connection.query('INSERT INTO TestAccess (TAUserId, TATestId) VALUES (' +
-        mysql.escape(req.body.id) + ',' + mysql.escape(req.body.testId) + ')', function(error){
-        if(error) throw error;
-    });
+    for(var i = 0; i < req.body.id.length; i++) {
+        sql.connection.query('INSERT INTO TestAccess (TAUserId, TATestId) VALUES (' +
+            mysql.escape(req.body.id[i]) + ',' + mysql.escape(req.body.testId) + ')', function(error){
+            if(error) throw error;
+        });
+    }
 
     app.mailer.send('email', {
         layout: false,
@@ -369,7 +371,9 @@ app.post("/statistics", function(req, res) {
 app.get("/testMenu", function(req, res) {
     sql.connection.query("SELECT * FROM Test " +
     "INNER JOIN TestAccess ON Test.TestId = TestAccess.TATestID " +
-    "WHERE TestAccess.TAUserId = " + req.session.id, function(error, result) {
+    "WHERE (TestAccess.TAUserId = " + req.session.id + ")" +
+    "AND (Test.TestId NOT IN (SELECT AnsweredTest.ATestId FROM AnsweredTest " +
+    "WHERE AnsweredTest.ATUserId = " + req.session.id + "))", function(error, result) {
         var tests = [];
         //Loop through all tests not answered by you, and check if this date is within the start and end dates for the test
         //if it is then push that testinfo on to the array sent to the client
