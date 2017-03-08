@@ -169,19 +169,29 @@ app.post("/_studentIndex", function(req, res) {
 app.get("/results", function(req, res) {
     sql.connection.query("SELECT Results.*, TestComment.TestComment FROM Results LEFT OUTER JOIN TestComment ON Results.AnsweredTestId = TestComment.TCATestId "
         + ' WHERE ATCorrected = 1 AND ATUserId = ' + req.session.id + ' AND ATShowResult = 1', function(error, result) {
+        console.log(result);
         req.session.tests = dcopy(result);
         res.render("results", req.session);
     });
 });
 
+app.get('/testResult=:testId', function(req, res){
+    var data = {};
+    getAnsweredTest(data, req.params.testId, req.session.id);
+    req.session.testResult = data;
+    setTimeout(function(){
+        res.render('correctedTest', req.session);
+    }, 2000);
+
+})
+
 //Get editMenu
 //Choose the test that you want to edit
 app.get("/editMenu", function(req, res) {
-    updateSessionTests(req);
-
-    setTimeout(function(){
-        res.render("editMenu", req.session);
-    }, 200);
+    sql.connection.query('SELECT * FROM Test WHERE TUserId = ' + mysql.escape(req.session.id), function(error, result){
+        req.session.tests = result;
+        res.render('editMenu', req.session);
+    })
 });
 
 //Gets all information for the test with id :testId and renders the edit-page with that information.
@@ -600,7 +610,7 @@ app.get('/downloadPDF', function(req, res){
 app.get('/correcting', function(req, res) {
 
     // Get testdata for Combobox
-    sql.connection.query('SELECT * FROM Test', function(err, result) {
+    sql.connection.query('SELECT * FROM Test WHERE TUserId = ' + req.session.id, function(err, result) {
         var test;
         var tests = [];
 
@@ -856,7 +866,7 @@ function getAnsweredTest(data, testId, userId){
         })
     })
 
-    //Adds all things associated with a specific question for a specifik test
+    //Adds all things associated with a specific question for a specific test
     function addStuff(result, k, question, questions, test, data){
         question = dcopy(result[k]);
         //Get all answeredquestions for this question

@@ -104,7 +104,7 @@ QuestionComment VARCHAR (60),
 QCUserId INT,
 QCQuestionId INT,
 CONSTRAINT QCUserIdFK FOREIGN KEY (QCUserId) REFERENCES User(UserId),
-CONSTRAINT QCQuestionIdFK FOREIGN KEY (QCQuestionId) REFERENCES Questions(QuestionId));
+CONSTRAINT QCQuestionIdFK FOREIGN KEY (QCQuestionId) REFERENCES AnsweredQuestion(AnsweredQuestionId));
 
 CREATE TABLE pictureURL(
 PictureId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
