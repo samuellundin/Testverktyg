@@ -175,13 +175,14 @@ app.get("/results", function(req, res) {
     });
 });
 
+//Lets a student see his test and all the correct answers
 app.get('/testResult=:testId', function(req, res){
     var data = {};
     getAnsweredTest(data, req.params.testId, req.session.id);
     req.session.testResult = data;
     setTimeout(function(){
         res.render('correctedTest', req.session);
-    }, 2000);
+    }, 500);
 
 })
 
@@ -748,11 +749,13 @@ function autoCorrect(testId, takenTestId){
                         break;
                     case 'Rangordningsfråga':
                         var ri = k;
-                        sql.connection.query('SELECT UAOrder, AOrder FROM QuestionAnswers WHERE AQuestionId = ' + result[ri].QuestionId, function(err2, res2){
+                        sql.connection.query('SELECT UAOrder, AOrder FROM QuestionAnswers WHERE AQuestionId = ' + result[ri].QuestionId + ' AND AnsweredTestId = ' + takenTestId, function(err2, res2){
                             if(err2) throw err2;
                             var correct = true;
+                            console.log(res2);
                             for(var ind = 0; ind < res2.length; ind++){
                                 if(res2[ind].AOrder != res2[ind].UAOrder){
+                                    console.log(res2[ind].AOrder + " " + res2[ind].UAOrder);
                                     correct = false;
                                     break;
                                 }

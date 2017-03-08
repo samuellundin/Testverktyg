@@ -64,12 +64,11 @@
                 `);
                 // Making text field (teacher comments) read-only
                 $("#textArea").prop("disabled", true);
+                $('#view').on('click', function(){
+                    location.replace('/testResult={{TestId}}');
+                });
             }
             {{/tests}}
-        });
-        $(document).on('click', '#view', function(){
-            console.log($('select#testName').attr('id'));
-/*            location.replace('/testResult=' + $('#testName').find(':selected').attr('id'));*/
         });
     });
 </script>
