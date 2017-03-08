@@ -72,10 +72,12 @@ YUI().use(
     }
 );
 
+// Event on create new question button
 $('#createQuestion').on('click', function(){
     resetQuestionBox();
 });
 
+// Event on create new answer
 $('#questionModal').on('click', '#addButton', function () {
     var answerCount = $('.answer').length + 1;
     $('#answersBox').append(`<div class="input-group answer">
@@ -95,6 +97,7 @@ $(document).on('click', 'button.removeButton', function (events) {
     $(this).parents('div').eq(0).remove();
 });
 
+// Datepicker for endDate
 $('#date').datepicker({
     format: 'yyyy-mm-dd',
     todayHighlight: true,
@@ -104,6 +107,8 @@ $('#date').datepicker({
         $('#timeEnd').val('00:00');
     }
 });
+
+// Datepicker for startDate
 $('#dateStart').datepicker({
     format: 'yyyy-mm-dd',
     todayHighlight: true,
@@ -113,6 +118,7 @@ $('#dateStart').datepicker({
         $('#timeStart').val('00:00');
     }
 });
+
 
 $(document).on('click', '#saveQuestion', function() {
     var i = "";
@@ -150,18 +156,21 @@ $(document).on('click', '#saveQuestion', function() {
     $('.sortable').sortable();
 });
 
+// Toggle panel-body when panel-heading is clicked
 $('#test').on('click', '.panel-heading', function(e) {
     if(!$(event.target).hasClass('btn')){
         $(this).next('.panel-body').slideToggle();
     }
 });
 
+// Remove question on remove button
 $(document).on('click', '.btn-remove', function() {
     $(this).closest('.panel').remove();
 });
 
 
 var thisPanel = '';
+// Event on edit button
 $(document).on('click', '.btn-edit', function() {
     var title = $(this).parent().parent().find('.panel-title').html();
     var imgUrl = $(this).parent().parent().parent().find('input[type=hidden]').val();
@@ -265,6 +274,8 @@ $(document).on('click', '.btn-edit', function() {
         $('#typeSelectEdit option[value=oppen]').attr('selected','selected');
     }
 });
+
+// Save edit
 $('#editModal').on('click', '#saveEditButton', function () {
     var i = "";
     $('#editModal .answer input:text').each(function() {
@@ -299,6 +310,8 @@ $('#editModal').on('click', '#saveEditButton', function () {
     }
     $('.sortable').sortable();
 });
+
+// Add new answer when editing question
 $('#editModal').on('click', '#addButton', function () {
     var answerCount = $('.answer').length + 1;
     $('#editModal').find('#answersBox').append(`<div class="input-group answer">
@@ -314,6 +327,7 @@ $('#editModal').on('click', '#addButton', function () {
             </div>`);
 });
 
+// Function to reset the questionbox
 function resetQuestionBox(){
     $('#questionModal').html(`
 
