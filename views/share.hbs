@@ -50,10 +50,12 @@
 </div>
 <script>
     var selectedTestEndDate;
+    var selectedTest;
 
     $( ".registerButton").on( "click", function(event) {
         {{#tests}}
             if('{{this.TTitle}}' == $('#testName').val()){
+                selectedTest = {{this.TestId}};
                 selectedTestEndDate = '{{this.TEndTestDate}}';
             }
         {{/tests}}
@@ -71,10 +73,12 @@
                 }
             {{/groupdetails}}
             console.log(studentIds + names + emails);
+            console.log("SELECTED TEST ÄR: " + selectedTest);
             $.ajax({
                 type: 'POST',
                 url: "/share",
                 data: {
+                    'testId': selectedTest,
                     'id' : studentIds,
                     'namn': names,
                     'mail': emails,
@@ -97,6 +101,7 @@
                 type: 'POST',
                 url: "/share",
                 data: {
+                    'testId': selectedTest,
                     'id' : studentId,
                     'namn': $('#shareStudentSelect').val(),
                     'mail': email,
